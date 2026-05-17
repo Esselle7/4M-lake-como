@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output — Cloudflare Pages builds from source, don't commit these
+.next/
+out/
+.vercel/
+.cloudflare/
+.claude
+
+# TypeScript build info
+tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# Environment variables — set these in the Cloudflare Pages dashboard
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+# Keep the example file so teammates know what vars are needed
+!.env.local.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Misc
+.cache/
+
+TODO

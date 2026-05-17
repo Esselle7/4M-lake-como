@@ -1,0 +1,241 @@
+{
+  "nav": {
+    "home": "Home",
+    "experiences": "Experiences",
+    "fleet": "Fleet",
+    "packages": "Packages",
+    "booking": "Book Now",
+    "location": "Find Us",
+    "contact": "Contact",
+    "visual_story": "Our Story"
+  },
+  "hero": {
+    "eyebrow": "Lake Como, Italy",
+    "headline_1": "Sail the Most",
+    "headline_2": "Beautiful Lake",
+    "headline_3": "in the World",
+    "subheadline": "Private boat tours crafted for those who seek the extraordinary",
+    "cta_primary": "Book Your Journey",
+    "cta_secondary": "Explore Experiences",
+    "scroll_hint": "Scroll to discover"
+  },
+  "how": {
+    "eyebrow": "How It Works",
+    "title": "Three Steps to an Unforgettable Day",
+    "subtitle": "From first inquiry to setting sail — we take care of everything",
+    "steps": [
+      {
+        "number": "01",
+        "title": "Choose Your Experience",
+        "desc": "Browse our curated collection of private tours — from a golden hour aperitivo to a full-day journey along Como's most iconic shores."
+      },
+      {
+        "number": "02",
+        "title": "Select Your Date",
+        "desc": "Pick the perfect day and time. Our team will confirm availability and tailor every detail to your preferences."
+      },
+      {
+        "number": "03",
+        "title": "Sail & Celebrate",
+        "desc": "Come aboard, leave everything else behind, and let the beauty of Lake Como unfold around you."
+      }
+    ]
+  },
+  "fleet": {
+    "eyebrow": "Our Fleet",
+    "title": "Two Exceptional Vessels",
+    "subtitle": "One uncompromising standard of excellence",
+    "capacity": "Up to",
+    "people": "guests",
+    "all_packages": "Explore Experiences",
+    "boats": [
+      {
+        "name": "Barca I",
+        "desc": "Elegant and swift, perfect for intimate escapes on the open water."
+      },
+      {
+        "name": "Barca II",
+        "desc": "Spacious and refined, ideal for small groups and private celebrations."
+      }
+    ]
+  },
+  "packages": {
+    "eyebrow": "Our Experiences",
+    "title": "Curated Moments on Lake Como",
+    "subtitle": "Every journey is private. Every detail, considered.",
+    "standard_label": "Standard",
+    "premium_label": "Premium Experience",
+    "from": "From",
+    "currency": "€",
+    "per_boat": "private boat",
+    "per_person": "per person (shared)",
+    "duration_label": "Duration",
+    "includes_label": "Includes",
+    "book_cta": "Reserve This Experience",
+    "items": [
+      {
+        "id": "golden-hour",
+        "name": "Golden Hour",
+        "type": "standard",
+        "duration_h": 1,
+        "duration_label": "1 hour",
+        "price": 250,
+        "image": "golden-hour.jpg",
+        "desc": "Toast to the sunset with a glass of Prosecco as Como's golden light paints the water. The perfect one-hour escape.",
+        "includes": "Complimentary Prosecco · First basin tour"
+      },
+      {
+        "id": "breakfast",
+        "name": "Breakfast on Board",
+        "type": "standard",
+        "duration_h": 1,
+        "duration_label": "1 hour",
+        "price": 300,
+        "image": "breakfast.jpg",
+        "desc": "Begin your day with a curated lakeside breakfast, drifting through Como's morning calm. Available 8:30–10:30.",
+        "includes": "Full breakfast service · Scenic morning tour"
+      },
+      {
+        "id": "aperitivo",
+        "name": "Aperitivo Tour",
+        "type": "standard",
+        "duration_h": 1.5,
+        "duration_label": "1.5 hours",
+        "price": 350,
+        "image": "aperitivo.jpg",
+        "desc": "The Italian art of the aperitivo, elevated at sunset on the lake. Drift past the most iconic shores as the sky turns gold.",
+        "includes": "Italian aperitivo & stuzzichini · Drinks at sunset"
+      },
+      {
+        "id": "sushi",
+        "name": "Sushi Experience",
+        "type": "standard",
+        "duration_h": 1.5,
+        "duration_label": "1.5 hours",
+        "price": 380,
+        "image": "sushi.jpg",
+        "desc": "Premium sushi box and curated drinks on a scenic panoramic cruise through Como's most breathtaking views.",
+        "includes": "Premium sushi box · Curated drinks · Panoramic route"
+      },
+      {
+        "id": "como-luxury",
+        "name": "Como Luxury",
+        "type": "premium",
+        "duration_h": 2,
+        "duration_label": "2 hours",
+        "price": 450,
+        "image": "como-luxury.jpg",
+        "desc": "Villa Pliniana, Villa Oleandra (George Clooney's estate), Nesso — Como's most exclusive landmarks, seen from the water.",
+        "includes": "Villa Pliniana · Villa Oleandra · Nesso gorge"
+      },
+      {
+        "id": "dolce-vita",
+        "name": "La Dolce Vita",
+        "type": "premium",
+        "duration_h": 4,
+        "duration_label": "4 hours",
+        "price": 800,
+        "image": "dolce-vita.jpg",
+        "desc": "A grand journey to Isola Comacina and the jewel village of Varenna — the definitive, unforgettable Como experience.",
+        "includes": "Isola Comacina · Varenna · Full lake grand tour"
+      }
+    ]
+  },
+  "visual": {
+    "back_to_site": "← Back to Site",
+    "page_title": "Our Story",
+    "book_cta": "Book Your Experience",
+    "sections": [
+      {
+        "eyebrow": "The Setting",
+        "title": "Where the Alps Meet the Water",
+        "desc": "Lake Como has enchanted artists, royalty, and wanderers for centuries. Seen from the water, its magic is unrivalled.",
+        "image": "story-1.jpg"
+      },
+      {
+        "eyebrow": "History & Elegance",
+        "title": "Villas, Gardens & Timeless Beauty",
+        "desc": "Glide past centuries-old villas, hidden gardens, and sun-drenched terraces that define the Como way of life.",
+        "image": "story-2.jpg"
+      },
+      {
+        "eyebrow": "Your Journey",
+        "title": "A Private World on the Water",
+        "desc": "No crowds. No fixed itineraries. Just you, the lake, and an experience crafted entirely around your wishes.",
+        "image": "story-3.jpg"
+      }
+    ]
+  },
+  "booking": {
+    "eyebrow": "Reserve Your Journey",
+    "title": "Begin Your Lake Como Story",
+    "subtitle": "Fill in the details below. We'll confirm your booking within hours.",
+    "step1_title": "Choose Experience",
+    "step2_title": "Date & Time",
+    "step3_title": "Your Details",
+    "package_label": "Select Package",
+    "package_placeholder": "Choose an experience...",
+    "mode_label": "Booking Mode",
+    "private": "Private (Full Boat)",
+    "private_title": "Private Boat",
+    "shared": "Shared (Per Person)",
+    "shared_title": "Shared Experience",
+    "private_desc": "Exclusive use of the vessel for your group",
+    "shared_desc": "Join other guests — price per person",
+    "date_label": "Preferred Date",
+    "time_label": "Preferred Time",
+    "time_options": ["Morning (8:00–12:00)", "Afternoon (12:00–18:00)", "Sunset (18:00–21:00)"],
+    "name_label": "First Name",
+    "surname_label": "Last Name",
+    "email_label": "Email",
+    "phone_label": "Phone",
+    "guests_label": "Number of Guests",
+    "notes_label": "Special Requests",
+    "notes_placeholder": "Dietary requirements, special occasions, any wishes…",
+    "back": "Back",
+    "next": "Continue",
+    "submit_desktop": "Send Booking Request",
+    "submit_mobile": "Request via WhatsApp",
+    "success_title": "Request Sent!",
+    "success_desc": "Thank you. We'll be in touch within a few hours to confirm your experience.",
+    "required": "Required field",
+    "sending": "Sending...",
+    "new_request": "← New request",
+    "time_locked_note": "Time set by the selected package",
+    "step_of": "of",
+    "step_boat_title": "Choose Your Vessel",
+    "boat_required": "Please select a vessel to continue"
+  },
+  "location": {
+    "eyebrow": "Departure Point",
+    "title": "This Is Where We Meet",
+    "subtitle": "Your Lake Como journey begins on the lakefront. Easy to find, impossible to forget.",
+    "address_label": "Address",
+    "address": "Lungo Lario Trieste",
+    "city": "22100 Como CO · Italy",
+    "dock_label": "The Dock",
+    "dock_desc": "The dock is located at the very beginning of Lungo Lario Trieste avenue. We'll be there waiting to welcome you aboard.",
+    "directions_label": "Getting Here",
+    "directions": "Head to the Como lakefront and follow Lungo Lario Trieste. Our dock is visible right at the start of the avenue, on the water's edge.",
+    "open_maps": "Open in Google Maps",
+    "coords": "45.8108° N · 9.0836° E · Lake Como"
+  },
+  "contact": {
+    "eyebrow": "Find Us",
+    "title": "We're Here for You",
+    "subtitle": "From general questions to last-minute requests — our team is always available.",
+    "address_label": "Departure Point",
+    "address": "Lungo Lario Trieste, Como",
+    "email_label": "Email",
+    "email": "info@4mlake.com",
+    "hours_label": "Available",
+    "hours": "Daily · 8:00 – 20:00",
+    "whatsapp_cta": "Chat on WhatsApp",
+    "map_placeholder": "Map & directions coming soon"
+  },
+  "footer": {
+    "tagline": "Private boat tours on Lake Como",
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy"
+  }
+}

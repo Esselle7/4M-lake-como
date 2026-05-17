@@ -1,0 +1,241 @@
+{
+  "nav": {
+    "home": "Home",
+    "experiences": "Esperienze",
+    "fleet": "La Flotta",
+    "packages": "Pacchetti",
+    "booking": "Prenota",
+    "location": "Troviamoci",
+    "contact": "Contatti",
+    "visual_story": "La Nostra Storia"
+  },
+  "hero": {
+    "eyebrow": "Lago di Como, Italia",
+    "headline_1": "Vivi il Lago",
+    "headline_2": "di Como come",
+    "headline_3": "non hai mai fatto",
+    "subheadline": "Escursioni private in barca per chi cerca esperienze straordinarie",
+    "cta_primary": "Prenota il Tuo Viaggio",
+    "cta_secondary": "Scopri le Esperienze",
+    "scroll_hint": "Scorri per scoprire"
+  },
+  "how": {
+    "eyebrow": "Come Funziona",
+    "title": "Tre Passi verso un Giorno Indimenticabile",
+    "subtitle": "Dalla prima richiesta all'imbarco — pensiamo noi a tutto",
+    "steps": [
+      {
+        "number": "01",
+        "title": "Scegli la Tua Esperienza",
+        "desc": "Sfoglia la nostra collezione di tour privati — da un aperitivo al tramonto a un'intera giornata sulle sponde più iconiche del Lago di Como."
+      },
+      {
+        "number": "02",
+        "title": "Seleziona la Data",
+        "desc": "Scegli il giorno e l'orario perfetto. Il nostro team confermerà la disponibilità e curerà ogni dettaglio secondo i tuoi desideri."
+      },
+      {
+        "number": "03",
+        "title": "Sali a Bordo e Celebra",
+        "desc": "Vieni a bordo, lascia tutto il resto alle spalle e lasciati avvolgere dalla bellezza del Lago di Como."
+      }
+    ]
+  },
+  "fleet": {
+    "eyebrow": "La Nostra Flotta",
+    "title": "Due Imbarcazioni d'Eccezione",
+    "subtitle": "Un unico standard irrinunciabile: l'eccellenza",
+    "capacity": "Fino a",
+    "people": "ospiti",
+    "all_packages": "Scopri le Esperienze",
+    "boats": [
+      {
+        "name": "Barca I",
+        "desc": "Elegante e agile, perfetta per fughe intime sull'acqua aperta."
+      },
+      {
+        "name": "Barca II",
+        "desc": "Spaziosa e raffinata, ideale per piccoli gruppi e celebrazioni private."
+      }
+    ]
+  },
+  "packages": {
+    "eyebrow": "Le Nostre Esperienze",
+    "title": "Momenti Curati sul Lago di Como",
+    "subtitle": "Ogni viaggio è privato. Ogni dettaglio, considerato.",
+    "standard_label": "Standard",
+    "premium_label": "Esperienza Premium",
+    "from": "Da",
+    "currency": "€",
+    "per_boat": "barca privata",
+    "per_person": "a persona (condivisa)",
+    "duration_label": "Durata",
+    "includes_label": "Include",
+    "book_cta": "Prenota Questa Esperienza",
+    "items": [
+      {
+        "id": "golden-hour",
+        "name": "Golden Hour",
+        "type": "standard",
+        "duration_h": 1,
+        "duration_label": "1 ora",
+        "price": 250,
+        "image": "golden-hour.jpg",
+        "desc": "Brinda al tramonto con un calice di Prosecco mentre la luce dorata del Como dipinge l'acqua. La fuga perfetta di un'ora.",
+        "includes": "Prosecco in omaggio · Tour del primo bacino"
+      },
+      {
+        "id": "breakfast",
+        "name": "Breakfast on Board",
+        "type": "standard",
+        "duration_h": 1,
+        "duration_label": "1 ora",
+        "price": 300,
+        "image": "breakfast.jpg",
+        "desc": "Inizia la giornata con una colazione curata in riva al lago, navigando nella calma mattutina del Como. Disponibile 8:30–10:30.",
+        "includes": "Colazione completa · Tour panoramico mattutino"
+      },
+      {
+        "id": "aperitivo",
+        "name": "Aperitivo Tour",
+        "type": "standard",
+        "duration_h": 1.5,
+        "duration_label": "1,5 ore",
+        "price": 350,
+        "image": "aperitivo.jpg",
+        "desc": "L'arte italiana dell'aperitivo, elevata al tramonto sul lago. Naviga tra le sponde più iconiche mentre il cielo si tinge d'oro.",
+        "includes": "Aperitivo italiano & stuzzichini · Drink al tramonto"
+      },
+      {
+        "id": "sushi",
+        "name": "Sushi Experience",
+        "type": "standard",
+        "duration_h": 1.5,
+        "duration_label": "1,5 ore",
+        "price": 380,
+        "image": "sushi.jpg",
+        "desc": "Sushi box premium e drink curati in una crociera panoramica tra le viste più mozzafiato del Lago di Como.",
+        "includes": "Sushi box premium · Drink curati · Percorso panoramico"
+      },
+      {
+        "id": "como-luxury",
+        "name": "Como Luxury",
+        "type": "premium",
+        "duration_h": 2,
+        "duration_label": "2 ore",
+        "price": 450,
+        "image": "como-luxury.jpg",
+        "desc": "Villa Pliniana, Villa Oleandra (la villa di George Clooney), Nesso — i luoghi più esclusivi del Como, visti dall'acqua.",
+        "includes": "Villa Pliniana · Villa Oleandra · Gola di Nesso"
+      },
+      {
+        "id": "dolce-vita",
+        "name": "La Dolce Vita",
+        "type": "premium",
+        "duration_h": 4,
+        "duration_label": "4 ore",
+        "price": 800,
+        "image": "dolce-vita.jpg",
+        "desc": "Un grande viaggio verso l'Isola Comacina e il gioiello di Varenna — l'esperienza definitiva e indimenticabile del Lago di Como.",
+        "includes": "Isola Comacina · Varenna · Grand tour del lago"
+      }
+    ]
+  },
+  "visual": {
+    "back_to_site": "← Torna al Sito",
+    "page_title": "La Nostra Storia",
+    "book_cta": "Prenota la Tua Esperienza",
+    "sections": [
+      {
+        "eyebrow": "Lo Scenario",
+        "title": "Dove le Alpi Incontrano l'Acqua",
+        "desc": "Il Lago di Como ha incantato artisti, nobili e viaggiatori per secoli. Visto dall'acqua, la sua magia è senza pari.",
+        "image": "story-1.jpg"
+      },
+      {
+        "eyebrow": "Storia ed Eleganza",
+        "title": "Ville, Giardini e Bellezza Senza Tempo",
+        "desc": "Scivolate accanto a ville centenarie, giardini nascosti e terrazze assolate che definiscono lo stile di vita del Como.",
+        "image": "story-2.jpg"
+      },
+      {
+        "eyebrow": "Il Tuo Viaggio",
+        "title": "Un Mondo Privato sull'Acqua",
+        "desc": "Niente folla. Nessun itinerario fisso. Solo tu, il lago e un'esperienza costruita interamente intorno ai tuoi desideri.",
+        "image": "story-3.jpg"
+      }
+    ]
+  },
+  "booking": {
+    "eyebrow": "Prenota il Tuo Viaggio",
+    "title": "Inizia la Tua Storia sul Lago di Como",
+    "subtitle": "Compila i dettagli qui sotto. Confermeremo la prenotazione entro poche ore.",
+    "step1_title": "Scegli l'Esperienza",
+    "step2_title": "Data e Orario",
+    "step3_title": "I Tuoi Dati",
+    "package_label": "Seleziona Pacchetto",
+    "package_placeholder": "Scegli un'esperienza...",
+    "mode_label": "Modalità di Prenotazione",
+    "private": "Privata (Barca Intera)",
+    "private_title": "Barca Privata",
+    "shared": "In Compagnia (A Persona)",
+    "shared_title": "In Compagnia",
+    "private_desc": "Uso esclusivo dell'imbarcazione per il tuo gruppo",
+    "shared_desc": "Condividi la barca con altri ospiti — prezzo a persona",
+    "date_label": "Data Preferita",
+    "time_label": "Orario Preferito",
+    "time_options": ["Mattina (8:00–12:00)", "Pomeriggio (12:00–18:00)", "Tramonto (18:00–21:00)"],
+    "name_label": "Nome",
+    "surname_label": "Cognome",
+    "email_label": "Email",
+    "phone_label": "Telefono",
+    "guests_label": "Numero di Ospiti",
+    "notes_label": "Richieste Speciali",
+    "notes_placeholder": "Intolleranze alimentari, occasioni speciali, desideri particolari…",
+    "back": "Indietro",
+    "next": "Continua",
+    "submit_desktop": "Invia Richiesta di Prenotazione",
+    "submit_mobile": "Richiedi via WhatsApp",
+    "success_title": "Richiesta Inviata!",
+    "success_desc": "Grazie. Ti risponderemo entro poche ore per confermare la tua esperienza.",
+    "required": "Campo obbligatorio",
+    "sending": "Invio in corso...",
+    "new_request": "← Nuova richiesta",
+    "time_locked_note": "Orario incluso nel pacchetto selezionato",
+    "step_of": "di",
+    "step_boat_title": "Scegli l'Imbarcazione",
+    "boat_required": "Seleziona un'imbarcazione per continuare"
+  },
+  "location": {
+    "eyebrow": "Il Punto di Imbarco",
+    "title": "Ci Troviamo Qui",
+    "subtitle": "Il vostro viaggio sul Lago di Como inizia lungo il lungolago. Semplice da trovare, impossibile da dimenticare.",
+    "address_label": "Indirizzo",
+    "address": "Lungo Lario Trieste",
+    "city": "22100 Como CO · Italia",
+    "dock_label": "Il Molo",
+    "dock_desc": "Il molo si trova all'inizio del viale Lungo Lario Trieste. Vi aspettiamo lì, pronti a darvi il benvenuto a bordo.",
+    "directions_label": "Come Arrivare",
+    "directions": "Raggiungi il lungolago di Como e imbocca il Lungo Lario Trieste. Il nostro molo è visibile subito all'inizio del viale, sulla riva del lago.",
+    "open_maps": "Apri in Google Maps",
+    "coords": "45.8108° N · 9.0836° E · Lago di Como"
+  },
+  "contact": {
+    "eyebrow": "Trovaci",
+    "title": "Siamo Qui per Te",
+    "subtitle": "Dalla prima domanda all'ultima richiesta — il nostro team è sempre disponibile.",
+    "address_label": "Punto di Imbarco",
+    "address": "Lungo Lario Trieste, Como",
+    "email_label": "Email",
+    "email": "info@4mlake.com",
+    "hours_label": "Disponibili",
+    "hours": "Tutti i giorni · 8:00 – 20:00",
+    "whatsapp_cta": "Scrivici su WhatsApp",
+    "map_placeholder": "Mappa e indicazioni in arrivo"
+  },
+  "footer": {
+    "tagline": "Tour privati in barca sul Lago di Como",
+    "rights": "Tutti i diritti riservati.",
+    "privacy": "Privacy Policy"
+  }
+}

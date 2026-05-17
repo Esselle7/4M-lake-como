@@ -1,0 +1,342 @@
+/* =============================================
+   FleetSection.module.css
+   4M Luxury Boats — Cinematic Card Animation
+   ============================================= */
+
+/* ---- Section ---- */
+.section {
+  background: #07101E;
+  padding: 6rem 1.5rem 8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* ---- Header ---- */
+.header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 4.5rem;
+  max-width: 560px;
+}
+
+.eyebrow {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #C9A96E;
+}
+
+.goldLine {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #C9A96E, transparent);
+}
+
+.title {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.subtitle {
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+}
+
+/* ---- Grid ---- */
+.grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* =============================================
+   CARD — Mobile (static luxury layout)
+   Always shows the expanded state on touch.
+   ============================================= */
+
+.card {
+  --gold: #C9A96E;
+  --gold-dim: rgba(201, 169, 110, 0.3);
+  --navy: #0A1628;
+  --navy-deep: #07101E;
+
+  position: relative;
+  width: min(320px, 88vw);
+  height: 420px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Background layer */
+.circle {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background: #0A1628;
+  border: 1px solid rgba(201, 169, 110, 0.28);
+  box-shadow:
+    0 0 0 1px rgba(201, 169, 110, 0.08) inset,
+    0 8px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* Logo hidden on mobile — only visible on desktop before hover */
+.logo {
+  display: none;
+}
+
+/* Boat image — fixed position for mobile */
+.productImg {
+  position: absolute;
+
+  top: 14%;
+  left: 73%;
+
+  transform: translate(-50%, -50%) rotate(10deg);
+
+  height: var(--product-h-mobile, 340px) !important;
+  width: auto !important;
+
+  max-width: none !important;
+  max-height: none !important;
+
+  object-fit: contain;
+
+  filter: drop-shadow(0 16px 40px rgba(0, 0, 0, 0.75));
+
+  pointer-events: none;
+}
+
+/* Content — always visible on mobile */
+.content {
+  position: absolute;
+  width: 54%;
+  left: 1.5rem;
+  padding: 1rem 0.5rem 1rem 0;
+  opacity: 1;
+  visibility: visible;
+}
+
+.contentTitle {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  color: #fff;
+  font-size: clamp(1.5rem, 4vw, 1.875rem);
+  font-weight: 400;
+  line-height: 1.0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0 0 0.75rem;
+}
+
+.contentDesc {
+  font-family: 'Jost', sans-serif;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8125rem;
+  font-weight: 300;
+  line-height: 1.65;
+  margin: 0 0 1.25rem;
+}
+
+.contentCta {
+  font-family: 'Jost', sans-serif;
+  color: #0A1628;
+  background: linear-gradient(135deg, #C9A96E 0%, #E8D5A3 55%, #C9A96E 100%);
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  display: inline-block;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: opacity 0.2s, box-shadow 0.2s;
+}
+
+.contentCta:hover {
+  opacity: 0.88;
+  box-shadow: 0 4px 20px rgba(201, 169, 110, 0.35);
+}
+
+/* =============================================
+   CARD — Desktop Hover Animation
+   Only on devices that support hover (not touch)
+   ============================================= */
+
+@media (hover: hover) and (min-width: 768px) {
+
+  /* Grid: side-by-side, overflow visible so images can float outside cards */
+  .grid {
+    flex-direction: row;
+    justify-content: center;
+    gap: 2.5rem;
+    overflow: visible;
+  }
+
+  /* Card: starts collapsed, expands on hover */
+  .card {
+    width: 320px;
+    height: 420px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0.5s;
+    overflow: visible;
+  }
+
+  .card:hover {
+    width: 660px;
+    transition-delay: 0s;
+    z-index: 10;
+  }
+
+  /* Circle: circular glow → full card rect */
+  .circle::before {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: #0D1528;
+    border: 5px solid var(--gold);
+    box-shadow: none;
+    transition:
+      width     0.55s cubic-bezier(0.4, 0, 0.2, 1),
+      height    0.55s cubic-bezier(0.4, 0, 0.2, 1),
+      border-radius 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+      background    0.5s  ease,
+      border        0.5s  ease;
+    transition-delay: 0.65s, 0.65s, 0.65s, 0.85s, 0.85s;
+    filter:
+      drop-shadow(0 0 18px rgba(201, 169, 110, 0.55))
+      drop-shadow(0 0 70px rgba(10, 22, 40, 0.9));
+  }
+
+  .card:hover .circle::before {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    background: #0A1628;
+    border: 1px solid rgba(201, 169, 110, 0.25);
+    transition-delay: 0s;
+    filter:
+      drop-shadow(0 0 8px rgba(201, 169, 110, 0.12))
+      drop-shadow(0 0 60px rgba(10, 22, 40, 1));
+  }
+
+  /* Logo: centered in circle, fades out on hover */
+  .logo {
+    display: block;
+    position: relative;
+    width: 190px;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    transition-delay: 0.5s;
+    filter: drop-shadow(0 0 10px rgba(201, 169, 110, 0.25));
+  }
+
+  .card:hover .logo {
+    transform: scale(0);
+    opacity: 0;
+    transition-delay: 0s;
+  }
+
+  /* Product image: hidden → floats to top-right */
+ .productImg {
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%) scale(0) rotate(-32deg);
+
+  height: var(--product-h-default, 280px) !important;
+  width: auto !important;
+
+  max-width: none !important;
+  max-height: none !important;
+
+  object-fit: contain;
+
+  transition:
+    top       0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    left      0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    height    0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    filter    0.55s ease;
+
+  transition-delay: 0s;
+}
+
+.card:hover .productImg {
+  top: 13%;
+  left: 72%;
+
+  height: var(--product-h-hover, 510px) !important;
+  width: auto !important;
+
+  transform: translate(-50%, -50%) scale(1) rotate(11deg);
+    transition-delay: 0.75s;
+    filter:
+      drop-shadow(0 24px 48px rgba(0, 0, 0, 0.75))
+      drop-shadow(0 0 24px rgba(201, 169, 110, 0.12));
+  }
+
+  /* Content: hidden → slides in from left */
+  .content {
+    left: -28%;
+    opacity: 0;
+    visibility: hidden;
+    width: 52%;
+    transition:
+      opacity    0.4s ease,
+      visibility 0.4s ease,
+      left       0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0s;
+  }
+
+  .card:hover .content {
+    left: 1.75rem;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0.78s;
+  }
+}
+
+/* ---- Tablet adjustments ---- */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .card {
+    width: min(300px, 44vw);
+    height: 400px;
+  }
+
+  .productImg {
+    height: 300px;
+  }
+
+  .contentTitle {
+    font-size: 1.5rem;
+  }
+}
