@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { useLang } from '@/context/LanguageContext'
 import styles from './FleetSection.module.css'
@@ -16,6 +16,109 @@ const FLEET_ASSETS = [
   { logoSrc: '/images/boat-1.png', productSrc: '/images/boat-1.png' },
   { logoSrc: '/images/boat-2.png', productSrc: '/images/boat-2.png' },
 ]
+
+// ── Mobile carousel — editorial horizontal snap, touch-native ───────────────
+
+interface MobileCarouselProps {
+  readonly boats: Array<{ logoSrc: string; productSrc: string; name: string; desc: string }>
+  readonly cta: string
+  readonly visible: boolean
+}
+
+function MobileCarousel({ boats, cta, visible }: MobileCarouselProps) {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const slideRefs = useRef<(HTMLDivElement | null)[]>([])
+
+  useEffect(() => {
+    const track = trackRef.current
+    const slides = slideRefs.current.filter(Boolean) as HTMLDivElement[]
+    if (!track || !slides.length) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = slideRefs.current.indexOf(entry.target as HTMLDivElement)
+            if (idx !== -1) setActiveIndex(idx)
+          }
+        })
+      },
+      { root: track, threshold: 0.55 }
+    )
+
+    slides.forEach((s) => observer.observe(s))
+    return () => observer.disconnect()
+  }, [])
+
+  const scrollToSlide = (index: number) => {
+    slideRefs.current[index]?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'start',
+    })
+  }
+
+  return (
+    <motion.div
+      className={styles.carousel}
+      initial={{ opacity: 0, y: 28 }}
+      animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+      transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div className={styles.carouselTrack} ref={trackRef}>
+        {boats.map((boat, i) => (
+          <div
+            key={boat.productSrc}
+            ref={(el) => { slideRefs.current[i] = el }}
+            className={`${styles.slide} ${i === activeIndex ? styles.slideActive : ''}`}
+          >
+            {/* Index counter */}
+            <div className={styles.slideIndex}>
+              <span className={styles.slideNum}>0{i + 1}</span>
+              <span className={styles.slideRule} />
+              <span className={styles.slideTotal}>0{boats.length}</span>
+            </div>
+
+            {/* Hero boat image */}
+            <div className={styles.slideImageWrap}>
+              <Image
+                src={boat.productSrc}
+                alt={`${boat.name} — luxury boat Lake Como`}
+                width={360}
+                height={280}
+                className={styles.slideImage}
+                priority={i === 0}
+              />
+            </div>
+
+            {/* Editorial content */}
+            <div className={styles.slideContent}>
+              <div className={styles.slideGoldBar} />
+              <h2 className={styles.slideName}>{boat.name}</h2>
+              <p className={styles.slideDesc}>{boat.desc}</p>
+              <a href="#contact" className={styles.slideCta}>{cta}</a>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Pagination dots */}
+      <div className={styles.carouselDots}>
+        {boats.map((_, i) => (
+          <button
+            key={i}
+            className={`${styles.dot} ${i === activeIndex ? styles.dotActive : ''}`}
+            onClick={() => scrollToSlide(i)}
+            aria-label={`Go to slide ${i + 1}`}
+          />
+        ))}
+      </div>
+    </motion.div>
+  )
+}
+
+// ── Desktop card ─────────────────────────────────────────────────────────────
 
 interface FleetCardProps {
   readonly logoSrc: string
@@ -95,20 +198,35 @@ export default function FleetSection() {
         <h2 className={styles.title}>{f.title}</h2>
       </motion.div>
 
-      {/* Fleet cards */}
-      <div ref={gridRef} className={styles.grid}>
-        {FLEET_ASSETS.map((asset, i) => (
-          <FleetCard
-            key={asset.logoSrc}
-            logoSrc={asset.logoSrc}
-            productSrc={asset.productSrc}
-            name={f.boats[i].name}
-            desc={f.boats[i].desc}
-            cta={f.all_packages}
-            index={i}
-            visible={isGridVisible}
-          />
-        ))}
+      {/* Sentinel: always in DOM, drives InView for both mobile and desktop */}
+      <div ref={gridRef} className={styles.fleetSentinel}>
+        {/* Mobile/tablet: editorial snap carousel */}
+        <MobileCarousel
+          boats={FLEET_ASSETS.map((a, i) => ({
+            logoSrc: a.logoSrc,
+            productSrc: a.productSrc,
+            name: f.boats[i].name,
+            desc: f.boats[i].desc,
+          }))}
+          cta={f.all_packages}
+          visible={isGridVisible}
+        />
+
+        {/* Desktop: cinematic hover cards */}
+        <div className={styles.grid}>
+          {FLEET_ASSETS.map((asset, i) => (
+            <FleetCard
+              key={asset.logoSrc}
+              logoSrc={asset.logoSrc}
+              productSrc={asset.productSrc}
+              name={f.boats[i].name}
+              desc={f.boats[i].desc}
+              cta={f.all_packages}
+              index={i}
+              visible={isGridVisible}
+            />
+          ))}
+        </div>
       </div>
     </section>
   )

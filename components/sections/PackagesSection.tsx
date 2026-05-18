@@ -38,17 +38,20 @@ const CARD_GRADIENTS = [
   'linear-gradient(160deg, #1C0F0A 0%, #3D2010 50%, #1C0F0A 100%)',
 ]
 
-function PackageCard({ pkg, index, labels }: { pkg: PackageItem; index: number; labels: CardLabels }) {
+function PackageCard({ pkg, index, labels, compact = false }: { pkg: PackageItem; index: number; labels: CardLabels; compact?: boolean }) {
   const isPremium = pkg.type === 'premium'
   const router = useRouter()
 
   return (
     <div
-      className="relative flex-shrink-0 w-[320px] md:w-[360px] overflow-hidden rounded-2xl flex flex-col"
+      className={clsx(
+        'relative flex-shrink-0 overflow-hidden rounded-2xl flex flex-col',
+        compact ? 'w-[268px]' : 'w-[320px] md:w-[360px]'
+      )}
       style={{ background: CARD_GRADIENTS[index % CARD_GRADIENTS.length] }}
     >
       {/* Image placeholder */}
-      <div className="relative h-48 overflow-hidden flex-shrink-0">
+      <div className={clsx('relative overflow-hidden flex-shrink-0', compact ? 'h-36' : 'h-48')}>
         {/*
           📸 PLACEHOLDER: {pkg.image}
           Inserisci: /public/images/{pkg.image}
@@ -71,7 +74,7 @@ function PackageCard({ pkg, index, labels }: { pkg: PackageItem; index: number; 
       </div>
 
       {/* Content */}
-      <div className="p-6 flex flex-col flex-1">
+      <div className={clsx('flex flex-col flex-1', compact ? 'p-4' : 'p-6')}>
         <div className="flex items-center gap-2 mb-2.5">
           <svg className="w-3 h-3 text-gold/60 flex-shrink-0" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
             <circle cx="6" cy="6" r="5" />
@@ -228,7 +231,7 @@ export default function PackagesSection() {
   return (
     <section
       id="packages"
-      className="py-28 md:py-40 overflow-hidden"
+      className="py-28 md:py-40"
       style={{ background: 'linear-gradient(180deg, #FAFAF8 0%, #F5F0E8 100%)' }}
     >
       {/* Section header */}
@@ -250,9 +253,23 @@ export default function PackagesSection() {
         </p>
       </motion.div>
 
-      {/* ── Marquee ── */}
+      {/* ── Mobile: static touch-scroll carousel ── */}
       <div
-        className="relative overflow-hidden"
+        className="md:hidden overflow-x-auto"
+        style={{ WebkitOverflowScrolling: 'touch', scrollSnapType: 'x mandatory', scrollbarWidth: 'none' }}
+      >
+        <div className="flex gap-4 px-6 pb-6 pt-2" style={{ width: 'max-content' }}>
+          {packages.map((pkg, i) => (
+            <div key={pkg.id} style={{ scrollSnapAlign: 'start' }}>
+              <PackageCard pkg={pkg} index={i} labels={labels} compact />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Desktop: auto-scrolling marquee ── */}
+      <div
+        className="hidden md:block relative overflow-hidden"
         style={{ cursor: isDraggingUI ? 'grabbing' : 'grab' }}
         onMouseEnter={() => { setPaused(true); pausedRef.current = true }}
         onMouseLeave={() => { setPaused(false); pausedRef.current = false }}
@@ -295,12 +312,12 @@ export default function PackagesSection() {
         </div>
       </div>
 
-      {/* Pause hint */}
+      {/* Pause hint — desktop only */}
       <motion.p
         initial={{ opacity: 0 }}
         animate={isHeaderInView ? { opacity: 1 } : {}}
         transition={{ delay: 0.6, duration: 0.6 }}
-        className="text-center text-navy/30 text-[9px] tracking-widest uppercase mt-8"
+        className="hidden md:block text-center text-navy/30 text-[9px] tracking-widest uppercase mt-8"
         style={{ fontFamily: 'Jost, sans-serif' }}
       >
         {isDraggingUI ? '← Drag →' : paused ? '⏸ Paused' : '↔ Drag or hover to pause'}

@@ -132,9 +132,11 @@ export default function GlowMenu() {
               })}
             </ul>
 
-            {/* Right: language + mobile burger */}
+            {/* Right: language (desktop only) + mobile burger */}
             <div className="flex items-center gap-3">
-              <LanguageSwitcher onDark />
+              <div className="hidden lg:block">
+                <LanguageSwitcher onDark />
+              </div>
               <button
                 className="lg:hidden flex flex-col gap-1.5 p-2 cursor-pointer"
                 onClick={() => setMenuOpen((p) => !p)}

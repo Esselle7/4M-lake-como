@@ -467,8 +467,6 @@ export default function BookingForm() {
   }
   }
 
-  const isMobileDevice =
-    typeof window !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
   return (
     <section id="booking" ref={sectionRef} className="py-28 md:py-40 bg-white-warm">
@@ -958,8 +956,6 @@ export default function BookingForm() {
                     </span>
                   ) : step < 3 ? (
                     b.next
-                  ) : isMobileDevice ? (
-                    b.submit_mobile
                   ) : (
                     b.submit_desktop
                   )}

@@ -68,7 +68,6 @@ export default function HeroSection() {
         style={{ y: titleY, opacity: titleOpacity }}
         className="relative z-10 text-center px-6 max-w-5xl mx-auto will-change-transform"
       >
-ù
 
         {/* Main headline — each line staggers in */}
         <div className="overflow-hidden mb-6">

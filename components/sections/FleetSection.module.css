@@ -56,13 +56,15 @@
   margin: 0;
 }
 
-/* ---- Grid ---- */
-.grid {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
+/* ---- Fleet content sentinel — always in DOM, drives InView ---- */
+.fleetSentinel {
   width: 100%;
+}
+
+/* ---- Grid ---- */
+/* Hidden on touch/mobile — replaced by the carousel component */
+.grid {
+  display: none;
 }
 
 /* =============================================
@@ -194,8 +196,10 @@
 
   /* Grid: side-by-side, overflow visible so images can float outside cards */
   .grid {
+    display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
     gap: 2.5rem;
     overflow: visible;
   }
@@ -340,8 +344,8 @@
   }
 }
 
-/* ---- Tablet adjustments ---- */
-@media (min-width: 768px) and (max-width: 1024px) {
+/* ---- Tablet adjustments (hover-capable tablets only) ---- */
+@media (min-width: 768px) and (max-width: 1024px) and (hover: hover) {
   .card {
     width: min(300px, 44vw);
     height: 400px;
@@ -354,4 +358,230 @@
   .contentTitle {
     font-size: 1.5rem;
   }
+}
+
+/* =============================================
+   CAROUSEL — Mobile & Touch Tablets
+   Shown on all touch/hover:none devices.
+   Desktop grid is hidden; this takes over.
+   Design: luxury editorial horizontal snap
+   ============================================= */
+
+/* Hidden on pointer-capable desktops */
+@media (hover: hover) and (min-width: 768px) {
+  .carousel { display: none; }
+}
+
+.carousel {
+  width: 100%;
+  position: relative;
+}
+
+/* Negative-margin bleed lets the track span viewport edge-to-edge
+   while the section header retains its 1.5rem gutter */
+.carouselTrack {
+  display: flex;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  gap: 0.875rem;
+  padding: 0.5rem 1.5rem 2rem;
+  scroll-padding-left: 1.5rem;
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
+}
+
+.carouselTrack::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---- Slide ---- */
+.slide {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  width: 82vw;
+  max-width: 360px;
+  min-height: 500px;
+  border-radius: 20px;
+  background: linear-gradient(175deg, #0C1A2E 0%, #07101E 55%, #0A1628 100%);
+  border: 1px solid rgba(201, 169, 110, 0.18);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* GPU layer: only transform/opacity animate — no layout, no filter on pseudo */
+  transform: scale(0.96);
+  transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.42s ease,
+              box-shadow 0.42s ease;
+  will-change: transform;
+}
+
+.slideActive {
+  transform: scale(1);
+  border-color: rgba(201, 169, 110, 0.38);
+  box-shadow:
+    0 0 0 1px rgba(201, 169, 110, 0.12) inset,
+    0 20px 60px rgba(0, 0, 0, 0.45),
+    0 0 40px rgba(201, 169, 110, 0.06);
+}
+
+/* Decorative corner accent — pure CSS, no images */
+.slide::after {
+  content: '';
+  position: absolute;
+  top: 1.125rem;
+  right: 1.125rem;
+  width: 18px;
+  height: 18px;
+  border-top: 1.5px solid rgba(201, 169, 110, 0.55);
+  border-right: 1.5px solid rgba(201, 169, 110, 0.55);
+  pointer-events: none;
+}
+
+/* ---- Slide header: index counter ---- */
+.slideIndex {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.25rem 1.375rem 0;
+}
+
+.slideNum {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: #C9A96E;
+}
+
+.slideRule {
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: rgba(201, 169, 110, 0.35);
+}
+
+.slideTotal {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.625rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.28);
+}
+
+/* ---- Boat image ---- */
+.slideImageWrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1.5rem 1rem;
+  min-height: 240px;
+}
+
+.slideImage {
+  max-height: 230px;
+  width: auto !important;
+  height: auto !important;
+  max-width: 90% !important;
+  object-fit: contain !important;
+  /* Safe drop-shadow: only on a leaf element, not on an animated container */
+  filter: drop-shadow(0 14px 32px rgba(0, 0, 0, 0.55));
+}
+
+/* ---- Text content ---- */
+.slideContent {
+  padding: 1.375rem 1.375rem 1.75rem;
+  border-top: 1px solid rgba(201, 169, 110, 0.12);
+}
+
+.slideGoldBar {
+  width: 28px;
+  height: 1.5px;
+  background: linear-gradient(90deg, #C9A96E, rgba(201, 169, 110, 0.25));
+  margin-bottom: 0.875rem;
+}
+
+.slideName {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-size: 1.875rem;
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.5rem;
+}
+
+.slideDesc {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.65;
+  margin: 0 0 1.125rem;
+}
+
+.slideCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #C9A96E;
+  text-decoration: none;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid rgba(201, 169, 110, 0.28);
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.slideCta::after {
+  content: '→';
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.slideCta:active {
+  color: #E8D5A3;
+  border-color: rgba(201, 169, 110, 0.6);
+}
+
+.slideCta:active::after {
+  transform: translateX(3px);
+}
+
+/* ---- Pagination dots ---- */
+.carouselDots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.375rem;
+  padding-bottom: 0.5rem;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(201, 169, 110, 0.22);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  /* Width animates to pill shape on active — safe property */
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.35s ease,
+              border-radius 0.35s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dotActive {
+  width: 22px;
+  border-radius: 3px;
+  background: #C9A96E;
 }
