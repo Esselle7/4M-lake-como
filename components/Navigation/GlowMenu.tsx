@@ -53,7 +53,7 @@ export default function GlowMenu() {
           }}
           transition={{ duration: 0.4 }}
         >
-          <div className="flex items-center justify-between px-5 py-3.5">
+          <div className="relative flex items-center justify-between px-5 py-3.5">
 
             {/* Logo */}
 
@@ -77,6 +77,16 @@ export default function GlowMenu() {
                 </span>
               </div>
             </Link>
+
+            {/* Mobile center title — visible only on mobile (lg:hidden) */}
+            <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center leading-none lg:hidden pointer-events-none">
+              <span className="text-white/90 text-[9px] tracking-[0.2em] uppercase" style={{ fontFamily: 'Jost, sans-serif' }}>
+                Luxury Boats
+              </span>
+              <span className="text-gold/70 text-[7px] tracking-[0.18em] uppercase" style={{ fontFamily: 'Jost, sans-serif' }}>
+                Lake Como
+              </span>
+            </div>
 
             {/* Desktop 3-page nav — LumaBar glow effect */}
             <ul className="hidden lg:flex items-center gap-1" role="list">
@@ -206,13 +216,6 @@ export default function GlowMenu() {
                 <LanguageSwitcher onDark />
               </motion.div>
             </div>
-            <button
-              onClick={() => setMenuOpen(false)}
-              className="absolute top-6 right-6 text-white/50 text-3xl cursor-pointer"
-              aria-label="Close menu"
-            >
-              ×
-            </button>
           </motion.div>
         )}
       </AnimatePresence>

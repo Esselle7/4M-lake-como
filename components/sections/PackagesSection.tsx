@@ -45,19 +45,30 @@ function PackageCard({ pkg, index, labels, compact = false }: { pkg: PackageItem
   return (
     <div
       className={clsx(
-        'relative flex-shrink-0 overflow-hidden rounded-2xl flex flex-col',
-        compact ? 'w-[268px]' : 'w-[320px] md:w-[360px]'
+        'relative overflow-hidden rounded-2xl flex flex-col',
+        /* compact: width controlled by parent wrapper; desktop: fixed widths */
+        compact ? 'w-full h-full' : 'flex-shrink-0 w-[320px] md:w-[360px]'
       )}
       style={{ background: CARD_GRADIENTS[index % CARD_GRADIENTS.length] }}
     >
-      {/* Image placeholder */}
-      <div className={clsx('relative overflow-hidden flex-shrink-0', compact ? 'h-36' : 'h-48')}>
-        {/*
-          📸 PLACEHOLDER: {pkg.image}
-          Inserisci: /public/images/{pkg.image}
-        */}
+      {/* Decorative corner — luxury editorial mark */}
+      {compact && (
+        <span
+          aria-hidden="true"
+          style={{
+            position: 'absolute', top: '1rem', right: '1rem',
+            width: 16, height: 16,
+            borderTop: '1.5px solid rgba(201,169,110,0.5)',
+            borderRight: '1.5px solid rgba(201,169,110,0.5)',
+            pointerEvents: 'none', zIndex: 2,
+          }}
+        />
+      )}
+
+      {/* Image area */}
+      <div className={clsx('relative overflow-hidden flex-shrink-0', compact ? 'h-32' : 'h-48')}>
         <div className="absolute inset-0 bg-black/20" />
-        <div className="absolute inset-0 flex items-end p-4">
+        <div className="absolute inset-0 flex items-end p-3">
           <span
             className={clsx(
               'px-2.5 py-1 rounded-full text-[9px] tracking-widest uppercase',
@@ -70,58 +81,85 @@ function PackageCard({ pkg, index, labels, compact = false }: { pkg: PackageItem
             {isPremium ? labels.premium_label : labels.standard_label}
           </span>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
       </div>
 
       {/* Content */}
       <div className={clsx('flex flex-col flex-1', compact ? 'p-4' : 'p-6')}>
-        <div className="flex items-center gap-2 mb-2.5">
-          <svg className="w-3 h-3 text-gold/60 flex-shrink-0" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
+        {/* Duration */}
+        <div className="flex items-center gap-2 mb-2">
+          <svg className="w-3 h-3 text-gold/50 flex-shrink-0" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
             <circle cx="6" cy="6" r="5" />
             <path d="M6 3v3.5l2 1.5" strokeLinecap="round" />
           </svg>
-          <span className="text-gold/60 text-[10px] tracking-widest uppercase" style={{ fontFamily: 'Jost, sans-serif' }}>
+          <span
+            className="text-gold/50 uppercase"
+            style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.5625rem', letterSpacing: '0.2em' }}
+          >
             {labels.duration_label} · {pkg.duration_label}
           </span>
         </div>
 
+        {/* Gold bar — editorial accent */}
+        {compact && (
+          <div style={{ width: 24, height: 1.5, background: 'linear-gradient(90deg,#C9A96E,rgba(201,169,110,0.2))', marginBottom: '0.5rem' }} />
+        )}
+
+        {/* Name */}
         <h3
-          className="text-white mb-2.5"
-          style={{ fontFamily: 'Bodoni Moda, serif', fontSize: '1.375rem', fontWeight: 400, fontStyle: 'italic' }}
+          className="text-white"
+          style={{
+            fontFamily: 'Bodoni Moda, serif',
+            fontSize: compact ? '1.125rem' : '1.375rem',
+            fontWeight: 400,
+            fontStyle: 'italic',
+            lineHeight: 1.15,
+            marginBottom: compact ? '0.375rem' : '0.625rem',
+          }}
         >
           {pkg.name}
         </h3>
 
+        {/* Description */}
         <p
-          className="text-white/50 text-sm leading-relaxed mb-4 flex-1"
-          style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}
+          className="flex-1"
+          style={{
+            fontFamily: 'Jost, sans-serif',
+            fontWeight: 300,
+            fontSize: compact ? '0.75rem' : '0.875rem',
+            color: 'rgba(255,255,255,0.48)',
+            lineHeight: 1.6,
+            marginBottom: compact ? '0.75rem' : '1rem',
+          }}
         >
           {pkg.desc}
         </p>
 
-        <div className="mb-5 pb-4 border-b border-white/10">
-          <p className="text-[9px] tracking-widest uppercase text-white/30 mb-1" style={{ fontFamily: 'Jost, sans-serif' }}>
+        {/* Includes */}
+        <div style={{ marginBottom: compact ? '0.75rem' : '1.25rem', paddingBottom: compact ? '0.75rem' : '1rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+          <p style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.5625rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)', marginBottom: 3 }}>
             {labels.includes_label}
           </p>
-          <p className="text-white/55 text-xs" style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}>
+          <p style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300, fontSize: '0.6875rem', color: 'rgba(255,255,255,0.5)' }}>
             {pkg.includes}
           </p>
         </div>
 
+        {/* Price + CTA */}
         <div className="flex items-end justify-between gap-3">
           <div>
-            <span className="text-white/30 text-[10px]" style={{ fontFamily: 'Jost, sans-serif' }}>
+            <span style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.625rem', color: 'rgba(255,255,255,0.28)' }}>
               {labels.from}
             </span>
-            <div className="flex items-baseline gap-0.5">
+            <div>
               <span
                 className="text-gold"
-                style={{ fontFamily: 'Bodoni Moda, serif', fontSize: '1.75rem', fontWeight: 400 }}
+                style={{ fontFamily: 'Bodoni Moda, serif', fontSize: compact ? '1.375rem' : '1.75rem', fontWeight: 400 }}
               >
                 {labels.currency}{pkg.price}
               </span>
             </div>
-            <span className="text-white/25 text-[9px] uppercase tracking-wide" style={{ fontFamily: 'Jost, sans-serif' }}>
+            <span style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.5625rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.22)' }}>
               {labels.per_boat}
             </span>
           </div>
@@ -135,6 +173,119 @@ function PackageCard({ pkg, index, labels, compact = false }: { pkg: PackageItem
         </div>
       </div>
     </div>
+  )
+}
+
+// ── Mobile snap carousel — centered cards with edge breathing room ────────────
+
+function MobilePackagesCarousel({
+  packages,
+  labels,
+  visible,
+}: {
+  packages: PackageItem[]
+  labels: CardLabels
+  visible: boolean
+}) {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const slideRefs = useRef<(HTMLDivElement | null)[]>([])
+
+  useEffect(() => {
+    const track = trackRef.current
+    const slides = slideRefs.current.filter(Boolean) as HTMLDivElement[]
+    if (!track || !slides.length) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = slideRefs.current.indexOf(entry.target as HTMLDivElement)
+            if (idx !== -1) setActiveIndex(idx)
+          }
+        })
+      },
+      { root: track, threshold: 0.6 }
+    )
+    slides.forEach((s) => observer.observe(s))
+    return () => observer.disconnect()
+  }, [])
+
+  const scrollToSlide = (index: number) => {
+    slideRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+  }
+
+  /* 78vw card with 11vw padding on each side = centered first/last card */
+  const SIDE_PAD = 'calc((100vw - 78vw) / 2)'
+
+  return (
+    <motion.div
+      className="md:hidden"
+      initial={{ opacity: 0, y: 20 }}
+      animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {/* Scroll track */}
+      <div
+        ref={trackRef}
+        style={{
+          display: 'flex',
+          overflowX: 'scroll',
+          scrollSnapType: 'x mandatory',
+          WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'],
+          scrollbarWidth: 'none' as React.CSSProperties['scrollbarWidth'],
+          gap: '0.875rem',
+          paddingLeft: SIDE_PAD,
+          paddingRight: SIDE_PAD,
+          scrollPaddingLeft: SIDE_PAD,
+          paddingTop: '0.5rem',
+          paddingBottom: '1.75rem',
+        }}
+      >
+        {packages.map((pkg, i) => (
+          <div
+            key={pkg.id}
+            ref={(el) => { slideRefs.current[i] = el }}
+            style={{
+              flexShrink: 0,
+              width: '78vw',
+              scrollSnapAlign: 'center',
+              transform: i === activeIndex ? 'scale(1)' : 'scale(0.955)',
+              transition: 'transform 0.42s cubic-bezier(0.4,0,0.2,1), box-shadow 0.42s ease',
+              boxShadow: i === activeIndex
+                ? '0 20px 60px rgba(0,0,0,0.38), 0 0 0 1px rgba(201,169,110,0.15)'
+                : '0 8px 24px rgba(0,0,0,0.2)',
+              borderRadius: '1rem',
+              willChange: 'transform',
+            }}
+          >
+            <PackageCard pkg={pkg} index={i} labels={labels} compact />
+          </div>
+        ))}
+      </div>
+
+      {/* Pagination dots */}
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', paddingBottom: '0.5rem' }}>
+        {packages.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => scrollToSlide(i)}
+            aria-label={`Vai alla card ${i + 1}`}
+            style={{
+              width: i === activeIndex ? 22 : 6,
+              height: 6,
+              borderRadius: i === activeIndex ? 3 : '50%',
+              background: i === activeIndex ? '#C9A96E' : 'rgba(201,169,110,0.22)',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0,
+              transition: 'width 0.35s cubic-bezier(0.4,0,0.2,1), background 0.35s ease, border-radius 0.35s ease',
+              WebkitTapHighlightColor: 'transparent',
+            }}
+          />
+        ))}
+      </div>
+    </motion.div>
   )
 }
 
@@ -253,19 +404,12 @@ export default function PackagesSection() {
         </p>
       </motion.div>
 
-      {/* ── Mobile: static touch-scroll carousel ── */}
-      <div
-        className="md:hidden overflow-x-auto"
-        style={{ WebkitOverflowScrolling: 'touch', scrollSnapType: 'x mandatory', scrollbarWidth: 'none' }}
-      >
-        <div className="flex gap-4 px-6 pb-6 pt-2" style={{ width: 'max-content' }}>
-          {packages.map((pkg, i) => (
-            <div key={pkg.id} style={{ scrollSnapAlign: 'start' }}>
-              <PackageCard pkg={pkg} index={i} labels={labels} compact />
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* ── Mobile: centered snap carousel ── */}
+      <MobilePackagesCarousel
+        packages={packages}
+        labels={labels}
+        visible={isHeaderInView}
+      />
 
       {/* ── Desktop: auto-scrolling marquee ── */}
       <div
