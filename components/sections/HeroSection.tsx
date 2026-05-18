@@ -68,23 +68,7 @@ export default function HeroSection() {
         style={{ y: titleY, opacity: titleOpacity }}
         className="relative z-10 text-center px-6 max-w-5xl mx-auto will-change-transform"
       >
-        {/* Eyebrow */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="eyebrow text-gold/80 mb-6"
-        >
-          {h.eyebrow}
-        </motion.p>
-
-        {/* Gold divider line */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.8, delay: 0.45 }}
-          className="gold-line mx-auto mb-8"
-        />
+ù
 
         {/* Main headline — each line staggers in */}
         <div className="overflow-hidden mb-6">

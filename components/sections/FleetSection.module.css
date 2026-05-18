@@ -200,13 +200,21 @@
     overflow: visible;
   }
 
-  /* Card: starts collapsed, expands on hover */
+  /* Card: starts collapsed, expands on hover.
+     translateZ(0) + will-change promote a dedicated GPU layer on Safari,
+     preventing compositing bleed onto adjacent elements. */
   .card {
     width: 320px;
     height: 420px;
     transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     transition-delay: 0.5s;
     overflow: visible;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: width;
+    isolation: isolate;
   }
 
   .card:hover {
@@ -215,24 +223,31 @@
     z-index: 10;
   }
 
-  /* Circle: circular glow → full card rect */
+  /* Circle: circular glow → full card rect.
+     REMOVED filter: drop-shadow — Safari cannot composite filters on
+     pseudo-elements that simultaneously animate width/height/border-radius,
+     causing the golden ghost artifacts. box-shadow is CPU-composited and
+     does not trigger the same layer invalidation bug. */
   .circle::before {
     width: 300px;
     height: 300px;
     border-radius: 50%;
     background: #0D1528;
     border: 5px solid var(--gold);
-    box-shadow: none;
+    box-shadow:
+      0 0 18px rgba(201, 169, 110, 0.55),
+      0 0 70px rgba(10, 22, 40, 0.9);
     transition:
-      width     0.55s cubic-bezier(0.4, 0, 0.2, 1),
-      height    0.55s cubic-bezier(0.4, 0, 0.2, 1),
+      width         0.55s cubic-bezier(0.4, 0, 0.2, 1),
+      height        0.55s cubic-bezier(0.4, 0, 0.2, 1),
       border-radius 0.55s cubic-bezier(0.4, 0, 0.2, 1),
       background    0.5s  ease,
-      border        0.5s  ease;
-    transition-delay: 0.65s, 0.65s, 0.65s, 0.85s, 0.85s;
-    filter:
-      drop-shadow(0 0 18px rgba(201, 169, 110, 0.55))
-      drop-shadow(0 0 70px rgba(10, 22, 40, 0.9));
+      border        0.5s  ease,
+      box-shadow    0.5s  ease;
+    transition-delay: 0.65s, 0.65s, 0.65s, 0.85s, 0.85s, 0.85s;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: width, height, border-radius;
   }
 
   .card:hover .circle::before {
@@ -241,10 +256,10 @@
     border-radius: 20px;
     background: #0A1628;
     border: 1px solid rgba(201, 169, 110, 0.25);
+    box-shadow:
+      0 0 8px rgba(201, 169, 110, 0.12),
+      0 0 60px rgba(10, 22, 40, 1);
     transition-delay: 0s;
-    filter:
-      drop-shadow(0 0 8px rgba(201, 169, 110, 0.12))
-      drop-shadow(0 0 60px rgba(10, 22, 40, 1));
   }
 
   /* Logo: centered in circle, fades out on hover */
@@ -257,6 +272,7 @@
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
     transition-delay: 0.5s;
     filter: drop-shadow(0 0 10px rgba(201, 169, 110, 0.25));
+    will-change: transform, opacity;
   }
 
   .card:hover .logo {
@@ -265,60 +281,59 @@
     transition-delay: 0s;
   }
 
-  /* Product image: hidden → floats to top-right */
- .productImg {
-  top: 50%;
-  left: 50%;
+  /* Product image: position is fixed; only transform animates (GPU-native).
+     Previously top/left were animated — those force layout recalculation and
+     leave stale GPU layers on Safari. Height stays at hover size permanently:
+     position:absolute removes it from flow, so there is no layout impact.
+     scale(0) on collapsed state achieves the same visual as the old approach. */
+  .productImg {
+    top: 13%;
+    left: 72%;
 
-  transform: translate(-50%, -50%) scale(0) rotate(-32deg);
+    transform: translate(-50%, -50%) scale(0) rotate(-32deg);
+    -webkit-transform: translate(-50%, -50%) scale(0) rotate(-32deg);
 
-  height: var(--product-h-default, 280px) !important;
-  width: auto !important;
+    height: var(--product-h-hover, 510px) !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: contain;
 
-  max-width: none !important;
-  max-height: none !important;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1), filter 0.55s ease;
+    transition-delay: 0s;
+    will-change: transform;
+  }
 
-  object-fit: contain;
-
-  transition:
-    top       0.55s cubic-bezier(0.4, 0, 0.2, 1),
-    left      0.55s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.55s cubic-bezier(0.4, 0, 0.2, 1),
-    height    0.55s cubic-bezier(0.4, 0, 0.2, 1),
-    filter    0.55s ease;
-
-  transition-delay: 0s;
-}
-
-.card:hover .productImg {
-  top: 13%;
-  left: 72%;
-
-  height: var(--product-h-hover, 510px) !important;
-  width: auto !important;
-
-  transform: translate(-50%, -50%) scale(1) rotate(11deg);
+  .card:hover .productImg {
+    height: var(--product-h-hover, 510px) !important;
+    width: auto !important;
+    transform: translate(-50%, -50%) scale(1) rotate(11deg);
+    -webkit-transform: translate(-50%, -50%) scale(1) rotate(11deg);
     transition-delay: 0.75s;
     filter:
       drop-shadow(0 24px 48px rgba(0, 0, 0, 0.75))
       drop-shadow(0 0 24px rgba(201, 169, 110, 0.12));
   }
 
-  /* Content: hidden → slides in from left */
+  /* Content: position fixed at final location; translateX handles the slide-in.
+     Previously left was animated — layout-triggered, not GPU-compositable.
+     translateX(-120%) pushes content off the left edge without touching layout. */
   .content {
-    left: -28%;
+    left: 1.75rem;
     opacity: 0;
     visibility: hidden;
     width: 52%;
+    transform: translateX(-120%);
     transition:
       opacity    0.4s ease,
       visibility 0.4s ease,
-      left       0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      transform  0.45s cubic-bezier(0.4, 0, 0.2, 1);
     transition-delay: 0s;
+    will-change: transform, opacity;
   }
 
   .card:hover .content {
-    left: 1.75rem;
+    transform: translateX(0);
     opacity: 1;
     visibility: visible;
     transition-delay: 0.78s;
