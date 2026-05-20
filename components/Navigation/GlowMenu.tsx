@@ -61,9 +61,11 @@ export default function GlowMenu() {
               <div className="relative w-[180x] h-[60px] -mr-3">
                 <Image
                 src="/images/logo.png"
-                alt="4M Luxury Boats"
+                alt="4M Luxury Boats — Home"
                 width={130}
                 height={52}
+                sizes="130px"
+                quality={85}
                 priority
                 className="h-[50px] w-auto object-contain brightness-0 invert opacity-90 hover:opacity-100 transition-opacity duration-200"
               />
@@ -181,6 +183,9 @@ export default function GlowMenu() {
             transition={{ duration: 0.2, ease: 'easeOut' }}
             className="fixed inset-0 z-40 lg:hidden flex flex-col"
             style={{ background: 'rgba(10, 22, 40, 0.97)', backdropFilter: 'blur(24px)' }}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu di navigazione"
           >
             <div className="flex flex-col items-center justify-center flex-1 gap-8">
               {NAV_PAGES.map((page, i) => {

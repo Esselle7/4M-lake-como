@@ -480,17 +480,17 @@ export default function BookingForm() {
         >
           <p className="eyebrow text-gold mb-4">{b.eyebrow}</p>
           <div className="gold-line mx-auto mb-6" />
-          <h2 
-            className="text-navy mb-6 text-3xl md:text-4xl lg:text-5xl" 
-            style={{ 
-              fontFamily: 'Bodoni Moda, serif', 
-              fontWeight: 400, 
+          <h1
+            className="text-navy mb-6 text-3xl md:text-4xl lg:text-5xl"
+            style={{
+              fontFamily: 'Bodoni Moda, serif',
+              fontWeight: 400,
               fontStyle: 'italic',
-              lineHeight: 1.2 
+              lineHeight: 1.2
             }}
           >
             {b.title}
-          </h2>
+          </h1>
           <p className="text-navy/45 text-base" style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}>
             {b.subtitle}
           </p>
@@ -634,10 +634,12 @@ export default function BookingForm() {
               >
                 <div className="relative h-24 overflow-hidden">
                   <Image
-                    src={`/images/${mode === 'private' ? 'private-tour.png' : 'shared-tour.png'}`}
+                    src={`/images/${mode === 'private' ? 'private-tour.webp' : 'shared-tour.webp'}`}
                     alt={mode === 'private' ? b.private_title : b.shared_title}
                     fill
                     sizes="(max-width: 640px) 100vw, 33vw"
+                    quality={70}
+                    loading="lazy"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-navy/15" />
@@ -692,7 +694,7 @@ export default function BookingForm() {
                             {/* Boat image */}
                             <div className="relative h-48 overflow-hidden">
                               <Image
-                                src={`/images/${boatId}.png`}
+                                src={`/images/${boatId}.webp`}
                                 alt={boat.name}
                                 fill
                                 sizes="(max-width: 640px) 100vw, 50vw"

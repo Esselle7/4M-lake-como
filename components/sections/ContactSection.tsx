@@ -21,10 +21,13 @@ export default function ContactSection() {
   const c = t.contact
   const waNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '39XXXXXXXXXX'
 
-  const infoItems = [
-    { label: c.address_label, value: c.address },
-    { label: c.email_label,   value: c.email   },
-    { label: c.hours_label,   value: c.hours   },
+  const MAPS_URL = 'https://maps.google.com/?q=Lungo+Lario+Trieste,+Como+22100+Italy'
+
+  type InfoItem = { label: string; value: string; href?: string; rel?: string; target?: string }
+  const infoItems: InfoItem[] = [
+    { label: c.address_label, value: c.address, href: MAPS_URL, rel: 'noopener noreferrer', target: '_blank' },
+    { label: c.email_label,   value: c.email,   href: `mailto:${c.email}` },
+    { label: c.hours_label,   value: c.hours },
   ]
 
   const LOGO_CONFIG = {
@@ -58,12 +61,13 @@ export default function ContactSection() {
         
         <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-0">
           <div className={`relative transition-all duration-300 ${LOGO_CONFIG.hoverScale}`}>
-              <Image 
+              <Image
                 src={LOGO_CONFIG.src}
-                alt="4M Luxury Boats"
+                alt="4M Luxury Boats — Tour privati Lago di Como"
                 width={150}
                 height={60}
-                priority
+                sizes="150px"
+                quality={85}
                 className={`${LOGO_CONFIG.height} w-auto object-contain brightness-0 invert ${LOGO_CONFIG.opacity}`}
               />
             </div>
@@ -118,12 +122,24 @@ export default function ContactSection() {
                 >
                   {item.label}
                 </p>
-                <p
-                  className="text-white/65 text-xs leading-snug"
-                  style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}
-                >
-                  {item.value}
-                </p>
+                {item.href ? (
+                  <a
+                    href={item.href}
+                    target={item.target}
+                    rel={item.rel}
+                    className="text-white/65 text-xs leading-snug hover:text-white/90 transition-colors duration-200 underline-offset-2 hover:underline"
+                    style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}
+                  >
+                    {item.value}
+                  </a>
+                ) : (
+                  <p
+                    className="text-white/65 text-xs leading-snug"
+                    style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}
+                  >
+                    {item.value}
+                  </p>
+                )}
               </div>
             ))}
           </div>

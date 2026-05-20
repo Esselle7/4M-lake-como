@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "upload-r2": "node --env-file=.env.local scripts/upload-r2.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -19,13 +20,16 @@
     "resend": "^6.12.3"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.1050.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10",
     "eslint": "^9",
     "eslint-config-next": "^15.1.0",
+    "mime-types": "^3.0.2",
     "postcss": "^8",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

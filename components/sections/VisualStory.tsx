@@ -52,10 +52,12 @@ function StoryPanel({ section, index }: { section: StorySection; index: number }
             {/* Sfondo con Immagine Next.js Dinamica */}
             <div className="absolute inset-0">
               <Image
-                src={`/images/${section.image}`} // Prende dinamicamente 'story-1.jpg', 'story-2.jpg', ecc.
+                src={`/images/${section.image}`}
                 alt={section.title}
                 fill
                 priority={index === 0}
+                sizes="100vw"
+                quality={75}
                 className="object-cover"
               />
             </div>

@@ -37,10 +37,13 @@ export default function HeroSection() {
         {/* Sfondo con Immagine Next.js */}
         <div className="absolute inset-0 scale-[1.15]">
           <Image
-            src="/images/hero-bg.jpg" // Next.js punta automaticamente alla cartella public
-            alt="Lago di Como"
+            src="/images/hero-bg.webp"
+            alt="Tour privato in barca sul Lago di Como — 4M Luxury Boats"
             fill
-            priority // Carica l'immagine immediatamente essendo nell'hero
+            priority
+            sizes="100vw"
+            quality={80}
+            fetchPriority="high"
             className="object-cover"
           />
         </div>
@@ -71,9 +74,12 @@ export default function HeroSection() {
 
         {/* Main headline — each line staggers in */}
         <div className="overflow-hidden mb-6">
+          {/* H1 semantico per SEO/a11y — una sola occorrenza per pagina */}
+          <h1 className="sr-only">{[h.headline_1, h.headline_2, h.headline_3].join(' ')}</h1>
           {[h.headline_1, h.headline_2, h.headline_3].map((line, i) => (
-            <motion.h1
+            <motion.div
               key={i}
+              aria-hidden="true"
               initial={{ y: '120%', opacity: 0 }}
               animate={{ y: '0%', opacity: 1 }}
               transition={{ duration: 0.9, delay: 0.5 + i * 0.12, ease: [0.22, 1, 0.36, 1] }}
@@ -81,7 +87,7 @@ export default function HeroSection() {
               style={{ lineHeight: i === 1 ? 1.05 : 1.0 }}
             >
               {i === 1 ? <em>{line}</em> : line}
-            </motion.h1>
+            </motion.div>
           ))}
         </div>
 

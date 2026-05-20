@@ -13,8 +13,8 @@ const PRODUCT_IMG_H_HOVER   = 200  // px — desktop expanded (on hover)
 // ────────────────────────────────────────────────────────────────────────────
 
 const FLEET_ASSETS = [
-  { logoSrc: '/images/boat-1.png', productSrc: '/images/boat-1.png' },
-  { logoSrc: '/images/boat-2.png', productSrc: '/images/boat-2.png' },
+  { logoSrc: '/images/boat-1.webp', productSrc: '/images/boat-1.webp' },
+  { logoSrc: '/images/boat-2.webp', productSrc: '/images/boat-2.webp' },
 ]
 
 // ── Mobile carousel — editorial horizontal snap, touch-native ───────────────
@@ -84,9 +84,11 @@ function MobileCarousel({ boats, cta, visible }: MobileCarouselProps) {
             <div className={styles.slideImageWrap}>
               <Image
                 src={boat.productSrc}
-                alt={`${boat.name} — luxury boat Lake Como`}
+                alt={`${boat.name} — barca di lusso flotta 4M Lago di Como`}
                 width={360}
                 height={280}
+                sizes="(max-width: 768px) 78vw, 360px"
+                quality={75}
                 className={styles.slideImage}
                 priority={i === 0}
               />
@@ -95,7 +97,7 @@ function MobileCarousel({ boats, cta, visible }: MobileCarouselProps) {
             {/* Editorial content */}
             <div className={styles.slideContent}>
               <div className={styles.slideGoldBar} />
-              <h2 className={styles.slideName}>{boat.name}</h2>
+              <h3 className={styles.slideName}>{boat.name}</h3>
               <p className={styles.slideDesc}>{boat.desc}</p>
               <a href="#contact" className={styles.slideCta}>{cta}</a>
             </div>
@@ -147,9 +149,11 @@ function FleetCard({ logoSrc, productSrc, name, desc, cta, index, visible }: Fle
       <div className={styles.circle}>
         <Image
           src={logoSrc}
-          alt={name}
+          alt={`Logo ${name}`}
           width={200}
           height={200}
+          sizes="200px"
+          quality={80}
           className={styles.logo}
           priority={index === 0}
         />
@@ -158,16 +162,18 @@ function FleetCard({ logoSrc, productSrc, name, desc, cta, index, visible }: Fle
       {/* Boat / product image — floats on hover */}
       <Image
         src={productSrc}
-        alt={`${name} — Luxury Lake Como boat`}
+        alt={`${name} — Barca di lusso 4M sul Lago di Como`}
         width={400}
         height={600}
+        sizes="(max-width: 768px) 50vw, 400px"
+        quality={75}
         className={styles.productImg}
         priority={index === 0}
       />
 
       {/* Text content */}
       <div className={styles.content}>
-        <h2 className={styles.contentTitle}>{name}</h2>
+        <h3 className={styles.contentTitle}>{name}</h3>
         <p className={styles.contentDesc}>{desc}</p>
       </div>
     </motion.div>

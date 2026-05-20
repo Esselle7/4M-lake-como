@@ -10,7 +10,7 @@ export default function StoriaPage() {
   const v = t.visual
 
   return (
-    <main>
+    <main id="main-content">
       <VisualStory />
 
       {/* Bottom CTA */}
