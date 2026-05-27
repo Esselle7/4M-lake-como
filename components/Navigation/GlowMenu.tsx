@@ -12,7 +12,7 @@ import clsx from 'clsx'
 const NAV_PAGES = [
   { href: '/', labelKey: 'home' as const },
   { href: '/booking', labelKey: 'booking' as const },
-  { href: '/storia', labelKey: 'visual_story' as const },
+  { href: '/story', labelKey: 'visual_story' as const },
 ]
 
 export default function GlowMenu() {
