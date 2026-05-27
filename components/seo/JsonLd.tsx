@@ -11,12 +11,12 @@ const DEPARTURE_POSTAL = '22100'
 const DEPARTURE_COUNTRY = 'IT'
 
 const PACKAGES = [
-  { id: 'golden-hour',  name: 'Golden Hour',        price: 250, duration: 'PT1H',   desc: 'Tour privato in barca sul Lago di Como con Prosecco al tramonto. 1 ora.' },
-  { id: 'breakfast',    name: 'Breakfast on Board',  price: 300, duration: 'PT1H',   desc: 'Colazione a bordo sul Lago di Como. Navigazione mattutina 8:30-10:30.' },
-  { id: 'aperitivo',    name: 'Aperitivo Tour',      price: 350, duration: 'PT1H30M',desc: 'Aperitivo italiano al tramonto in barca privata sul Lago di Como.' },
-  { id: 'sushi',        name: 'Sushi Experience',    price: 380, duration: 'PT1H30M',desc: 'Sushi box premium e drink in crociera panoramica sul Lago di Como.' },
-  { id: 'como-luxury',  name: 'Como Luxury',         price: 450, duration: 'PT2H',   desc: 'Tour di 2 ore: Villa Pliniana, Villa Oleandra (George Clooney), Nesso.' },
-  { id: 'dolce-vita',   name: 'La Dolce Vita',       price: 800, duration: 'PT4H',   desc: 'Grand tour 4 ore: Isola Comacina e Varenna — esperienza completa Lago di Como.' },
+  { id: 'golden-hour',  name: 'Golden Hour',        price: 250, duration: 'PT1H',   desc: 'Private boat tour on Lake Como with Prosecco at sunset. 1 hour.' },
+  { id: 'breakfast',    name: 'Breakfast on Board',  price: 300, duration: 'PT1H',   desc: 'Breakfast on board on Lake Como. Morning cruise 8:30–10:30.' },
+  { id: 'aperitivo',    name: 'Aperitivo Tour',      price: 350, duration: 'PT1H30M',desc: 'Italian aperitivo at sunset on a private boat on Lake Como.' },
+  { id: 'sushi',        name: 'Sushi Experience',    price: 380, duration: 'PT1H30M',desc: 'Premium sushi box and drinks on a panoramic cruise on Lake Como.' },
+  { id: 'como-luxury',  name: 'Como Luxury',         price: 450, duration: 'PT2H',   desc: '2-hour tour: Villa Pliniana, Villa Oleandra (George Clooney), Nesso.' },
+  { id: 'dolce-vita',   name: 'La Dolce Vita',       price: 800, duration: 'PT4H',   desc: 'Grand 4-hour tour: Isola Comacina and Varenna — the full Lake Como experience.' },
 ] as const
 
 const SOCIAL_LINKS: string[] = [
@@ -69,7 +69,7 @@ export function WebsiteLd() {
     '@id': `${SITE}#website`,
     url: SITE,
     name: BUSINESS_NAME,
-    description: 'Esperienze esclusive in barca sul Lago di Como. Tour privati, aperitivo al tramonto, colazione a bordo, gite alle ville storiche.',
+    description: 'Exclusive private boat tours on Lake Como. Sunset aperitivo, breakfast on board, historic villa tours and more.',
     publisher: { '@id': `${SITE}#organization` },
     inLanguage: ['it-IT', 'en-US', 'de-DE'],
     potentialAction: {
@@ -89,7 +89,7 @@ export function LocalBusinessLd({ locale = 'it' }: { locale?: string }) {
     '@type': ['LocalBusiness', 'TouristAttraction'],
     '@id': `${SITE}#business`,
     name: BUSINESS_NAME,
-    description: 'Esperienze esclusive in barca sul Lago di Como. Tour privati con skipper, aperitivo al tramonto, colazione a bordo, gite a Villa Oleandra e Varenna. Prenota via email o WhatsApp.',
+    description: 'Exclusive private boat tours on Lake Como with skipper. Sunset aperitivo, breakfast on board, Villa Oleandra and Varenna tours. Book via email or WhatsApp.',
     url: SITE,
     telephone: PHONE,
     email: EMAIL,
@@ -136,17 +136,17 @@ export function LocalBusinessLd({ locale = 'it' }: { locale?: string }) {
     }],
     knowsAbout: [
       'Boat tours Lake Como',
-      'Private boat rental Como',
+      'Private boat rental Lake Como',
       'Luxury experiences Lake Como',
       'Villa Oleandra tour',
-      'Aperitivo in barca Lago di Como',
-      'Colazione a bordo Como',
-      'Tour privato barca Como',
+      'Sunset aperitivo boat tour Lake Como',
+      'Breakfast on board Lake Como',
+      'Private boat charter Como',
     ],
     touristType: ['Luxury traveler', 'Couples', 'Groups', 'Corporate events'],
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
-      name: 'Tour ed Esperienze in Barca sul Lago di Como',
+      name: 'Boat Tours & Experiences on Lake Como',
       itemListElement: PACKAGES.map(p => ({
         '@type': 'Offer',
         '@id': `${SITE}#offer-${p.id}`,
@@ -213,24 +213,24 @@ export function BookingPageFaqLd() {
   return FaqLd({
     qa: [
       {
-        q: 'Come si prenota un tour in barca sul Lago di Como con 4M Luxury Boats?',
-        a: 'Compila il modulo di prenotazione scegliendo pacchetto, data e orario. Da desktop riceverai conferma via email; da smartphone puoi richiedere direttamente via WhatsApp. Non è richiesto alcun pagamento anticipato online.',
+        q: 'How do I book a private boat tour on Lake Como with 4M Luxury Boats?',
+        a: 'Fill in the booking form selecting your package, date and time. From desktop you will receive confirmation by email; from mobile you can request directly via WhatsApp. No online payment is required in advance.',
       },
       {
-        q: 'Quanto costa un tour privato in barca sul Lago di Como?',
-        a: 'I prezzi partono da €250 per la Golden Hour (1 ora privata con Prosecco) fino a €800 per La Dolce Vita (4 ore con tappa a Isola Comacina e Varenna). Tutti i prezzi si riferiscono alla barca intera in modalità privata.',
+        q: 'How much does a private boat tour on Lake Como cost?',
+        a: 'Prices start from €250 for the Golden Hour (1-hour private tour with Prosecco) up to €800 for La Dolce Vita (4-hour tour stopping at Isola Comacina and Varenna). All prices are for the entire boat in private mode.',
       },
       {
-        q: 'Da dove parte il tour in barca sul Lago di Como?',
-        a: 'Il punto di imbarco è Lungo Lario Trieste, Como (22100). Il molo è facilmente raggiungibile a piedi dal centro di Como.',
+        q: 'Where do the Lake Como boat tours depart from?',
+        a: 'The departure point is Lungo Lario Trieste, Como (22100). The dock is easily reachable on foot from Como city centre.',
       },
       {
-        q: 'È possibile portare bambini o animali a bordo?',
-        a: 'Sì, le imbarcazioni accolgono famiglie con bambini. Per animali e richieste speciali contattaci direttamente prima della prenotazione via WhatsApp o email.',
+        q: 'Can children or pets come on board?',
+        a: 'Yes, our boats welcome families with children. For pets and special requests please contact us directly before booking via WhatsApp or email.',
       },
       {
-        q: 'Cosa succede in caso di maltempo?',
-        a: 'In caso di condizioni meteo avverse, gestiamo riprogrammazione o rimborso direttamente via WhatsApp o email entro 24 ore dalla partenza prevista.',
+        q: 'What happens in case of bad weather?',
+        a: 'In case of adverse weather conditions we manage rescheduling or a full refund directly via WhatsApp or email within 24 hours of the scheduled departure.',
       },
     ],
   })
@@ -258,7 +258,7 @@ export function WebPageLd({
     url,
     isPartOf: { '@id': `${SITE}#website` },
     about: { '@id': `${SITE}#business` },
-    inLanguage: 'it-IT',
+    inLanguage: 'en-US',
     ...(breadcrumb ? {
       breadcrumb: {
         '@type': 'BreadcrumbList',

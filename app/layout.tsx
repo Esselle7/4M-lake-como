@@ -17,25 +17,25 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: '4M Luxury Boats — Tour Privati Barca Lago di Como',
+    default: '4M Luxury Boats — Private Boat Tours on Lake Como',
     template: '%s | 4M Luxury Boats',
   },
   description:
-    'Esperienze esclusive in barca sul Lago di Como. Tour privati e condivisi: aperitivo al tramonto, colazione a bordo, Villa Oleandra, Varenna. Prenota direttamente.',
+    'Exclusive private boat tours on Lake Como. Sunset aperitivo, breakfast on board, Villa Oleandra, Varenna & more. Book directly — no middlemen.',
   applicationName: '4M Luxury Boats',
   authors: [{ name: '4M Luxury Boats' }],
   generator: 'Next.js',
   keywords: [
-    'tour barca lago di como',
-    'noleggio barca privata como',
-    'aperitivo in barca lago di como',
-    'gita in barca como',
-    'luxury boat lake como',
     'private boat tour lake como',
-    'bootstour comer see',
-    'villa oleandra tour barca',
-    'colazione in barca como',
+    'luxury boat rental lake como',
+    'sunset aperitivo lake como',
     'breakfast on board lake como',
+    'villa oleandra boat tour',
+    'lake como experience',
+    'boat tour como italy',
+    'bootstour comer see',
+    'private yacht lake como',
+    'lake como day trip',
   ],
   alternates: {
     canonical: '/',
@@ -49,25 +49,25 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: '4M Luxury Boats',
-    title: '4M Luxury Boats — Tour Privati Barca Lago di Como',
+    title: '4M Luxury Boats — Private Boat Tours on Lake Como',
     description:
-      'Esperienze esclusive in barca sul Lago di Como. Tour privati con o senza skipper, aperitivo al tramonto, Villa Oleandra.',
+      'Exclusive private boat tours on Lake Como. Sunset aperitivo, breakfast on board, Villa Oleandra & iconic shores. Book directly.',
     url: SITE_URL,
-    locale: 'it_IT',
-    alternateLocale: ['en_US', 'de_DE'],
+    locale: 'en_US',
+    alternateLocale: ['it_IT', 'de_DE'],
     images: [
       {
         url: '/images/hero-bg.webp',
         width: 1200,
         height: 630,
-        alt: '4M Luxury Boats — Lago di Como',
+        alt: '4M Luxury Boats — Lake Como',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: '4M Luxury Boats — Tour Privati Barca Lago di Como',
-    description: 'Esperienze esclusive in barca sul Lago di Como.',
+    title: '4M Luxury Boats — Private Boat Tours on Lake Como',
+    description: 'Exclusive private boat tours on Lake Como. Sunset aperitivo, breakfast on board & more.',
     images: ['/images/hero-bg.webp'],
   },
   robots: {
@@ -90,7 +90,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="it" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Google Search Console verification */}
         <meta name="google-site-verification" content="hsfMPs_e8ZZ-JEcVyuHdHpATrlz6NqsVCsL9P8MedzQ" />
@@ -116,7 +116,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Schema.org JSON-LD */}
         <OrganizationLd />
         <WebsiteLd />
-        <LocalBusinessLd locale="it" />
+        <LocalBusinessLd locale="en" />
       </head>
       <body suppressHydrationWarning>
         {/* Skip link accessibilità WCAG 2.1 */}
@@ -124,7 +124,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-gold focus:text-navy focus:rounded-lg focus:font-semibold focus:text-sm"
         >
-          Vai al contenuto principale
+          Skip to main content
         </a>
         <LanguageProvider>
           <ClientLayout>
