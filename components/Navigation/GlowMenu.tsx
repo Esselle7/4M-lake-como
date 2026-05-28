@@ -9,6 +9,16 @@ import { useLang } from '@/context/LanguageContext'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 import clsx from 'clsx'
 
+const GYG_SIZE = 40  // ← modifica questo per ridimensionare il logo GetYourGuide
+
+const INSTAGRAM_ICON = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+    <circle cx="12" cy="12" r="4"/>
+    <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+  </svg>
+)
+
 const NAV_PAGES = [
   { href: '/', labelKey: 'home' as const },
   { href: '/booking', labelKey: 'booking' as const },
@@ -144,8 +154,30 @@ export default function GlowMenu() {
               })}
             </ul>
 
-            {/* Right: language (desktop only) + mobile burger */}
+            {/* Right: social icons + language (desktop only) + mobile burger */}
             <div className="flex items-center gap-3">
+              {/* Social icons — desktop only */}
+              <div className="hidden lg:flex items-center gap-1.5">
+                <a
+                  href="https://www.instagram.com/4mlakecomo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="w-7 h-7 flex items-center justify-center rounded-full text-white/50 hover:text-white transition-colors duration-200"
+                >
+                  {INSTAGRAM_ICON}
+                </a>
+                <a
+                  href="https://www.getyourguide.com/4mlake-s747478"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GetYourGuide"
+                  className="flex items-center justify-center rounded-full opacity-50 hover:opacity-100 transition-opacity duration-200"
+                  style={{ width: GYG_SIZE + 8, height: GYG_SIZE + 8 }}
+                >
+                  <Image src="/images/gyg.webp" alt="GetYourGuide" width={GYG_SIZE} height={GYG_SIZE} style={{ width: GYG_SIZE, height: GYG_SIZE }} className="object-contain brightness-0 invert" />
+                </a>
+              </div>
               <div className="hidden lg:block">
                 <LanguageSwitcher onDark />
               </div>
@@ -219,6 +251,32 @@ export default function GlowMenu() {
                 className="mt-4"
               >
                 <LanguageSwitcher onDark />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.42 }}
+                className="flex items-center gap-5 mt-2"
+              >
+                <a
+                  href="https://www.instagram.com/4mlakecomo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="w-8 h-8 flex items-center justify-center rounded-full border border-white/15 text-white/50 hover:text-white hover:border-white/35 transition-all duration-200"
+                >
+                  {INSTAGRAM_ICON}
+                </a>
+                <a
+                  href="https://www.getyourguide.com/4mlake-s747478"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GetYourGuide"
+                  className="flex items-center justify-center rounded-full border border-white/15 opacity-50 hover:opacity-100 hover:border-white/35 transition-all duration-200"
+                  style={{ width: GYG_SIZE + 8, height: GYG_SIZE + 8 }}
+                >
+                  <Image src="/images/gyg.webp" alt="GetYourGuide" width={GYG_SIZE} height={GYG_SIZE} style={{ width: GYG_SIZE, height: GYG_SIZE }} className="object-contain brightness-0 invert" />
+                </a>
               </motion.div>
             </div>
           </motion.div>

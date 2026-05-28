@@ -13,6 +13,7 @@ const WA_ICON = (
   </svg>
 )
 
+
 export default function ContactSection() {
   const { t } = useLang()
   const sectionRef = useRef<HTMLDivElement>(null)
@@ -146,7 +147,6 @@ export default function ContactSection() {
 
           {/* Right — WhatsApp CTA */}
           <div className="flex-shrink-0">
-            
             <a
               href={`https://wa.me/${waNumber}`}
               target="_blank"

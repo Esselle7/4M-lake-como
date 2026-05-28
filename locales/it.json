@@ -50,12 +50,12 @@
     "all_packages": "Scopri le Esperienze",
     "boats": [
       {
-        "name": "Barca I",
-        "desc": "Elegante e agile, perfetta per fughe intime sull'acqua aperta."
+        "name": "Bruno Abbate Primatist 25",
+        "desc": "Un'icona del design italiano. Sportiva e agile, con linee che tagliano l'acqua con eleganza — la barca ideale per chi vuole vivere il lago in modo dinamico e indimenticabile."
       },
       {
-        "name": "Barca II",
-        "desc": "Spaziosa e raffinata, ideale per piccoli gruppi e celebrazioni private."
+        "name": "Cranchi Turchese 24",
+        "desc": "Classe e comfort senza compromessi. Spazi generosi e un'eleganza senza tempo la rendono la scelta perfetta per chi cerca relax e raffinatezza sul lago."
       }
     ]
   },

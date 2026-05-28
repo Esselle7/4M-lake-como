@@ -50,12 +50,12 @@
     "all_packages": "Erlebnisse Entdecken",
     "boats": [
       {
-        "name": "Boot I",
-        "desc": "Elegant und schnell, perfekt für intime Ausflüge auf offenem Wasser."
+        "name": "Bruno Abbate Primatist 25",
+        "desc": "Eine Ikone des italienischen Designs. Sportlich und wendig, mit Linien, die das Wasser mit Eleganz durchschneiden — das perfekte Boot für alle, die den See auf dynamische und unvergessliche Weise erleben möchten."
       },
       {
-        "name": "Boot II",
-        "desc": "Geräumig und verfeinert, ideal für kleine Gruppen und private Feiern."
+        "name": "Cranchi Turchese 24",
+        "desc": "Klasse und Komfort ohne Kompromisse. Großzügige Räume und zeitlose Eleganz machen sie zur perfekten Wahl für alle, die Entspannung und Raffinesse auf dem See suchen."
       }
     ]
   },
