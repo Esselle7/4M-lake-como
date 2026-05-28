@@ -22,6 +22,11 @@ interface FormData {
   notes: string
 }
 
+const BOAT_IMAGES: Record<string, string> = {
+  'boat-1': 'boat-1-v2.0.webp',
+  'boat-2': 'boat-2.webp',
+}
+
 const INITIAL_FORM: FormData = {
   packageId: '',
   packageName: '',
@@ -638,7 +643,7 @@ export default function BookingForm() {
                     alt={mode === 'private' ? b.private_title : b.shared_title}
                     fill
                     sizes="(max-width: 640px) 100vw, 33vw"
-                    quality={70}
+                    quality={75}
                     loading="lazy"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
@@ -694,7 +699,7 @@ export default function BookingForm() {
                             {/* Boat image */}
                             <div className="relative h-48 overflow-hidden">
                               <Image
-                                src={`/images/${boatId}.webp`}
+                                src={`/images/${BOAT_IMAGES[boatId] ?? `${boatId}.webp`}`}
                                 alt={boat.name}
                                 fill
                                 sizes="(max-width: 640px) 100vw, 50vw"

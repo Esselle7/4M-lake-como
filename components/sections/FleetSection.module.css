@@ -1,6 +1,6 @@
 /* =============================================
    FleetSection.module.css
-   4M Luxury Boats — Cinematic Card Animation
+   4M Luxury Boats — Fleet Section
    ============================================= */
 
 /* ---- Section ---- */
@@ -61,302 +61,322 @@
   width: 100%;
 }
 
-/* ---- Grid ---- */
-/* Hidden on touch/mobile — replaced by the carousel component */
-.grid {
-  display: none;
-}
-
 /* =============================================
-   CARD — Mobile (static luxury layout)
-   Always shows the expanded state on touch.
+   DESKTOP FLEET — hover-capable ≥768px
    ============================================= */
 
-.card {
-  --gold: #C9A96E;
-  --gold-dim: rgba(201, 169, 110, 0.3);
-  --navy: #0A1628;
-  --navy-deep: #07101E;
-
-  position: relative;
-  width: min(320px, 88vw);
-  height: 420px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-
-/* Background layer */
-.circle {
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.circle::before {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 20px;
-  background: #0A1628;
-  border: 1px solid rgba(201, 169, 110, 0.28);
-  box-shadow:
-    0 0 0 1px rgba(201, 169, 110, 0.08) inset,
-    0 8px 40px rgba(0, 0, 0, 0.6);
-}
-
-/* Logo hidden on mobile — only visible on desktop before hover */
-.logo {
+/* Hidden on mobile / touch; revealed in media query below */
+.desktopFleet {
   display: none;
 }
-
-/* Boat image — fixed position for mobile */
-.productImg {
-  position: absolute;
-
-  top: 14%;
-  left: 73%;
-
-  transform: translate(-50%, -50%) rotate(10deg);
-
-  height: var(--product-h-mobile, 340px) !important;
-  width: auto !important;
-
-  max-width: none !important;
-  max-height: none !important;
-
-  object-fit: contain;
-
-  filter: drop-shadow(0 16px 40px rgba(0, 0, 0, 0.75));
-
-  pointer-events: none;
-}
-
-/* Content — always visible on mobile */
-.content {
-  position: absolute;
-  width: 54%;
-  left: 1.5rem;
-  padding: 1rem 0.5rem 1rem 0;
-  opacity: 1;
-  visibility: visible;
-}
-
-.contentTitle {
-  font-family: 'Bodoni Moda', Georgia, serif;
-  color: #fff;
-  font-size: clamp(1.5rem, 4vw, 1.875rem);
-  font-weight: 400;
-  line-height: 1.0;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  margin: 0 0 0.75rem;
-}
-
-.contentDesc {
-  font-family: 'Jost', sans-serif;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.8125rem;
-  font-weight: 300;
-  line-height: 1.65;
-  margin: 0 0 1.25rem;
-}
-
-.contentCta {
-  font-family: 'Jost', sans-serif;
-  color: #0A1628;
-  background: linear-gradient(135deg, #C9A96E 0%, #E8D5A3 55%, #C9A96E 100%);
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  display: inline-block;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  transition: opacity 0.2s, box-shadow 0.2s;
-}
-
-.contentCta:hover {
-  opacity: 0.88;
-  box-shadow: 0 4px 20px rgba(201, 169, 110, 0.35);
-}
-
-/* =============================================
-   CARD — Desktop Hover Animation
-   Only on devices that support hover (not touch)
-   ============================================= */
 
 @media (hover: hover) and (min-width: 768px) {
+  .carousel { display: none; }
 
-  /* Grid: side-by-side, overflow visible so images can float outside cards */
-  .grid {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+  .desktopFleet {
+    display: grid;
+    grid-template-columns: 210px auto 1fr;
+    gap: 4rem;
     align-items: center;
-    gap: 2.5rem;
-    overflow: visible;
-  }
-
-  /* Card: starts collapsed, expands on hover.
-     translateZ(0) + will-change promote a dedicated GPU layer on Safari,
-     preventing compositing bleed onto adjacent elements. */
-  .card {
-    width: 320px;
-    height: 420px;
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    transition-delay: 0.5s;
-    overflow: visible;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    will-change: width;
-    isolation: isolate;
-  }
-
-  .card:hover {
-    width: 660px;
-    transition-delay: 0s;
-    z-index: 10;
-  }
-
-  /* Circle: circular glow → full card rect.
-     REMOVED filter: drop-shadow — Safari cannot composite filters on
-     pseudo-elements that simultaneously animate width/height/border-radius,
-     causing the golden ghost artifacts. box-shadow is CPU-composited and
-     does not trigger the same layer invalidation bug. */
-  .circle::before {
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    background: #0D1528;
-    border: 5px solid var(--gold);
-    box-shadow:
-      0 0 18px rgba(201, 169, 110, 0.55),
-      0 0 70px rgba(10, 22, 40, 0.9);
-    transition:
-      width         0.55s cubic-bezier(0.4, 0, 0.2, 1),
-      height        0.55s cubic-bezier(0.4, 0, 0.2, 1),
-      border-radius 0.55s cubic-bezier(0.4, 0, 0.2, 1),
-      background    0.5s  ease,
-      border        0.5s  ease,
-      box-shadow    0.5s  ease;
-    transition-delay: 0.65s, 0.65s, 0.65s, 0.85s, 0.85s, 0.85s;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    will-change: width, height, border-radius;
-  }
-
-  .card:hover .circle::before {
     width: 100%;
-    height: 100%;
-    border-radius: 20px;
-    background: #0A1628;
-    border: 1px solid rgba(201, 169, 110, 0.25);
-    box-shadow:
-      0 0 8px rgba(201, 169, 110, 0.12),
-      0 0 60px rgba(10, 22, 40, 1);
-    transition-delay: 0s;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    min-width: 0;
   }
 
-  /* Logo: centered in circle, fades out on hover */
-  .logo {
-    display: block;
+  /* ---- Vessel selector ---- */
+  .vesselNav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     position: relative;
-    width: 190px;
-    height: auto;
-    object-fit: contain;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-    transition-delay: 0.5s;
-    filter: drop-shadow(0 0 10px rgba(201, 169, 110, 0.25));
-    will-change: transform, opacity;
+    min-width: 0;
   }
 
-  .card:hover .logo {
-    transform: scale(0);
-    opacity: 0;
-    transition-delay: 0s;
+  /* Continuous vertical track */
+  .vesselNav::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(201, 169, 110, 0.1);
   }
 
-  /* Product image: position is fixed; only transform animates (GPU-native).
-     Previously top/left were animated — those force layout recalculation and
-     leave stale GPU layers on Safari. Height stays at hover size permanently:
-     position:absolute removes it from flow, so there is no layout impact.
-     scale(0) on collapsed state achieves the same visual as the old approach. */
-  .productImg {
-    top: 13%;
-    left: 72%;
+  .vesselTab {
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    padding: 2rem 0 2rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.55rem;
+    width: 100%;
+    position: relative;
+    /* Left indicator bar */
+    border-left: 2px solid transparent;
+    transition: border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-    transform: translate(-50%, -50%) scale(0) rotate(-32deg);
-    -webkit-transform: translate(-50%, -50%) scale(0) rotate(-32deg);
+  /* Thin separator between tabs */
+  .vesselTab + .vesselTab {
+    border-top: 1px solid rgba(201, 169, 110, 0.07);
+  }
 
-    height: var(--product-h-hover, 510px) !important;
-    width: auto !important;
-    max-width: none !important;
-    max-height: none !important;
-    object-fit: contain;
+  .vesselTab:hover {
+    border-left-color: rgba(201, 169, 110, 0.35);
+  }
 
-    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1), filter 0.55s ease;
-    transition-delay: 0s;
+  .vesselTabActive {
+    border-left-color: #C9A96E;
+  }
+
+  .vesselTabNum {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.5625rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: rgba(201, 169, 110, 0.22);
+    text-transform: uppercase;
+    transition: color 0.35s ease;
+  }
+
+  .vesselTabActive .vesselTabNum {
+    color: #C9A96E;
+  }
+
+  .vesselTabName {
+    font-family: 'Bodoni Moda', Georgia, serif;
+    font-size: 1.625rem;
+    color: rgba(255, 255, 255, 0.2);
+    font-weight: 400;
+    letter-spacing: 0.025em;
+    line-height: 1.15;
+    transition: color 0.38s ease;
+  }
+
+  .vesselTab:hover .vesselTabName {
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .vesselTabActive .vesselTabName {
+    color: #fff;
+  }
+
+  /* Animated gold dash — slides in on active */
+  .vesselTabBar {
+    display: block;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, #C9A96E, rgba(201, 169, 110, 0.2));
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .vesselTabActive .vesselTabBar {
+    width: 36px;
+  }
+
+  /* ---- Flip gallery wrapper ---- */
+  .flipWrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.875rem;
+  }
+
+  .flipBorder {
+    background: rgba(10, 22, 40, 0.6);
+    border: 1px solid rgba(201, 169, 110, 0.18);
+    padding: 6px;
+    box-shadow:
+      0 0 0 1px rgba(201, 169, 110, 0.05) inset,
+      0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  .flipGallery {
+    position: relative;
+    width: var(--flip-w, 300px);
+    height: var(--flip-h, 480px);
+    perspective: 800px;
+  }
+
+  /* Centre dividing line */
+  .flipGallery::after {
+    content: '';
+    position: absolute;
+    background: #07101E;
+    width: 100%;
+    height: 4px;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    z-index: 5;
+  }
+
+  .flipPanel {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    overflow: hidden;
+    background-size: var(--flip-w, 300px) var(--flip-h, 480px);
+    background-repeat: no-repeat;
     will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 
-  .card:hover .productImg {
-    height: var(--product-h-hover, 510px) !important;
-    width: auto !important;
-    transform: translate(-50%, -50%) scale(1) rotate(11deg);
-    -webkit-transform: translate(-50%, -50%) scale(1) rotate(11deg);
-    transition-delay: 0.75s;
-    filter:
-      drop-shadow(0 24px 48px rgba(0, 0, 0, 0.75))
-      drop-shadow(0 0 24px rgba(201, 169, 110, 0.12));
+  .flipTop,
+  .flipOverlayTop {
+    top: 0;
+    transform-origin: bottom;
+    background-position: top;
   }
 
-  /* Content: position fixed at final location; translateX handles the slide-in.
-     Previously left was animated — layout-triggered, not GPU-compositable.
-     translateX(-120%) pushes content off the left edge without touching layout. */
-  .content {
-    left: 1.75rem;
-    opacity: 0;
-    visibility: hidden;
-    width: 52%;
-    transform: translateX(-120%);
+  .flipBottom,
+  .flipOverlayBottom {
+    bottom: 0;
+    transform-origin: top;
+    background-position: bottom;
+  }
+
+  /* ---- Gallery footer: title + nav ---- */
+  .flipFooter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: var(--flip-w, 300px);
+  }
+
+  .flipTitle {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    font-weight: 300;
+    line-height: 2;
+    text-align: center;
+    display: block;
+    min-height: 1.2em;
+  }
+
+  .flipNav {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+  }
+
+  .flipNavBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1.375rem;
+    line-height: 1;
+    padding: 0.2rem 0.35rem;
+    transition: color 0.22s ease, transform 0.22s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .flipNavBtn:hover {
+    color: #C9A96E;
+    transform: scale(1.25);
+  }
+
+  .flipDots {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+  }
+
+  .flipDot {
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(201, 169, 110, 0.18);
     transition:
-      opacity    0.4s ease,
-      visibility 0.4s ease,
-      transform  0.45s cubic-bezier(0.4, 0, 0.2, 1);
-    transition-delay: 0s;
-    will-change: transform, opacity;
+      width       0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      background  0.35s ease,
+      border-radius 0.35s ease;
   }
 
-  .card:hover .content {
-    transform: translateX(0);
-    opacity: 1;
-    visibility: visible;
-    transition-delay: 0.78s;
-  }
-}
-
-/* ---- Tablet adjustments (hover-capable tablets only) ---- */
-@media (min-width: 768px) and (max-width: 1024px) and (hover: hover) {
-  .card {
-    width: min(300px, 44vw);
-    height: 400px;
+  .flipDotActive {
+    width: 18px;
+    border-radius: 3px;
+    background: #C9A96E;
   }
 
-  .productImg {
-    height: 300px;
+  /* ---- Vessel description ---- */
+  .vesselInfo {
+    padding-left: 1.25rem;
+    border-left: 1px solid rgba(201, 169, 110, 0.12);
+    min-width: 0;
   }
 
-  .contentTitle {
-    font-size: 1.5rem;
+  .vesselInfoTag {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #C9A96E;
+    margin: 0 0 1.25rem;
+  }
+
+  .vesselInfoName {
+    font-family: 'Bodoni Moda', Georgia, serif;
+    font-size: clamp(1.625rem, 2.5vw, 2.5rem);
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 1.375rem;
+  }
+
+  .vesselInfoDesc {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.48);
+    line-height: 1.75;
+    margin: 0 0 2rem;
+  }
+
+  .vesselInfoCta {
+    font-family: 'Jost', sans-serif;
+    color: #0A1628;
+    background: linear-gradient(135deg, #C9A96E 0%, #E8D5A3 55%, #C9A96E 100%);
+    padding: 0.7rem 1.625rem;
+    display: inline-block;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: opacity 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .vesselInfoCta:hover {
+    opacity: 0.88;
+    box-shadow: 0 4px 20px rgba(201, 169, 110, 0.35);
+  }
+
+  /* Wider gap at large desktop */
+  @media (min-width: 1100px) {
+    .desktopFleet {
+      gap: 5rem;
+      grid-template-columns: 240px auto 1fr;
+    }
+    .vesselTabName {
+      font-size: 1.875rem;
+    }
   }
 }
 
@@ -366,11 +386,6 @@
    Desktop grid is hidden; this takes over.
    Design: luxury editorial horizontal snap
    ============================================= */
-
-/* Hidden on pointer-capable desktops */
-@media (hover: hover) and (min-width: 768px) {
-  .carousel { display: none; }
-}
 
 .carousel {
   width: 100%;
