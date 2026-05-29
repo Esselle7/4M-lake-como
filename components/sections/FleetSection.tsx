@@ -18,8 +18,9 @@ interface FlipImage {
   url:   string
 }
 
-const FLEET_ASSETS: Array<{ images: FlipImage[] }> = [
+const FLEET_ASSETS: Array<{ images: FlipImage[]; available: boolean }> = [
   {
+    available: true,
     images: [
       { title: 'Bruno Abbate Primatist',    url: '/images/ba-prima-1.webp' },
       { title: 'Bruno Abbate — Dettaglio',  url: '/images/ba-prima-2.webp' },
@@ -27,6 +28,7 @@ const FLEET_ASSETS: Array<{ images: FlipImage[] }> = [
     ],
   },
   {
+    available: false,  // Cranchi Turchese — not yet in service
     images: [
       { title: 'Cranchi E26 Classic',  url: '/images/cranchi-e26-1.webp' },
       { title: 'Cranchi — Dettaglio',  url: '/images/cranchi-e26-2.webp' },
@@ -61,12 +63,13 @@ const REV_BOTTOM: Keyframe[] = [
 // ── Mobile carousel — editorial horizontal snap, touch-native ─────────────────
 
 interface MobileCarouselProps {
-  readonly boats: Array<{ productSrc: string; name: string; desc: string }>
+  readonly boats: Array<{ productSrc: string; name: string; desc: string; available: boolean }>
   readonly cta: string
   readonly visible: boolean
+  readonly notAvailableLabel: string
 }
 
-function MobileCarousel({ boats, cta, visible }: MobileCarouselProps) {
+function MobileCarousel({ boats, cta, visible, notAvailableLabel }: MobileCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const trackRef  = useRef<HTMLDivElement>(null)
   const slideRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -112,8 +115,13 @@ function MobileCarousel({ boats, cta, visible }: MobileCarouselProps) {
           <div
             key={boat.productSrc}
             ref={(el) => { slideRefs.current[i] = el }}
-            className={`${styles.slide} ${i === activeIndex ? styles.slideActive : ''}`}
+            className={`${styles.slide} ${i === activeIndex ? styles.slideActive : ''} ${!boat.available ? styles.slideUnavailable : ''}`}
           >
+            {!boat.available && (
+              <div className={styles.slideOverlay}>
+                <span className={styles.slideOverlayLabel}>{notAvailableLabel}</span>
+              </div>
+            )}
             <div className={styles.slideIndex}>
               <span className={styles.slideNum}>0{i + 1}</span>
               <span className={styles.slideRule} />
@@ -135,7 +143,9 @@ function MobileCarousel({ boats, cta, visible }: MobileCarouselProps) {
               <div className={styles.slideGoldBar} />
               <h3 className={styles.slideName}>{boat.name}</h3>
               <p className={styles.slideDesc}>{boat.desc}</p>
-              <a href="#contact" className={styles.slideCta}>{cta}</a>
+              {boat.available && (
+                <a href="#contact" className={styles.slideCta}>{cta}</a>
+              )}
             </div>
           </div>
         ))}
@@ -297,19 +307,22 @@ interface DesktopBoat {
   images:     FlipImage[]
   name:       string
   desc:       string
+  available:  boolean
 }
 
 interface DesktopFleetProps {
-  readonly boats:   DesktopBoat[]
-  readonly cta:     string
-  readonly visible: boolean
+  readonly boats:             DesktopBoat[]
+  readonly cta:               string
+  readonly visible:           boolean
+  readonly notAvailableLabel: string
 }
 
-function DesktopFleet({ boats, cta, visible }: DesktopFleetProps) {
+function DesktopFleet({ boats, cta, visible, notAvailableLabel }: DesktopFleetProps) {
   const [activeIdx, setActiveIdx] = useState(0)
   const [timerKey,  setTimerKey]  = useState(0)
 
   const switchVessel = (idx: number) => {
+    if (!boats[idx].available) return
     setActiveIdx(idx)
     setTimerKey((k) => k + 1)
   }
@@ -328,11 +341,15 @@ function DesktopFleet({ boats, cta, visible }: DesktopFleetProps) {
             key={i}
             type="button"
             onClick={() => switchVessel(i)}
-            className={`${styles.vesselTab} ${i === activeIdx ? styles.vesselTabActive : ''}`}
+            className={`${styles.vesselTab} ${i === activeIdx ? styles.vesselTabActive : ''} ${!boat.available ? styles.vesselTabDisabled : ''}`}
             aria-current={i === activeIdx ? 'true' : undefined}
+            aria-disabled={!boat.available ? 'true' : undefined}
           >
             <span className={styles.vesselTabNum}>0{i + 1}</span>
             <span className={styles.vesselTabName}>{boat.name}</span>
+            {!boat.available && (
+              <span className={styles.vesselTabBadge}>{notAvailableLabel}</span>
+            )}
             <span className={styles.vesselTabBar} aria-hidden="true" />
           </button>
         ))}
@@ -382,6 +399,7 @@ export default function FleetSection() {
     images:     a.images,
     name:       f.boats[i].name,
     desc:       f.boats[i].desc,
+    available:  a.available,
   }))
 
   return (
@@ -400,10 +418,10 @@ export default function FleetSection() {
 
       <div ref={gridRef} className={styles.fleetSentinel}>
         {/* Mobile / touch tablet: editorial snap carousel */}
-        <MobileCarousel boats={boats} cta={f.all_packages} visible={isGridVisible} />
+        <MobileCarousel boats={boats} cta={f.all_packages} visible={isGridVisible} notAvailableLabel={f.not_available} />
 
         {/* Desktop: flip gallery + vessel selector + description */}
-        <DesktopFleet boats={boats} cta={f.all_packages} visible={isGridVisible} />
+        <DesktopFleet boats={boats} cta={f.all_packages} visible={isGridVisible} notAvailableLabel={f.not_available} />
       </div>
     </section>
   )

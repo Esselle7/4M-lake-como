@@ -48,6 +48,7 @@
     "capacity": "Bis zu",
     "people": "Gäste",
     "all_packages": "Erlebnisse Entdecken",
+    "not_available": "Noch nicht verfügbar",
     "boats": [
       {
         "name": "Bruno Abbate Primatist 25",
@@ -80,7 +81,7 @@
         "duration_h": 1,
         "duration_label": "1 Stunde",
         "price": 250,
-        "image": "golden-hour.jpg",
+        "image": "golden-hour-v1.0.webp",
         "desc": "Stoßen Sie bei Sonnenuntergang mit einem Glas Prosecco an, während Comos goldenes Licht das Wasser bemalt. Die perfekte einstündige Auszeit.",
         "includes": "Prosecco Begrüßung · Tour durch das erste Becken"
       },
@@ -91,7 +92,7 @@
         "duration_h": 1,
         "duration_label": "1 Stunde",
         "price": 300,
-        "image": "breakfast.jpg",
+        "image": "breakfast-v1.0.webp",
         "desc": "Beginnen Sie den Tag mit einem kuratierten Frühstück am See und gleiten Sie durch Comos morgendliche Stille. Verfügbar 8:30–10:30.",
         "includes": "Vollständiger Frühstücksservice · Panoramische Morgenfahrt"
       },
@@ -102,7 +103,7 @@
         "duration_h": 1.5,
         "duration_label": "1,5 Stunden",
         "price": 350,
-        "image": "aperitivo.jpg",
+        "image": "aperitivo-v1.0.webp",
         "desc": "Die italienische Kunst des Aperitivo, zum Sonnenuntergang am See verfeinert. Gleiten Sie an den ikonischsten Ufern entlang, während der Himmel sich golden färbt.",
         "includes": "Italienischer Aperitivo & Häppchen · Drinks bei Sonnenuntergang"
       },
@@ -113,7 +114,7 @@
         "duration_h": 1.5,
         "duration_label": "1,5 Stunden",
         "price": 380,
-        "image": "sushi.jpg",
+        "image": "sushi-v1.0.webp",
         "desc": "Premium-Sushi-Box und kuratierte Drinks auf einer atemberaubenden Panoramafahrt durch den Comer See.",
         "includes": "Premium-Sushi-Box · Kuratierte Drinks · Panoramaroute"
       },
@@ -124,7 +125,7 @@
         "duration_h": 2,
         "duration_label": "2 Stunden",
         "price": 450,
-        "image": "como-luxury.jpg",
+        "image": "como-luxury-v1.0.webp",
         "desc": "Villa Pliniana, Villa Oleandra (George Clooneys Anwesen), Nesso — Comos exklusivste Wahrzeichen vom Wasser aus.",
         "includes": "Villa Pliniana · Villa Oleandra · Nesso-Schlucht"
       },
@@ -135,7 +136,7 @@
         "duration_h": 4,
         "duration_label": "4 Stunden",
         "price": 800,
-        "image": "dolce-vita.jpg",
+        "image": "dolce-vita-v1.0.webp",
         "desc": "Eine große Reise zur Isola Comacina und dem Juwel Varenna — das ultimative, unvergessliche Comer-See-Erlebnis.",
         "includes": "Isola Comacina · Varenna · Große Seerundfahrt"
       }

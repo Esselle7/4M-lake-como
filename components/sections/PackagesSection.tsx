@@ -5,6 +5,7 @@ import { motion, useInView } from 'framer-motion'
 import { useLang } from '@/context/LanguageContext'
 import LiquidGlassButton from '@/components/ui/LiquidGlassButton'
 import { useRouter } from 'next/navigation'
+import NextImage from 'next/image'
 import clsx from 'clsx'
 
 interface PackageItem {
@@ -45,7 +46,7 @@ function PackageCard({ pkg, index, labels, compact = false }: { pkg: PackageItem
   return (
     <div
       className={clsx(
-        'relative overflow-hidden rounded-2xl flex flex-col',
+        'group relative overflow-hidden rounded-2xl flex flex-col',
         /* compact: width controlled by parent wrapper; desktop: fixed widths */
         compact ? 'w-full h-full' : 'flex-shrink-0 w-[320px] md:w-[360px]'
       )}
@@ -67,21 +68,43 @@ function PackageCard({ pkg, index, labels, compact = false }: { pkg: PackageItem
 
       {/* Image area */}
       <div className={clsx('relative overflow-hidden flex-shrink-0', compact ? 'h-32' : 'h-48')}>
-        <div className="absolute inset-0 bg-black/20" />
+        {/* Image — saturated, punchy, no grey veil */}
+        <NextImage
+          src={`/images/${pkg.image}`}
+          alt={pkg.name}
+          fill
+          sizes="(max-width: 768px) 78vw, 360px"
+          quality={85}
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          style={{ filter: 'saturate(1.32) contrast(1.09) brightness(1.06)' }}
+        />
+        {/* Cinematic warm screen — adds golden shimmer to highlights, never darkens */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'linear-gradient(155deg, rgba(255,210,100,0.09) 0%, rgba(80,160,255,0.05) 55%, transparent 100%)',
+            mixBlendMode: 'screen',
+          }}
+        />
+        {/* Bottom vignette — only for badge legibility, transparent in upper 60% */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.10) 38%, transparent 62%)' }}
+        />
+        {/* Badge — above all overlays */}
         <div className="absolute inset-0 flex items-end p-3">
           <span
             className={clsx(
               'px-2.5 py-1 rounded-full text-[9px] tracking-widest uppercase',
               isPremium
-                ? 'bg-gold text-navy font-semibold'
-                : 'border border-white/25 text-white/75'
+                ? 'bg-gold text-navy font-semibold shadow-sm'
+                : 'border border-white/30 text-white/85 backdrop-blur-sm'
             )}
             style={{ fontFamily: 'Jost, sans-serif', letterSpacing: '0.15em' }}
           >
             {isPremium ? labels.premium_label : labels.standard_label}
           </span>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
       </div>
 
       {/* Content */}

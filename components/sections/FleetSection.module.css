@@ -368,6 +368,40 @@
     box-shadow: 0 4px 20px rgba(201, 169, 110, 0.35);
   }
 
+  /* ---- Unavailable vessel tab ---- */
+  .vesselTabDisabled {
+    cursor: not-allowed;
+  }
+
+  .vesselTabDisabled .vesselTabNum {
+    color: rgba(201, 169, 110, 0.08);
+  }
+
+  .vesselTabDisabled .vesselTabName {
+    color: rgba(255, 255, 255, 0.1);
+  }
+
+  .vesselTabDisabled:hover {
+    border-left-color: transparent !important;
+  }
+
+  .vesselTabDisabled .vesselTabBar {
+    display: none;
+  }
+
+  .vesselTabBadge {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.4375rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(201, 169, 110, 0.3);
+    border: 1px solid rgba(201, 169, 110, 0.14);
+    padding: 0.2rem 0.55rem;
+    border-radius: 2px;
+    display: inline-block;
+  }
+
   /* Wider gap at large desktop */
   @media (min-width: 1100px) {
     .desktopFleet {
@@ -599,4 +633,34 @@
   width: 22px;
   border-radius: 3px;
   background: #C9A96E;
+}
+
+/* ---- Unavailable slide overlay (mobile) ---- */
+.slideUnavailable {
+  pointer-events: none;
+}
+
+.slideOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 16, 30, 0.80);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  z-index: 10;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.slideOverlayLabel {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(201, 169, 110, 0.55);
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  padding: 0.5rem 1.25rem;
+  border-radius: 2px;
 }

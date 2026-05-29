@@ -48,6 +48,7 @@
     "capacity": "Fino a",
     "people": "ospiti",
     "all_packages": "Scopri le Esperienze",
+    "not_available": "Non ancora disponibile",
     "boats": [
       {
         "name": "Bruno Abbate Primatist 25",
@@ -80,7 +81,7 @@
         "duration_h": 1,
         "duration_label": "1 ora",
         "price": 250,
-        "image": "golden-hour.jpg",
+        "image": "golden-hour-v1.0.webp",
         "desc": "Brinda al tramonto con un calice di Prosecco mentre la luce dorata del Como dipinge l'acqua. La fuga perfetta di un'ora.",
         "includes": "Prosecco in omaggio · Tour del primo bacino"
       },
@@ -91,7 +92,7 @@
         "duration_h": 1,
         "duration_label": "1 ora",
         "price": 300,
-        "image": "breakfast.jpg",
+        "image": "breakfast-v1.0.webp",
         "desc": "Inizia la giornata con una colazione curata in riva al lago, navigando nella calma mattutina del Como. Disponibile 8:30–10:30.",
         "includes": "Colazione completa · Tour panoramico mattutino"
       },
@@ -102,7 +103,7 @@
         "duration_h": 1.5,
         "duration_label": "1,5 ore",
         "price": 350,
-        "image": "aperitivo.jpg",
+        "image": "aperitivo-v1.0.webp",
         "desc": "L'arte italiana dell'aperitivo, elevata al tramonto sul lago. Naviga tra le sponde più iconiche mentre il cielo si tinge d'oro.",
         "includes": "Aperitivo italiano & stuzzichini · Drink al tramonto"
       },
@@ -113,7 +114,7 @@
         "duration_h": 1.5,
         "duration_label": "1,5 ore",
         "price": 380,
-        "image": "sushi.jpg",
+        "image": "sushi-v1.0.webp",
         "desc": "Sushi box premium e drink curati in una crociera panoramica tra le viste più mozzafiato del Lago di Como.",
         "includes": "Sushi box premium · Drink curati · Percorso panoramico"
       },
@@ -124,7 +125,7 @@
         "duration_h": 2,
         "duration_label": "2 ore",
         "price": 450,
-        "image": "como-luxury.jpg",
+        "image": "como-luxury-v1.0.webp",
         "desc": "Villa Pliniana, Villa Oleandra (la villa di George Clooney), Nesso — i luoghi più esclusivi del Como, visti dall'acqua.",
         "includes": "Villa Pliniana · Villa Oleandra · Gola di Nesso"
       },
@@ -135,7 +136,7 @@
         "duration_h": 4,
         "duration_label": "4 ore",
         "price": 800,
-        "image": "dolce-vita.jpg",
+        "image": "dolce-vita-v1.0.webp",
         "desc": "Un grande viaggio verso l'Isola Comacina e il gioiello di Varenna — l'esperienza definitiva e indimenticabile del Lago di Como.",
         "includes": "Isola Comacina · Varenna · Grand tour del lago"
       }

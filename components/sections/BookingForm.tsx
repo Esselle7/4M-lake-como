@@ -23,9 +23,15 @@ interface FormData {
 }
 
 const BOAT_IMAGES: Record<string, string> = {
-  'boat-1': 'boat-1-v2.0.webp',
-  'boat-2': 'boat-2.webp',
+  'boat-1': 'ba-prima-1.webp',
+  'boat-2': 'cranchi-e26-1.webp',
 }
+
+// Set visible: true to re-enable a boat in the booking flow when ready
+const BOATS_CONFIG: Array<{ id: 'boat-1' | 'boat-2'; fleetIdx: number; visible: boolean }> = [
+  { id: 'boat-1', fleetIdx: 0, visible: true  },
+  { id: 'boat-2', fleetIdx: 1, visible: false },
+]
 
 const INITIAL_FORM: FormData = {
   packageId: '',
@@ -141,7 +147,7 @@ function CalendarPicker({
   }
 
   return (
-    <div className="rounded-2xl p-4 border border-navy/8 bg-cream/30">
+    <div className="rounded-2xl p-4 border border-navy/8 bg-cream/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
       {/* Month navigation */}
       <div className="flex items-center justify-between mb-4">
         <button
@@ -198,12 +204,12 @@ function CalendarPicker({
               onClick={() => !isPast(day) && onChange(toISO(day))}
               className={clsx(
                 'relative h-9 w-full flex items-center justify-center rounded-lg text-sm transition-all duration-150 cursor-pointer',
-                isPast(day) && 'text-navy/15 cursor-not-allowed',
-                !isPast(day) && !isSelected(day) && 'text-navy/65 hover:bg-gold/15 hover:text-navy',
-                isSelected(day) && 'bg-gold text-navy font-semibold',
-                isTodayCell(day) && !isSelected(day) && !isPast(day) && 'font-bold text-navy'
+                isPast(day) && 'text-navy/12 cursor-not-allowed',
+                !isPast(day) && !isSelected(day) && 'text-navy/60 hover:bg-gold/15 hover:text-navy hover:scale-105',
+                isSelected(day) && 'bg-gold text-navy font-semibold scale-110 rounded-xl',
+                isTodayCell(day) && !isSelected(day) && !isPast(day) && 'font-bold text-navy ring-1 ring-gold/30'
               )}
-              style={{ fontFamily: 'Jost, sans-serif', boxShadow: isSelected(day) ? '0 2px 12px rgba(201,169,110,0.35)' : undefined }}
+              style={{ fontFamily: 'Jost, sans-serif', boxShadow: isSelected(day) ? '0 0 0 3px rgba(201,169,110,0.22), 0 4px 16px rgba(201,169,110,0.35)' : undefined }}
             >
               {day}
               {isTodayCell(day) && !isSelected(day) && (
@@ -268,21 +274,32 @@ function TimeSlotPicker({
               disabled={isDisabled}
               onClick={() => !isDisabled && onChange(opt)}
               className={clsx(
-                'flex flex-col items-center gap-2.5 py-5 px-3 rounded-2xl border transition-all duration-200 cursor-pointer',
+                'relative flex flex-col items-center gap-2.5 py-5 px-3 rounded-2xl border transition-all duration-250 cursor-pointer overflow-hidden',
                 isSelected && !isDisabled
-                  ? 'border-gold bg-gold/10 shadow-[0_2px_16px_rgba(201,169,110,0.25)]'
+                  ? 'border-gold bg-gold/[0.09] shadow-[0_0_0_1px_rgba(201,169,110,0.18),0_4px_24px_rgba(201,169,110,0.28)] scale-[1.03]'
                   : !isDisabled
-                  ? 'border-navy/10 bg-white hover:border-navy/20 hover:bg-cream/50'
-                  : 'border-navy/5 bg-navy/2 opacity-30 cursor-not-allowed'
+                  ? 'border-navy/10 bg-white hover:border-gold/25 hover:bg-cream/30 hover:shadow-[0_2px_12px_rgba(201,169,110,0.09)]'
+                  : 'border-navy/5 bg-navy/2 opacity-25 cursor-not-allowed'
               )}
             >
-              <span className={clsx('transition-colors', isSelected ? 'text-gold' : 'text-navy/35')}>
+              {/* Gold top bar */}
+              <motion.div
+                className="absolute top-0 left-0 right-0 h-[2px]"
+                style={{ background: 'linear-gradient(90deg, transparent, #C9A96E, transparent)' }}
+                animate={{ opacity: isSelected && !isDisabled ? 1 : 0 }}
+                transition={{ duration: 0.25 }}
+              />
+              <motion.span
+                animate={{ scale: isSelected && !isDisabled ? 1.12 : 1 }}
+                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                className={clsx('transition-colors', isSelected && !isDisabled ? 'text-gold' : 'text-navy/30')}
+              >
                 {TIME_ICONS[idx]}
-              </span>
+              </motion.span>
               <span
                 className={clsx(
                   'text-[10px] text-center leading-snug',
-                  isSelected ? 'text-navy font-medium' : 'text-navy/55'
+                  isSelected && !isDisabled ? 'text-navy font-semibold' : 'text-navy/50'
                 )}
                 style={{ fontFamily: 'Jost, sans-serif' }}
               >
@@ -309,43 +326,55 @@ function TimeSlotPicker({
 
 function StepIndicator({ step, total, label }: { step: number; total: number; label: string }) {
   return (
-    <div className="flex items-center justify-center gap-3 mb-10">
-      {Array.from({ length: total }).map((_, i) => (
-        <div key={i} className="flex items-center gap-1.5">
-          <motion.div
-            animate={{
-              background: i <= step ? '#C9A96E' : 'transparent',
-              scale: i === step ? 1.1 : 1,
-              borderColor: i <= step ? '#C9A96E' : 'rgba(10, 22, 40, 0.2)',
-            }}
-            className="w-6 h-6 rounded-full border flex items-center justify-center"
-            transition={{ duration: 0.3 }}
-          >
-            {i < step ? (
-              <svg className="w-3 h-3 text-navy" viewBox="0 0 12 12" fill="none">
-                <path d="M2.5 6l2.5 2.5 4.5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            ) : (
-              <span
-                className={clsx('text-[9px]', i <= step ? 'text-navy' : 'text-navy/30')}
-                style={{ fontFamily: 'Jost, sans-serif', fontWeight: 600 }}
+    <div className="flex flex-col items-center gap-3 mb-10">
+      <div className="flex items-center">
+        {Array.from({ length: total }).map((_, i) => (
+          <div key={i} className="flex items-center">
+            <div className="relative">
+              {/* Pulsing ring on active step */}
+              {i === step && (
+                <motion.div
+                  className="absolute inset-0 rounded-full border border-gold/40"
+                  animate={{ scale: [1, 1.55], opacity: [0.6, 0] }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
+                />
+              )}
+              <motion.div
+                animate={{
+                  background: i <= step ? '#C9A96E' : 'transparent',
+                  scale: i === step ? 1.12 : 1,
+                  borderColor: i <= step ? '#C9A96E' : 'rgba(10, 22, 40, 0.18)',
+                }}
+                className="relative w-7 h-7 rounded-full border-[1.5px] flex items-center justify-center"
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               >
-                {i + 1}
-              </span>
+                {i < step ? (
+                  <svg className="w-3.5 h-3.5 text-navy" viewBox="0 0 12 12" fill="none">
+                    <path d="M2.5 6l2.5 2.5 4.5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                ) : (
+                  <span
+                    className={clsx('text-[9px]', i <= step ? 'text-navy' : 'text-navy/25')}
+                    style={{ fontFamily: 'Jost, sans-serif', fontWeight: 700 }}
+                  >
+                    {i + 1}
+                  </span>
+                )}
+              </motion.div>
+            </div>
+            {i < total - 1 && (
+              <motion.div
+                animate={{ background: i < step ? '#C9A96E' : 'rgba(10, 22, 40, 0.10)' }}
+                className="w-10 md:w-14 h-px mx-1"
+                transition={{ duration: 0.5, delay: 0.1 }}
+              />
             )}
-          </motion.div>
-          {i < total - 1 && (
-            <motion.div
-              animate={{ background: i < step ? '#C9A96E' : 'rgba(10, 22, 40, 0.12)' }}
-              className="w-6 h-px"
-              transition={{ duration: 0.4 }}
-            />
-          )}
-        </div>
-      ))}
+          </div>
+        ))}
+      </div>
       <span
-        className="ml-2 text-xs text-navy/40"
-        style={{ fontFamily: 'Jost, sans-serif', letterSpacing: '0.08em' }}
+        className="text-[10px] text-navy/35 tracking-widest uppercase"
+        style={{ fontFamily: 'Jost, sans-serif', letterSpacing: '0.16em' }}
       >
         {label}
       </span>
@@ -507,8 +536,11 @@ export default function BookingForm() {
           initial={{ opacity: 0, y: 24 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.15 }}
-          className="bg-white rounded-2xl shadow-luxury p-8 md:p-12 border border-navy/6"
+          className="bg-white rounded-2xl shadow-luxury border border-navy/8 overflow-hidden"
         >
+          {/* Gold accent line at card top */}
+          <div className="h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
+          <div className="p-8 md:p-12">
           {!submitted ? (
             <>
               <StepIndicator step={step} total={4} label={`${step + 1} ${b.step_of} 4`} />
@@ -558,14 +590,32 @@ export default function BookingForm() {
                   }
                 }}
                 className={clsx(
-                  'text-left p-4 rounded-xl border transition-all duration-200 cursor-pointer w-full flex flex-col justify-between min-h-[140px]',
+                  'relative text-left p-4 rounded-xl border transition-all duration-250 cursor-pointer w-full flex flex-col justify-between min-h-[140px] overflow-hidden',
                   selected
-                    ? 'border-gold bg-gold/8 shadow-glass-gold'
-                    : 'border-navy/10 hover:border-navy/20 bg-white hover:bg-cream/50'
+                    ? 'border-gold bg-gold/[0.07] shadow-[0_0_0_1px_rgba(201,169,110,0.18),0_8px_32px_rgba(201,169,110,0.20)] scale-[1.01]'
+                    : 'border-navy/10 hover:border-gold/30 hover:shadow-[0_2px_14px_rgba(201,169,110,0.10)] bg-white hover:bg-cream/30'
                 )}
               >
+                {/* Gold top accent bar */}
+                <motion.div
+                  className="absolute top-0 left-0 right-0 h-[2px]"
+                  style={{ background: 'linear-gradient(90deg, transparent, #C9A96E 40%, #E8D5A3 50%, #C9A96E 60%, transparent)' }}
+                  animate={{ opacity: selected ? 1 : 0, scaleX: selected ? 1 : 0.4 }}
+                  transition={{ duration: 0.3 }}
+                />
+                {/* Gold checkmark */}
+                <motion.div
+                  className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-gold flex items-center justify-center shadow-sm"
+                  animate={{ opacity: selected ? 1 : 0, scale: selected ? 1 : 0.5 }}
+                  transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <svg className="w-2.5 h-2.5 text-navy" viewBox="0 0 10 10" fill="none">
+                    <path d="M2 5.2l2 2 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </motion.div>
+
                 <div>
-                  <div className="flex items-start justify-between mb-1 gap-2">
+                  <div className="flex items-start justify-between mb-1 gap-2 pr-6">
                     <span
                       className={clsx('text-sm font-medium leading-tight', selected ? 'text-navy' : 'text-navy/80')}
                       style={{ fontFamily: 'Bodoni Moda, serif', fontSize: '0.95rem', fontStyle: 'italic' }}
@@ -576,8 +626,8 @@ export default function BookingForm() {
                       className={clsx(
                         'text-[8px] tracking-widest uppercase px-1.5 py-0.5 rounded-full flex-shrink-0',
                         pkg.type === 'premium'
-                          ? 'bg-gold/15 text-gold-dark'
-                          : 'bg-navy/6 text-navy/50'
+                          ? selected ? 'bg-gold text-navy' : 'bg-gold/15 text-gold-dark'
+                          : selected ? 'bg-navy/12 text-navy/65' : 'bg-navy/6 text-navy/45'
                       )}
                       style={{ fontFamily: 'Jost, sans-serif' }}
                     >
@@ -585,30 +635,25 @@ export default function BookingForm() {
                     </span>
                   </div>
                   <div className="flex items-center gap-1 mb-1.5">
-                    <span className="text-gold text-[10px]">✦</span>
-                    <span className="text-[10px] text-navy/60" style={{ fontFamily: 'Jost, sans-serif' }}>
+                    <span className={clsx('text-[10px]', selected ? 'text-gold' : 'text-gold/60')}>✦</span>
+                    <span className={clsx('text-[10px]', selected ? 'text-navy/70' : 'text-navy/50')} style={{ fontFamily: 'Jost, sans-serif' }}>
                       {pkg.duration_label}
                     </span>
                   </div>
-                  <p className="text-[9px] text-navy/40 leading-snug" style={{ fontFamily: 'Jost, sans-serif' }}>
+                  <p className={clsx('text-[9px] leading-snug', selected ? 'text-navy/55' : 'text-navy/38')} style={{ fontFamily: 'Jost, sans-serif' }}>
                     {pkg.includes}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-end mt-auto">
+                <div className="flex items-center justify-between mt-auto pt-2">
+                  <div className={clsx('h-px flex-1 mr-3 transition-colors duration-300', selected ? 'bg-gold/25' : 'bg-navy/6')} />
                   <span
-                    className={clsx(selected ? 'text-navy' : 'text-navy/75')}
+                    className={clsx('transition-all duration-300', selected ? 'text-navy' : 'text-navy/65')}
                     style={{ fontFamily: 'Bodoni Moda, serif', fontSize: '1.125rem', fontWeight: 400 }}
                   >
                     {t.packages.currency}{pkg.price}
                   </span>
                 </div>
-                {selected && (
-                  <motion.div
-                    layoutId="underline"
-                    className="absolute bottom-0 left-4 right-4 h-px bg-gold"
-                  />
-                )}
               </button>
             )
           })}
@@ -634,9 +679,18 @@ export default function BookingForm() {
                 onClick={() => set('mode', mode)}
                 className={clsx(
                   'group relative overflow-hidden rounded-xl border transition-all duration-300 text-left cursor-pointer w-full',
-                  isSelected ? 'border-gold shadow-glass-gold' : 'border-navy/10 hover:border-navy/20'
+                  isSelected
+                    ? 'border-gold shadow-[0_0_0_1px_rgba(201,169,110,0.2),0_6px_28px_rgba(201,169,110,0.22)] scale-[1.01]'
+                    : 'border-navy/10 hover:border-gold/25 hover:shadow-[0_2px_12px_rgba(201,169,110,0.09)]'
                 )}
               >
+                {/* Gold top bar */}
+                <motion.div
+                  className="absolute top-0 left-0 right-0 h-[2px] z-10"
+                  style={{ background: 'linear-gradient(90deg, transparent, #C9A96E 40%, #E8D5A3 50%, #C9A96E 60%, transparent)' }}
+                  animate={{ opacity: isSelected ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                />
                 <div className="relative h-24 overflow-hidden">
                   <Image
                     src={`/images/${mode === 'private' ? 'private-tour.webp' : 'shared-tour.webp'}`}
@@ -648,16 +702,26 @@ export default function BookingForm() {
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-navy/15" />
-                  {isSelected && <div className="absolute inset-0 bg-gradient-to-t from-gold/25 to-transparent" />}
+                  {isSelected && <div className="absolute inset-0 bg-gradient-to-t from-gold/20 to-transparent" />}
+                  {/* Checkmark badge */}
+                  <motion.div
+                    className="absolute top-2 right-2 w-6 h-6 rounded-full bg-gold flex items-center justify-center shadow-md"
+                    animate={{ opacity: isSelected ? 1 : 0, scale: isSelected ? 1 : 0.4 }}
+                    transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <svg className="w-3 h-3 text-navy" viewBox="0 0 12 12" fill="none">
+                      <path d="M2.5 6l2.5 2.5 4.5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </motion.div>
                 </div>
-                <div className={clsx('p-4 transition-colors duration-300', isSelected ? 'bg-gold/8' : 'bg-white')}>
+                <div className={clsx('p-4 transition-colors duration-300', isSelected ? 'bg-gold/[0.07]' : 'bg-white')}>
                   <p
                     className={clsx('mb-0.5', isSelected ? 'text-navy' : 'text-navy/80')}
                     style={{ fontFamily: 'Bodoni Moda, serif', fontSize: '0.95rem', fontStyle: 'italic', fontWeight: 400 }}
                   >
                     {mode === 'private' ? b.private_title : b.shared_title}
                   </p>
-                  <p className="text-[10px] text-navy/45 leading-tight" style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}>
+                  <p className={clsx('text-[10px] leading-tight', isSelected ? 'text-navy/55' : 'text-navy/40')} style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}>
                     {mode === 'private' ? b.private_desc : b.shared_desc}
                   </p>
                 </div>
@@ -682,8 +746,8 @@ export default function BookingForm() {
                     </h3>
 
                     <div className="grid sm:grid-cols-2 gap-4">
-                      {(['boat-1', 'boat-2'] as const).map((boatId, idx) => {
-                        const boat = t.fleet.boats[idx]
+                      {BOATS_CONFIG.filter(b => b.visible).map(({ id: boatId, fleetIdx }) => {
+                        const boat = t.fleet.boats[fleetIdx]
                         const isSelected = form.boatId === boatId
                         return (
                           <button
@@ -692,10 +756,17 @@ export default function BookingForm() {
                             className={clsx(
                               'group relative overflow-hidden rounded-2xl border transition-all duration-300 text-left cursor-pointer',
                               isSelected
-                                ? 'border-gold shadow-[0_4px_24px_rgba(201,169,110,0.25)]'
-                                : 'border-navy/10 hover:border-navy/25'
+                                ? 'border-gold shadow-[0_0_0_1px_rgba(201,169,110,0.2),0_8px_40px_rgba(201,169,110,0.28)] scale-[1.01]'
+                                : 'border-navy/10 hover:border-gold/30 hover:shadow-[0_4px_20px_rgba(201,169,110,0.12)]'
                             )}
                           >
+                            {/* Gold top bar */}
+                            <motion.div
+                              className="absolute top-0 left-0 right-0 h-[2px] z-10"
+                              style={{ background: 'linear-gradient(90deg, transparent, #C9A96E 35%, #E8D5A3 50%, #C9A96E 65%, transparent)' }}
+                              animate={{ opacity: isSelected ? 1 : 0, scaleX: isSelected ? 1 : 0.3 }}
+                              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                            />
                             {/* Boat image */}
                             <div className="relative h-48 overflow-hidden">
                               <Image
@@ -706,38 +777,45 @@ export default function BookingForm() {
                                 priority
                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                               />
-                              <div className="absolute inset-0 bg-navy/20" />
+                              <div className={clsx('absolute inset-0 transition-all duration-300', isSelected ? 'bg-navy/15' : 'bg-navy/25')} />
                               {isSelected && (
-                                <div className="absolute inset-0 bg-gradient-to-t from-gold/25 to-transparent" />
-                              )}
-                              {isSelected && (
-                                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gold" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-gold/20 via-transparent to-transparent" />
                               )}
                               {/* Boat number badge */}
                               <div className="absolute top-3 left-3">
-                                <span
-                                  className={clsx(
-                                    'text-[10px] tracking-[0.2em] uppercase px-2.5 py-1 rounded-full',
-                                    isSelected
-                                      ? 'bg-gold text-navy'
-                                      : 'bg-white/15 text-white backdrop-blur-sm'
-                                  )}
+                                <motion.span
+                                  animate={{
+                                    background: isSelected ? '#C9A96E' : 'rgba(255,255,255,0.15)',
+                                    color: isSelected ? '#0A1628' : '#ffffff',
+                                  }}
+                                  transition={{ duration: 0.25 }}
+                                  className="text-[10px] tracking-[0.2em] uppercase px-2.5 py-1 rounded-full backdrop-blur-sm inline-block"
                                   style={{ fontFamily: 'Jost, sans-serif' }}
                                 >
-                                  {idx === 0 ? 'I' : 'II'}
-                                </span>
+                                  {fleetIdx === 0 ? 'I' : 'II'}
+                                </motion.span>
                               </div>
+                              {/* Gold checkmark */}
+                              <motion.div
+                                className="absolute top-3 right-3 w-7 h-7 rounded-full bg-gold flex items-center justify-center shadow-lg"
+                                animate={{ opacity: isSelected ? 1 : 0, scale: isSelected ? 1 : 0.3 }}
+                                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                              >
+                                <svg className="w-3.5 h-3.5 text-navy" viewBox="0 0 12 12" fill="none">
+                                  <path d="M2.5 6l2.5 2.5 4.5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                              </motion.div>
                             </div>
 
                             {/* Info */}
-                            <div className={clsx('p-4 transition-colors duration-300', isSelected ? 'bg-gold/8' : 'bg-white')}>
+                            <div className={clsx('p-4 transition-colors duration-300', isSelected ? 'bg-gold/[0.07]' : 'bg-white')}>
                               <p
                                 className={clsx('mb-1', isSelected ? 'text-navy' : 'text-navy/80')}
                                 style={{ fontFamily: 'Bodoni Moda, serif', fontSize: '1.05rem', fontStyle: 'italic', fontWeight: 400 }}
                               >
                                 {boat.name}
                               </p>
-                              <p className="text-xs text-navy/45" style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}>
+                              <p className={clsx('text-xs', isSelected ? 'text-navy/55' : 'text-navy/40')} style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}>
                                 {boat.desc}
                               </p>
                             </div>
@@ -1005,6 +1083,7 @@ export default function BookingForm() {
               </button>
             </motion.div>
           )}
+          </div>{/* /inner padding div */}
         </motion.div>
       </div>
     </section>

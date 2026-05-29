@@ -48,6 +48,7 @@
     "capacity": "Up to",
     "people": "guests",
     "all_packages": "Explore Experiences",
+    "not_available": "Not yet available",
     "boats": [
       {
         "name": "Bruno Abbate Primatist 25",
@@ -80,7 +81,7 @@
         "duration_h": 1,
         "duration_label": "1 hour",
         "price": 250,
-        "image": "golden-hour.jpg",
+        "image": "golden-hour-v1.0.webp",
         "desc": "Toast to the sunset with a glass of Prosecco as Como's golden light paints the water. The perfect one-hour escape.",
         "includes": "Complimentary Prosecco · First basin tour"
       },
@@ -91,7 +92,7 @@
         "duration_h": 1,
         "duration_label": "1 hour",
         "price": 300,
-        "image": "breakfast.jpg",
+        "image": "breakfast-v1.0.webp",
         "desc": "Begin your day with a curated lakeside breakfast, drifting through Como's morning calm. Available 8:30–10:30.",
         "includes": "Full breakfast service · Scenic morning tour"
       },
@@ -102,7 +103,7 @@
         "duration_h": 1.5,
         "duration_label": "1.5 hours",
         "price": 350,
-        "image": "aperitivo.jpg",
+        "image": "aperitivo-v1.0.webp",
         "desc": "The Italian art of the aperitivo, elevated at sunset on the lake. Drift past the most iconic shores as the sky turns gold.",
         "includes": "Italian aperitivo & stuzzichini · Drinks at sunset"
       },
@@ -113,7 +114,7 @@
         "duration_h": 1.5,
         "duration_label": "1.5 hours",
         "price": 380,
-        "image": "sushi.jpg",
+        "image": "sushi-v1.0.webp",
         "desc": "Premium sushi box and curated drinks on a scenic panoramic cruise through Como's most breathtaking views.",
         "includes": "Premium sushi box · Curated drinks · Panoramic route"
       },
@@ -124,7 +125,7 @@
         "duration_h": 2,
         "duration_label": "2 hours",
         "price": 450,
-        "image": "como-luxury.jpg",
+        "image": "como-luxury-v1.0.webp",
         "desc": "Villa Pliniana, Villa Oleandra (George Clooney's estate), Nesso — Como's most exclusive landmarks, seen from the water.",
         "includes": "Villa Pliniana · Villa Oleandra · Nesso gorge"
       },
@@ -135,7 +136,7 @@
         "duration_h": 4,
         "duration_label": "4 hours",
         "price": 800,
-        "image": "dolce-vita.jpg",
+        "image": "dolce-vita-v1.0.webp",
         "desc": "A grand journey to Isola Comacina and the jewel village of Varenna — the definitive, unforgettable Como experience.",
         "includes": "Isola Comacina · Varenna · Full lake grand tour"
       }
