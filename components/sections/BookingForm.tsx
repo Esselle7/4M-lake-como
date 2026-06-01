@@ -452,6 +452,43 @@ export default function BookingForm() {
     const boatName = form.boatId === 'boat-1' ? t.fleet.boats[0].name : t.fleet.boats[1].name
     return `Vorrei richiedere una prenotazione per il pacchetto "${form.packageName}" in modalità ${modeText}. Imbarcazione: ${boatName}. Data: ${form.date} alle ore ${form.time}. Gruppo composto da ${form.guests} persone. Nome: ${form.name} ${form.surname}. Contatto: ${form.phone} - ${form.email}. Note: ${form.notes || 'Nessuna nota specifica'}.`
   }
+
+  // Messaggio di conferma pronto da copiare e inviare al cliente su WhatsApp,
+  // personalizzato con i dati della prenotazione (data, barca, prezzo, acconto).
+  function buildWhatsappMessage() {
+    const pkg = packages.find(p => p.id === form.packageId)
+    const boatName = form.boatId === 'boat-1' ? t.fleet.boats[0].name : t.fleet.boats[1].name
+    const isPrivate = form.mode === 'private'
+    const guests = parseInt(form.guests, 10) || 1
+    const guestsLabel = `${guests} ${guests === 1 ? 'persona' : 'persone'}`
+    const currency = t.packages.currency
+    const unitPrice = typeof pkg?.price === 'number' ? pkg.price : Number(pkg?.price) || 0
+    const total = isPrivate ? unitPrice : unitPrice * guests
+    const deposit = Math.round(total * 0.3)
+    const modeLabel = isPrivate ? `barca privata per ${guestsLabel}` : `tour condiviso, ${guestsLabel}`
+
+    let dateLabel = form.date
+    if (form.date) {
+      const d = new Date(`${form.date}T00:00:00`)
+      const raw = new Intl.DateTimeFormat('it-IT', { weekday: 'long', day: 'numeric', month: 'long' }).format(d)
+      dateLabel = raw.charAt(0).toUpperCase() + raw.slice(1)
+    }
+
+    return `Ciao ${form.name}! 🛥️✨
+Qui è lo staff di 4M Lake Como. Siamo felici di confermarti che abbiamo ricevuto la tua richiesta di prenotazione! Pronti a farvi vivere un'esperienza indimenticabile sul lago. 🌊
+Ecco il riepilogo del vostro tour:
+📅 Data: ${dateLabel}
+🥂 Esperienza: ${form.packageName} (${modeLabel})
+🕒 Partenza: ${form.time}
+📍 Meeting point: Molo di Lungo Lario Trieste, Como (trovi la posizione esatta e tutti i riferimenti completi sul nostro sito web https://4mboatlakecomo.com/)
+🚤 La barca: Per questa occasione vi abbiamo riservato la splendida ${boatName} 🇮🇹💨
+💰 Prezzo totale: ${currency}${total}
+🔒 Per bloccare definitivamente la prenotazione:
+A breve ti invieremo qui sotto un link sicuro per il pagamento dell'acconto, che è di ${currency}${deposit} (30% del prezzo totale). Ti basterà cliccarci sopra per completare la transazione in un attimo.
+Non vediamo l'ora di avervi a bordo! Se hai richieste particolari per l'aperitivo o per la musica, faccelo sapere. 🍾🥂
+A presto,
+Il team di 4M Lake Como 🌅📖`
+  }
   const handleBlur = (field: string, value: string) => {
   let errorMessage = "";
   
@@ -473,11 +510,12 @@ export default function BookingForm() {
     if (!validateStep()) return
     setIsSending(true)
     const message = buildMessage()
+    const whatsappMessage = buildWhatsappMessage()
     try {
       const response = await fetch('/api/send-booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ form, message }),
+        body: JSON.stringify({ form, message, whatsappMessage }),
       })
       if (!response.ok) throw new Error('Errore invio mail')
       setSubmitted(true)

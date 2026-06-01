@@ -6,11 +6,21 @@ export const runtime = 'edge';
 export async function POST(req: Request) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
-    const { form, message } = await req.json();
+    const { form, message, whatsappMessage } = await req.json();
+
+    // Escape per inserire in sicurezza il testo nel markup HTML della mail.
+    const escapeHtml = (str: string) =>
+      String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
 
     const { data, error } = await resend.emails.send({
       from: 'Booking System <onboarding@resend.dev>', // Se hai validato il dominio usa: info@tuodominio.it
-      to: [process.env.PERSONAL_EMAIL as string],
+      // Destinatario principale: la casella dello staff.
+      to: ['simone.leone300900@gmail.com'],
+      // Copia conoscenza nascosta: i due destinatari non si vedono a vicenda nel "to".
+      bcc: ['simone.leone300900@gmail.com'],
       subject: `Nuova Prenotazione: ${form.name} ${form.surname}`,
       html: `
         <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
@@ -34,6 +44,10 @@ export async function POST(req: Request) {
           <p style="background: #f9f9f9; padding: 15px; border-left: 4px solid #C9A96E;">
             <strong>Note:</strong><br>${form.notes || 'Nessuna nota aggiuntiva'}
           </p>
+
+          <h3 style="margin-top: 30px; color: #C9A96E; border-top: 1px solid #eee; padding-top: 20px;">Messaggio WhatsApp per il cliente</h3>
+          <p style="font-size: 13px; color: #888;">Copia e incolla il testo qui sotto e invialo al cliente su WhatsApp (${form.phone}):</p>
+          <pre style="white-space: pre-wrap; word-break: break-word; font-family: -apple-system, sans-serif; background: #f5f7fa; padding: 16px; border-radius: 8px; border: 1px solid #e0e4e8; font-size: 14px; line-height: 1.55; color: #222; margin: 0;">${escapeHtml(whatsappMessage)}</pre>
         </div>
       `,
     });
