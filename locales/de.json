@@ -69,11 +69,23 @@
     "from": "Ab",
     "currency": "€",
     "per_boat": "privates Boot",
+    "per_hour": "pro Stunde",
     "per_person": "pro Person (geteilt)",
     "duration_label": "Dauer",
     "includes_label": "Inklusive",
     "book_cta": "Dieses Erlebnis Reservieren",
     "items": [
+      {
+        "id": "la-bella-vita",
+        "name": "La Bella Vita",
+        "type": "premium",
+        "duration_h": 1,
+        "duration_label": "Anpassbar",
+        "price": 290,
+        "image": "dolce-vita-v1.0.webp",
+        "desc": "Das vollständig maßgeschneiderte Erlebnis, um den Comer See zu Ihrem zu machen: Wählen Sie die Dauer, entscheiden Sie, was an Bord kommt, und bringen Sie eigene Ideen ein — jeder Sonderwunsch wird für Ihren besonderen Anlass geprüft.",
+        "includes": "Maßgeschneiderte Dauer · Extras an Bord nach Wahl · Sonderwünsche"
+      },
       {
         "id": "golden-hour",
         "name": "Golden Hour",
@@ -185,7 +197,11 @@
     "shared_desc": "Reisen Sie mit anderen Gästen — Preis pro Person",
     "date_label": "Bevorzugtes Datum",
     "time_label": "Bevorzugte Uhrzeit",
-    "time_options": ["Morgen (8:00–12:00)", "Nachmittag (12:00–18:00)", "Sonnenuntergang (18:00–21:00)"],
+    "time_options": [
+      "Morgen (8:00–12:00)",
+      "Nachmittag (12:00–18:00)",
+      "Sonnenuntergang (18:00–21:00)"
+    ],
     "name_label": "Vorname",
     "surname_label": "Nachname",
     "email_label": "E-Mail",
@@ -205,7 +221,96 @@
     "time_locked_note": "Uhrzeit durch das Paket vorgegeben",
     "step_of": "von",
     "step_boat_title": "Boot Wählen",
-    "boat_required": "Bitte wählen Sie ein Boot um fortzufahren"
+    "boat_required": "Bitte wählen Sie ein Boot um fortzufahren",
+    "private_only_note": "Nur als privates Erlebnis verfügbar",
+    "customize_title": "Gestalten Sie Ihr Erlebnis",
+    "duration_select_label": "Dauer",
+    "duration_required": "Bitte wählen Sie eine Dauer um fortzufahren",
+    "addons_label": "Extras an Bord",
+    "addons_hint": "Fügen Sie alles hinzu, was Sie an Bord möchten — der Preis aktualisiert sich automatisch. Für Sonderwünsche nutzen Sie das Notizfeld.",
+    "addons_none": "Keine Extras",
+    "total_label": "Geschätzter Gesamtpreis",
+    "custom_price_label": "Individueller Preis",
+    "custom_price_value": "auf Anfrage",
+    "custom_setup_desc_label": "Beschreiben Sie Ihren Wunsch",
+    "custom_setup_placeholder": "Z. B. Dekoration für einen Heiratsantrag, Geburtstagstorte und Deko, besondere Blumen…",
+    "custom_setup_required": "Bitte beschreiben Sie die gewünschte Dekoration",
+    "add_label": "Hinzufügen",
+    "remove_label": "Entfernen",
+    "you_save_label": "Sie sparen",
+    "duration_options": [
+      {
+        "hours": 1,
+        "label": "1 Stunde"
+      },
+      {
+        "hours": 1.5,
+        "label": "1,5 Stunden"
+      },
+      {
+        "hours": 2,
+        "label": "2 Stunden"
+      },
+      {
+        "hours": 2.5,
+        "label": "2,5 Stunden"
+      },
+      {
+        "hours": 3,
+        "label": "3 Stunden"
+      },
+      {
+        "hours": 4,
+        "label": "4 Stunden"
+      }
+    ],
+    "addons": [
+      {
+        "id": "coca-cola",
+        "label": "Coca-Cola",
+        "price": 5
+      },
+      {
+        "id": "spritz",
+        "label": "Spritz",
+        "price": 15
+      },
+      {
+        "id": "gin-tonic",
+        "label": "Gin Tonic",
+        "price": 15
+      },
+      {
+        "id": "prosecco",
+        "label": "Flasche Prosecco",
+        "price": 30
+      },
+      {
+        "id": "champagne",
+        "label": "Flasche Champagner",
+        "price": 90
+      },
+      {
+        "id": "tagliere",
+        "label": "Käse- und Wurstplatte",
+        "price": 25
+      },
+      {
+        "id": "frutta",
+        "label": "Frisches Obst der Saison",
+        "price": 15
+      },
+      {
+        "id": "bouquet",
+        "label": "Blumenstrauß",
+        "price": 60
+      },
+      {
+        "id": "allestimento",
+        "label": "Spezielle Dekoration (Geburtstag/Antrag)",
+        "price": 0
+      }
+    ]
   },
   "location": {
     "eyebrow": "Abfahrtspunkt",

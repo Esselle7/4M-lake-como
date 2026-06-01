@@ -69,11 +69,23 @@
     "from": "Da",
     "currency": "€",
     "per_boat": "barca privata",
+    "per_hour": "all'ora",
     "per_person": "a persona (condivisa)",
     "duration_label": "Durata",
     "includes_label": "Include",
     "book_cta": "Prenota Questa Esperienza",
     "items": [
+      {
+        "id": "la-bella-vita",
+        "name": "La Bella Vita",
+        "type": "premium",
+        "duration_h": 1,
+        "duration_label": "Personalizzabile",
+        "price": 290,
+        "image": "dolce-vita-v1.0.webp",
+        "desc": "L'esperienza interamente su misura per fare tuo il Lago di Como: scegli la durata, decidi cosa portare a bordo e proponi le tue idee — ogni richiesta speciale verrà valutata per rendere unica la tua occasione.",
+        "includes": "Durata su misura · Extra a bordo a scelta · Richieste speciali"
+      },
       {
         "id": "golden-hour",
         "name": "Golden Hour",
@@ -185,7 +197,11 @@
     "shared_desc": "Condividi la barca con altri ospiti — prezzo a persona",
     "date_label": "Data Preferita",
     "time_label": "Orario Preferito",
-    "time_options": ["Mattina (8:00–12:00)", "Pomeriggio (12:00–18:00)", "Tramonto (18:00–21:00)"],
+    "time_options": [
+      "Mattina (8:00–12:00)",
+      "Pomeriggio (12:00–18:00)",
+      "Tramonto (18:00–21:00)"
+    ],
     "name_label": "Nome",
     "surname_label": "Cognome",
     "email_label": "Email",
@@ -205,7 +221,96 @@
     "time_locked_note": "Orario incluso nel pacchetto selezionato",
     "step_of": "di",
     "step_boat_title": "Scegli l'Imbarcazione",
-    "boat_required": "Seleziona un'imbarcazione per continuare"
+    "boat_required": "Seleziona un'imbarcazione per continuare",
+    "private_only_note": "Esperienza disponibile solo in modalità privata",
+    "customize_title": "Personalizza la Tua Esperienza",
+    "duration_select_label": "Durata",
+    "duration_required": "Seleziona una durata per continuare",
+    "addons_label": "Extra a Bordo",
+    "addons_hint": "Aggiungi tutto ciò che desideri a bordo: il prezzo si aggiorna in automatico. Per richieste speciali usa il campo note.",
+    "addons_none": "Nessun extra",
+    "total_label": "Totale stimato",
+    "custom_price_label": "Prezzo personalizzato",
+    "custom_price_value": "da definire",
+    "custom_setup_desc_label": "Descrivi cosa desideri",
+    "custom_setup_placeholder": "Es. allestimento per proposta di matrimonio, torta e decorazioni di compleanno, fiori particolari…",
+    "custom_setup_required": "Descrivi l'allestimento che desideri",
+    "add_label": "Aggiungi",
+    "remove_label": "Rimuovi",
+    "you_save_label": "Risparmi",
+    "duration_options": [
+      {
+        "hours": 1,
+        "label": "1 ora"
+      },
+      {
+        "hours": 1.5,
+        "label": "1 ora e mezza"
+      },
+      {
+        "hours": 2,
+        "label": "2 ore"
+      },
+      {
+        "hours": 2.5,
+        "label": "2 ore e mezza"
+      },
+      {
+        "hours": 3,
+        "label": "3 ore"
+      },
+      {
+        "hours": 4,
+        "label": "4 ore"
+      }
+    ],
+    "addons": [
+      {
+        "id": "coca-cola",
+        "label": "Coca-Cola",
+        "price": 5
+      },
+      {
+        "id": "spritz",
+        "label": "Spritz",
+        "price": 15
+      },
+      {
+        "id": "gin-tonic",
+        "label": "Gin Tonic",
+        "price": 15
+      },
+      {
+        "id": "prosecco",
+        "label": "Bottiglia di Prosecco",
+        "price": 30
+      },
+      {
+        "id": "champagne",
+        "label": "Bottiglia di Champagne",
+        "price": 90
+      },
+      {
+        "id": "tagliere",
+        "label": "Tagliere di salumi e formaggi",
+        "price": 25
+      },
+      {
+        "id": "frutta",
+        "label": "Frutta fresca di stagione",
+        "price": 15
+      },
+      {
+        "id": "bouquet",
+        "label": "Bouquet di fiori",
+        "price": 60
+      },
+      {
+        "id": "allestimento",
+        "label": "Allestimento speciale (compleanno/proposta)",
+        "price": 0
+      }
+    ]
   },
   "location": {
     "eyebrow": "Il Punto di Imbarco",

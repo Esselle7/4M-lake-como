@@ -11,6 +11,7 @@ const DEPARTURE_POSTAL = '22100'
 const DEPARTURE_COUNTRY = 'IT'
 
 const PACKAGES = [
+  { id: 'la-bella-vita', name: 'La Bella Vita',     price: 290, duration: 'PT1H',   desc: 'Fully customizable private boat experience on Lake Como. Choose your duration (from 1 hour, €290/hour) and onboard extras. Special requests welcome.' },
   { id: 'golden-hour',  name: 'Golden Hour',        price: 250, duration: 'PT1H',   desc: 'Private boat tour on Lake Como with Prosecco at sunset. 1 hour.' },
   { id: 'breakfast',    name: 'Breakfast on Board',  price: 300, duration: 'PT1H',   desc: 'Breakfast on board on Lake Como. Morning cruise 8:30–10:30.' },
   { id: 'aperitivo',    name: 'Aperitivo Tour',      price: 350, duration: 'PT1H30M',desc: 'Italian aperitivo at sunset on a private boat on Lake Como.' },

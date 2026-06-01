@@ -69,11 +69,23 @@
     "from": "From",
     "currency": "€",
     "per_boat": "private boat",
+    "per_hour": "per hour",
     "per_person": "per person (shared)",
     "duration_label": "Duration",
     "includes_label": "Includes",
     "book_cta": "Reserve This Experience",
     "items": [
+      {
+        "id": "la-bella-vita",
+        "name": "La Bella Vita",
+        "type": "premium",
+        "duration_h": 1,
+        "duration_label": "Customizable",
+        "price": 290,
+        "image": "dolce-vita-v1.0.webp",
+        "desc": "The fully bespoke experience to make Lake Como yours: choose your duration, decide what to bring on board and suggest your own ideas — every special request is considered to make your occasion unique.",
+        "includes": "Tailored duration · Choice of onboard extras · Special requests"
+      },
       {
         "id": "golden-hour",
         "name": "Golden Hour",
@@ -185,7 +197,11 @@
     "shared_desc": "Join other guests — price per person",
     "date_label": "Preferred Date",
     "time_label": "Preferred Time",
-    "time_options": ["Morning (8:00–12:00)", "Afternoon (12:00–18:00)", "Sunset (18:00–21:00)"],
+    "time_options": [
+      "Morning (8:00–12:00)",
+      "Afternoon (12:00–18:00)",
+      "Sunset (18:00–21:00)"
+    ],
     "name_label": "First Name",
     "surname_label": "Last Name",
     "email_label": "Email",
@@ -205,7 +221,96 @@
     "time_locked_note": "Time set by the selected package",
     "step_of": "of",
     "step_boat_title": "Choose Your Vessel",
-    "boat_required": "Please select a vessel to continue"
+    "boat_required": "Please select a vessel to continue",
+    "private_only_note": "Available as a private experience only",
+    "customize_title": "Customize Your Experience",
+    "duration_select_label": "Duration",
+    "duration_required": "Please select a duration to continue",
+    "addons_label": "Onboard Extras",
+    "addons_hint": "Add anything you'd like on board — the price updates automatically. For special requests use the notes field.",
+    "addons_none": "No extras",
+    "total_label": "Estimated total",
+    "custom_price_label": "Custom price",
+    "custom_price_value": "to be quoted",
+    "custom_setup_desc_label": "Describe what you'd like",
+    "custom_setup_placeholder": "E.g. setup for a marriage proposal, birthday cake and decorations, special flowers…",
+    "custom_setup_required": "Please describe the setup you'd like",
+    "add_label": "Add",
+    "remove_label": "Remove",
+    "you_save_label": "You save",
+    "duration_options": [
+      {
+        "hours": 1,
+        "label": "1 hour"
+      },
+      {
+        "hours": 1.5,
+        "label": "1.5 hours"
+      },
+      {
+        "hours": 2,
+        "label": "2 hours"
+      },
+      {
+        "hours": 2.5,
+        "label": "2.5 hours"
+      },
+      {
+        "hours": 3,
+        "label": "3 hours"
+      },
+      {
+        "hours": 4,
+        "label": "4 hours"
+      }
+    ],
+    "addons": [
+      {
+        "id": "coca-cola",
+        "label": "Coca-Cola",
+        "price": 5
+      },
+      {
+        "id": "spritz",
+        "label": "Spritz",
+        "price": 15
+      },
+      {
+        "id": "gin-tonic",
+        "label": "Gin & Tonic",
+        "price": 15
+      },
+      {
+        "id": "prosecco",
+        "label": "Bottle of Prosecco",
+        "price": 30
+      },
+      {
+        "id": "champagne",
+        "label": "Bottle of Champagne",
+        "price": 90
+      },
+      {
+        "id": "tagliere",
+        "label": "Cheese & charcuterie board",
+        "price": 25
+      },
+      {
+        "id": "frutta",
+        "label": "Fresh seasonal fruit",
+        "price": 15
+      },
+      {
+        "id": "bouquet",
+        "label": "Flower bouquet",
+        "price": 60
+      },
+      {
+        "id": "allestimento",
+        "label": "Special setup (birthday/proposal)",
+        "price": 0
+      }
+    ]
   },
   "location": {
     "eyebrow": "Departure Point",

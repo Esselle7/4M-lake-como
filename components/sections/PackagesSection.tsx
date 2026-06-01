@@ -7,6 +7,7 @@ import LiquidGlassButton from '@/components/ui/LiquidGlassButton'
 import { useRouter } from 'next/navigation'
 import NextImage from 'next/image'
 import clsx from 'clsx'
+import { CUSTOM_PACKAGE_ID } from '@/lib/pricing'
 
 interface PackageItem {
   id: string
@@ -23,6 +24,7 @@ interface CardLabels {
   from: string
   currency: string
   per_boat: string
+  per_hour: string
   duration_label: string
   includes_label: string
   book_cta: string
@@ -41,6 +43,7 @@ const CARD_GRADIENTS = [
 
 function PackageCard({ pkg, index, labels, compact = false }: { pkg: PackageItem; index: number; labels: CardLabels; compact?: boolean }) {
   const isPremium = pkg.type === 'premium'
+  const isCustom = pkg.id === CUSTOM_PACKAGE_ID
   const router = useRouter()
 
   return (
@@ -183,7 +186,7 @@ function PackageCard({ pkg, index, labels, compact = false }: { pkg: PackageItem
               </span>
             </div>
             <span style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.5625rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.22)' }}>
-              {labels.per_boat}
+              {isCustom ? labels.per_hour : labels.per_boat}
             </span>
           </div>
           <LiquidGlassButton
@@ -395,6 +398,7 @@ export default function PackagesSection() {
     from: p.from,
     currency: p.currency,
     per_boat: p.per_boat,
+    per_hour: p.per_hour,
     duration_label: p.duration_label,
     includes_label: p.includes_label,
     book_cta: p.book_cta,

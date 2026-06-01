@@ -6,6 +6,15 @@ import { useLang } from '@/context/LanguageContext'
 import Image from 'next/image'
 import LiquidGlassButton from '@/components/ui/LiquidGlassButton'
 import clsx from 'clsx'
+import itLocale from '@/locales/it.json'
+import enLocale from '@/locales/en.json'
+import {
+  computePriceBreakdown,
+  computeDeposit,
+  isCustomPackage,
+  isCustomPriceAddon,
+  selectedAddonLines,
+} from '@/lib/pricing'
 
 interface FormData {
   packageId: string
@@ -20,6 +29,11 @@ interface FormData {
   phone: string
   guests: string
   notes: string
+  // "La Bella Vita" only — chosen duration (hours) and onboard extras (addonId → qty)
+  durationHours: number
+  addons: Record<string, number>
+  // Free-text brief for the custom-priced "special setup" extra (quoted later)
+  customSetupNote: string
 }
 
 const BOAT_IMAGES: Record<string, string> = {
@@ -46,6 +60,9 @@ const INITIAL_FORM: FormData = {
   phone: '',
   guests: '2',
   notes: '',
+  durationHours: 0,
+  addons: {},
+  customSetupNote: '',
 }
 
 const LOCKED_TIMES: Record<string, number> = {
@@ -382,6 +399,90 @@ function StepIndicator({ step, total, label }: { step: number; total: number; la
   )
 }
 
+// ── WhatsApp confirmation copy (always rendered in both IT + EN) ──────────────
+
+type WaLang = 'it' | 'en'
+
+const WA_STRINGS: Record<WaLang, {
+  locale: string
+  header: string
+  greeting: (name: string) => string
+  intro: string
+  recap: string
+  date: string
+  experience: string
+  duration: string
+  extras: string
+  setup: string
+  departure: string
+  meeting: string
+  boat: (name: string) => string
+  total: string
+  insteadOf: (orig: string, pct: number) => string
+  customPrice: string
+  bespoke: (guests: string) => string
+  privateFor: (guests: string) => string
+  sharedFor: (guests: string) => string
+  persons: (n: number) => string
+  lock: string
+  deposit: (amount: string) => string
+  closing: string
+  signoff: string
+}> = {
+  it: {
+    locale: 'it-IT',
+    header: '🇮🇹 ITALIANO',
+    greeting: (name) => `Ciao ${name}! 🛥️✨`,
+    intro: `Qui è lo staff di 4M Lake Como. Siamo felici di confermarti che abbiamo ricevuto la tua richiesta di prenotazione! Pronti a farvi vivere un'esperienza indimenticabile sul lago. 🌊`,
+    recap: `Ecco il riepilogo del vostro tour:`,
+    date: 'Data',
+    experience: 'Esperienza',
+    duration: 'Durata',
+    extras: 'Extra a bordo',
+    setup: 'Allestimento speciale',
+    departure: 'Partenza',
+    meeting: `Meeting point: Molo di Lungo Lario Trieste, Como (trovi la posizione esatta e tutti i riferimenti completi sul nostro sito web https://4mboatlakecomo.com/)`,
+    boat: (name) => `La barca: Per questa occasione vi abbiamo riservato la splendida ${name} 🇮🇹💨`,
+    total: 'Prezzo totale',
+    insteadOf: (orig, pct) => `(anziché ${orig} — sconto ${pct}% sulle ore)`,
+    customPrice: 'prezzo da definire',
+    bespoke: (g) => `esperienza su misura (barca privata per ${g})`,
+    privateFor: (g) => `barca privata per ${g}`,
+    sharedFor: (g) => `tour condiviso, ${g}`,
+    persons: (n) => `${n} ${n === 1 ? 'persona' : 'persone'}`,
+    lock: `🔒 Per bloccare definitivamente la prenotazione:`,
+    deposit: (amount) => `A breve ti invieremo qui sotto un link sicuro per il pagamento dell'acconto, che è di ${amount} (30% del prezzo totale). Ti basterà cliccarci sopra per completare la transazione in un attimo.`,
+    closing: `Non vediamo l'ora di avervi a bordo! Se hai richieste particolari per l'aperitivo, per la musica o per le tue occasioni speciali, faccelo sapere. 🍾🥂`,
+    signoff: `A presto,\nIl team di 4M Lake Como 🌅📖`,
+  },
+  en: {
+    locale: 'en-GB',
+    header: '🇬🇧 ENGLISH',
+    greeting: (name) => `Hi ${name}! 🛥️✨`,
+    intro: `This is the 4M Lake Como team. We're delighted to confirm we've received your booking request! Ready to give you an unforgettable experience on the lake. 🌊`,
+    recap: `Here's a summary of your tour:`,
+    date: 'Date',
+    experience: 'Experience',
+    duration: 'Duration',
+    extras: 'Onboard extras',
+    setup: 'Special setup',
+    departure: 'Departure',
+    meeting: `Meeting point: Molo di Lungo Lario Trieste, Como (you'll find the exact location and all the details on our website https://4mboatlakecomo.com/)`,
+    boat: (name) => `The boat: For this occasion we've reserved the stunning ${name} 🇮🇹💨`,
+    total: 'Total price',
+    insteadOf: (orig, pct) => `(instead of ${orig} — ${pct}% off the hours)`,
+    customPrice: 'price to be confirmed',
+    bespoke: (g) => `bespoke experience (private boat for ${g})`,
+    privateFor: (g) => `private boat for ${g}`,
+    sharedFor: (g) => `shared tour, ${g}`,
+    persons: (n) => `${n} ${n === 1 ? 'person' : 'people'}`,
+    lock: `🔒 To secure your booking:`,
+    deposit: (amount) => `We'll shortly send you a secure link below to pay the deposit of ${amount} (30% of the total). Just tap it to complete the transaction in seconds.`,
+    closing: `We can't wait to have you on board! If you have any special requests for the aperitivo, the music or your special occasion, just let us know. 🍾🥂`,
+    signoff: `See you soon,\nThe 4M Lake Como team 🌅📖`,
+  },
+}
+
 // ── Main Component ────────────────────────────────────────────────────────────
 
 export default function BookingForm() {
@@ -391,11 +492,34 @@ export default function BookingForm() {
   const [submitted, setSubmitted] = useState(false)
   const [errors, setErrors] = useState<Partial<FormData>>({})
   const [isSending, setIsSending] = useState(false)
+  const [durationError, setDurationError] = useState('')
   const sectionRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-80px' })
 
   const b = t.booking
   const packages = t.packages.items
+
+  // "La Bella Vita": fully customizable, private-only experience
+  const addonCatalog = b.addons
+  // Extras with a fixed price (stepper) vs. the custom-priced "special setup" (toggle + brief)
+  const fixedAddons = addonCatalog.filter(a => !isCustomPriceAddon(a.id))
+  const customAddon = addonCatalog.find(a => isCustomPriceAddon(a.id))
+  const customSetupSelected = !!customAddon && (form.addons[customAddon.id] || 0) > 0
+  const durationOptions = b.duration_options
+  const isCustom = isCustomPackage(form.packageId)
+  const currency = t.packages.currency
+
+  const selectedPkg = packages.find(p => p.id === form.packageId)
+  const unitPrice = typeof selectedPkg?.price === 'number' ? selectedPkg.price : Number(selectedPkg?.price) || 0
+  const liveBreakdown = computePriceBreakdown({
+    packageId: form.packageId,
+    unitPrice,
+    mode: form.mode,
+    guests: parseInt(form.guests, 10) || 1,
+    durationHours: form.durationHours,
+    addons: form.addons,
+    addonCatalog,
+  })
 
   const timeOptionsRef = useRef(b.time_options)
   useEffect(() => { timeOptionsRef.current = b.time_options }, [b.time_options])
@@ -405,6 +529,7 @@ export default function BookingForm() {
       const { id, name } = (e as CustomEvent<{ id: string; name: string }>).detail
       const lockedIdx = LOCKED_TIMES[id]
       const minIdx = TIME_MIN_INDEX[id]
+      const custom = isCustomPackage(id)
       setForm(prev => {
         const currentTimeIdx = timeOptionsRef.current.indexOf(prev.time)
         const nowBelowMin = minIdx !== undefined && currentTimeIdx >= 0 && currentTimeIdx < minIdx
@@ -412,12 +537,19 @@ export default function BookingForm() {
           ...prev,
           packageId: id,
           packageName: name,
+          // La Bella Vita is private-only and customizable: force private,
+          // default to the first duration, and reset extras when leaving it.
+          mode: custom ? 'private' : prev.mode,
+          durationHours: custom ? durationOptions[0].hours : 0,
+          addons: custom ? prev.addons : {},
+          customSetupNote: custom ? prev.customSetupNote : '',
           time: lockedIdx !== undefined
             ? timeOptionsRef.current[lockedIdx]
             : nowBelowMin ? '' : prev.time,
         }
       })
       setErrors({})
+      setDurationError('')
       setStep(0)
     }
     window.addEventListener('selectPackage', handler)
@@ -429,11 +561,45 @@ export default function BookingForm() {
     setErrors(e => ({ ...e, [field]: '' }))
   }
 
+  const setDuration = (hours: number) => {
+    setForm(p => ({ ...p, durationHours: hours }))
+    setDurationError('')
+  }
+
+  // Increment/decrement an onboard extra; quantity never goes below 0.
+  const changeAddon = (id: string, delta: number) => {
+    setForm(p => {
+      const next = Math.max(0, (p.addons[id] || 0) + delta)
+      const addons = { ...p.addons }
+      if (next === 0) delete addons[id]
+      else addons[id] = next
+      return { ...p, addons }
+    })
+  }
+
+  // Toggle the custom-priced "special setup" extra on/off (no quantity).
+  const toggleCustomSetup = (id: string) => {
+    setForm(p => {
+      const addons = { ...p.addons }
+      if (addons[id]) {
+        delete addons[id]
+        return { ...p, addons, customSetupNote: '' }
+      }
+      addons[id] = 1
+      return { ...p, addons }
+    })
+    setErrors(e => ({ ...e, customSetupNote: '' }))
+  }
+
   function validateStep(): boolean {
     const errs: Partial<FormData> = {}
+    let durationInvalid = false
     if (step === 0 && !form.packageId) errs.packageId = b.required
     if (step === 1 && !form.boatId) errs.boatId = b.boat_required
     if (step === 2) {
+      durationInvalid = isCustom && !(form.durationHours > 0)
+      setDurationError(durationInvalid ? b.duration_required : '')
+      if (customSetupSelected && !form.customSetupNote.trim()) errs.customSetupNote = b.custom_setup_required
       if (!form.date) errs.date = b.required
       if (!form.time) errs.time = b.required
     }
@@ -444,50 +610,125 @@ export default function BookingForm() {
       if (!form.phone.trim()) errs.phone = b.required
     }
     setErrors(errs)
-    return Object.keys(errs).length === 0
+    return Object.keys(errs).length === 0 && !durationInvalid
+  }
+
+  // Single source of truth for the booking price + breakdown, reused by the
+  // WhatsApp/email messages and the structured payload sent to the API.
+  function computePricing() {
+    const guests = parseInt(form.guests, 10) || 1
+    const bd = computePriceBreakdown({
+      packageId: form.packageId,
+      unitPrice,
+      mode: form.mode,
+      guests,
+      durationHours: form.durationHours,
+      addons: form.addons,
+      addonCatalog,
+    })
+    const durationLabel = durationOptions.find(o => o.hours === form.durationHours)?.label ?? ''
+    const addonLines = selectedAddonLines(form.addons, addonCatalog).map(l => ({
+      ...l,
+      isCustomPrice: isCustomPriceAddon(l.id),
+    }))
+    return {
+      isCustom,
+      currency,
+      guests,
+      unitPrice,
+      durationHours: form.durationHours,
+      durationLabel,
+      addonLines,
+      customSetupNote: form.customSetupNote.trim(),
+      discountRate: bd.discountRate,
+      originalTotal: bd.originalTotal,
+      total: bd.total,
+      deposit: computeDeposit(bd.total),
+    }
   }
 
   function buildMessage() {
     const modeText = form.mode === 'private' ? b.private : b.shared
     const boatName = form.boatId === 'boat-1' ? t.fleet.boats[0].name : t.fleet.boats[1].name
-    return `Vorrei richiedere una prenotazione per il pacchetto "${form.packageName}" in modalità ${modeText}. Imbarcazione: ${boatName}. Data: ${form.date} alle ore ${form.time}. Gruppo composto da ${form.guests} persone. Nome: ${form.name} ${form.surname}. Contatto: ${form.phone} - ${form.email}. Note: ${form.notes || 'Nessuna nota specifica'}.`
+    const pr = computePricing()
+    let extra = ''
+    if (pr.isCustom) {
+      const addonsText = pr.addonLines.length
+        ? ` Extra a bordo: ${pr.addonLines
+            .map(l => (l.isCustomPrice ? `${l.label} (prezzo da definire)` : `${l.qty}× ${l.label}`))
+            .join(', ')}.`
+        : ''
+      const setupText = pr.customSetupNote ? ` Allestimento speciale: ${pr.customSetupNote}.` : ''
+      extra = ` Durata: ${pr.durationLabel}.${addonsText}${setupText} Totale stimato: ${currency}${pr.total} (acconto ${currency}${pr.deposit}).`
+    }
+    return `Vorrei richiedere una prenotazione per il pacchetto "${form.packageName}" in modalità ${modeText}. Imbarcazione: ${boatName}. Data: ${form.date} alle ore ${form.time}. Gruppo composto da ${form.guests} persone. Nome: ${form.name} ${form.surname}. Contatto: ${form.phone} - ${form.email}. Note: ${form.notes || 'Nessuna nota specifica'}.${extra}`
   }
 
-  // Messaggio di conferma pronto da copiare e inviare al cliente su WhatsApp,
-  // personalizzato con i dati della prenotazione (data, barca, prezzo, acconto).
-  function buildWhatsappMessage() {
-    const pkg = packages.find(p => p.id === form.packageId)
+  // Single localized variant of the WhatsApp confirmation. Extra/duration labels
+  // are pulled from the matching locale file so each block is fully translated.
+  function buildWhatsappVariant(lng: WaLang) {
+    const tr = WA_STRINGS[lng]
+    const loc = lng === 'it' ? itLocale : enLocale
+    const pr = computePricing() // numbers (currency/total/discount) are language-independent
     const boatName = form.boatId === 'boat-1' ? t.fleet.boats[0].name : t.fleet.boats[1].name
-    const isPrivate = form.mode === 'private'
-    const guests = parseInt(form.guests, 10) || 1
-    const guestsLabel = `${guests} ${guests === 1 ? 'persona' : 'persone'}`
-    const currency = t.packages.currency
-    const unitPrice = typeof pkg?.price === 'number' ? pkg.price : Number(pkg?.price) || 0
-    const total = isPrivate ? unitPrice : unitPrice * guests
-    const deposit = Math.round(total * 0.3)
-    const modeLabel = isPrivate ? `barca privata per ${guestsLabel}` : `tour condiviso, ${guestsLabel}`
+    const guestsLabel = tr.persons(pr.guests)
+    const experienceLabel = pr.isCustom
+      ? `${form.packageName} — ${tr.bespoke(guestsLabel)}`
+      : `${form.packageName} (${form.mode === 'private' ? tr.privateFor(guestsLabel) : tr.sharedFor(guestsLabel)})`
+
+    const durationLabel = loc.booking.duration_options.find(o => o.hours === form.durationHours)?.label ?? ''
+    const addonLines = selectedAddonLines(form.addons, loc.booking.addons)
+    // Translate the selected time slot by matching its index in the active locale.
+    const timeIdx = t.booking.time_options.indexOf(form.time)
+    const timeLabel = timeIdx >= 0 ? loc.booking.time_options[timeIdx] : form.time
 
     let dateLabel = form.date
     if (form.date) {
       const d = new Date(`${form.date}T00:00:00`)
-      const raw = new Intl.DateTimeFormat('it-IT', { weekday: 'long', day: 'numeric', month: 'long' }).format(d)
+      const raw = new Intl.DateTimeFormat(tr.locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(d)
       dateLabel = raw.charAt(0).toUpperCase() + raw.slice(1)
     }
 
-    return `Ciao ${form.name}! 🛥️✨
-Qui è lo staff di 4M Lake Como. Siamo felici di confermarti che abbiamo ricevuto la tua richiesta di prenotazione! Pronti a farvi vivere un'esperienza indimenticabile sul lago. 🌊
-Ecco il riepilogo del vostro tour:
-📅 Data: ${dateLabel}
-🥂 Esperienza: ${form.packageName} (${modeLabel})
-🕒 Partenza: ${form.time}
-📍 Meeting point: Molo di Lungo Lario Trieste, Como (trovi la posizione esatta e tutti i riferimenti completi sul nostro sito web https://4mboatlakecomo.com/)
-🚤 La barca: Per questa occasione vi abbiamo riservato la splendida ${boatName} 🇮🇹💨
-💰 Prezzo totale: ${currency}${total}
-🔒 Per bloccare definitivamente la prenotazione:
-A breve ti invieremo qui sotto un link sicuro per il pagamento dell'acconto, che è di ${currency}${deposit} (30% del prezzo totale). Ti basterà cliccarci sopra per completare la transazione in un attimo.
-Non vediamo l'ora di avervi a bordo! Se hai richieste particolari per l'aperitivo o per la musica, faccelo sapere. 🍾🥂
-A presto,
-Il team di 4M Lake Como 🌅📖`
+    const lines = [
+      tr.greeting(form.name),
+      tr.intro,
+      tr.recap,
+      `📅 ${tr.date}: ${dateLabel}`,
+      `🥂 ${tr.experience}: ${experienceLabel}`,
+    ]
+    if (pr.isCustom) lines.push(`⏱️ ${tr.duration}: ${durationLabel}`)
+    if (pr.isCustom && addonLines.length) {
+      const addonText = addonLines
+        .map(l => (isCustomPriceAddon(l.id) ? `${l.label} (${tr.customPrice})` : `${l.qty}× ${l.label}`))
+        .join(', ')
+      lines.push(`🍹 ${tr.extras}: ${addonText}`)
+    }
+    if (pr.isCustom && pr.customSetupNote) lines.push(`📝 ${tr.setup}: ${pr.customSetupNote}`)
+    const priceLine = pr.discountRate > 0
+      ? `💰 ${tr.total}: ${currency}${pr.total} ${tr.insteadOf(`${currency}${pr.originalTotal}`, Math.round(pr.discountRate * 100))}`
+      : `💰 ${tr.total}: ${currency}${pr.total}`
+    lines.push(
+      `🕒 ${tr.departure}: ${timeLabel}`,
+      `📍 ${tr.meeting}`,
+      `🚤 ${tr.boat(boatName)}`,
+      priceLine,
+      tr.lock,
+      tr.deposit(`${currency}${pr.deposit}`),
+      tr.closing,
+      tr.signoff,
+    )
+    return lines.join('\n')
+  }
+
+  // Confirmation message ready to copy into WhatsApp — always bilingual (IT + EN).
+  function buildWhatsappMessage() {
+    return [
+      WA_STRINGS.it.header,
+      buildWhatsappVariant('it'),
+      '———————————————',
+      WA_STRINGS.en.header,
+      buildWhatsappVariant('en'),
+    ].join('\n\n')
   }
   const handleBlur = (field: string, value: string) => {
   let errorMessage = "";
@@ -511,11 +752,12 @@ Il team di 4M Lake Como 🌅📖`
     setIsSending(true)
     const message = buildMessage()
     const whatsappMessage = buildWhatsappMessage()
+    const pricing = computePricing()
     try {
       const response = await fetch('/api/send-booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ form, message, whatsappMessage }),
+        body: JSON.stringify({ form, message, whatsappMessage, pricing }),
       })
       if (!response.ok) {
         const payload = await response.json().catch(() => null)
@@ -620,6 +862,17 @@ Il team di 4M Lake Como 🌅📖`
                 onClick={() => {
                   set('packageId', pkg.id)
                   set('packageName', pkg.name)
+                  // La Bella Vita: private-only & customizable — force private,
+                  // seed the first duration, and clear extras when switching away.
+                  const custom = isCustomPackage(pkg.id)
+                  setForm(p => ({
+                    ...p,
+                    mode: custom ? 'private' : p.mode,
+                    durationHours: custom ? durationOptions[0].hours : 0,
+                    addons: custom ? p.addons : {},
+                    customSetupNote: custom ? p.customSetupNote : '',
+                  }))
+                  setDurationError('')
                   const lockedIdx = LOCKED_TIMES[pkg.id]
                   const minIdx = TIME_MIN_INDEX[pkg.id]
                   if (lockedIdx !== undefined) {
@@ -694,6 +947,9 @@ Il team di 4M Lake Como 🌅📖`
                     style={{ fontFamily: 'Bodoni Moda, serif', fontSize: '1.125rem', fontWeight: 400 }}
                   >
                     {t.packages.currency}{pkg.price}
+                    {isCustomPackage(pkg.id) && (
+                      <span className="text-navy/45" style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.625rem' }}> /{t.packages.per_hour}</span>
+                    )}
                   </span>
                 </div>
               </button>
@@ -715,12 +971,17 @@ Il team di 4M Lake Como 🌅📖`
         <div className="grid grid-cols-1 gap-4">
           {(['private', 'shared'] as const).map((mode) => {
             const isSelected = form.mode === mode
+            // La Bella Vita is private-only: lock the shared option out.
+            const isDisabled = isCustom && mode === 'shared'
             return (
               <button
                 key={mode}
-                onClick={() => set('mode', mode)}
+                onClick={() => !isDisabled && set('mode', mode)}
+                disabled={isDisabled}
                 className={clsx(
-                  'group relative overflow-hidden rounded-xl border transition-all duration-300 text-left cursor-pointer w-full',
+                  'group relative overflow-hidden rounded-xl border transition-all duration-300 text-left w-full',
+                  isDisabled && 'opacity-40 cursor-not-allowed',
+                  !isDisabled && 'cursor-pointer',
                   isSelected
                     ? 'border-gold shadow-[0_0_0_1px_rgba(201,169,110,0.2),0_6px_28px_rgba(201,169,110,0.22)] scale-[1.01]'
                     : 'border-navy/10 hover:border-gold/25 hover:shadow-[0_2px_12px_rgba(201,169,110,0.09)]'
@@ -771,6 +1032,12 @@ Il team di 4M Lake Como 🌅📖`
             )
           })}
         </div>
+        {isCustom && (
+          <p className="flex items-center gap-1.5 mt-3 text-[10px] text-navy/45" style={{ fontFamily: 'Jost, sans-serif' }}>
+            <span className="text-gold">✦</span>
+            {b.private_only_note}
+          </p>
+        )}
       </div>
 
     </div>
@@ -883,6 +1150,169 @@ Il team di 4M Lake Como 🌅📖`
                     >
                       {b.step2_title}
                     </h3>
+
+                    {/* ── La Bella Vita: customize duration + onboard extras ── */}
+                    {isCustom && (
+                      <div className="mb-8 p-5 rounded-2xl border border-gold/25 bg-gold/[0.04]">
+                        <p className="text-xs text-navy/55 tracking-widest uppercase mb-4 flex items-center gap-1.5" style={{ fontFamily: 'Jost, sans-serif', letterSpacing: '0.15em' }}>
+                          <span className="text-gold">✦</span> {b.customize_title}
+                        </p>
+
+                        {/* Duration */}
+                        <label className="block text-[10px] tracking-widest uppercase text-navy/50 mb-3" style={{ fontFamily: 'Jost, sans-serif' }}>
+                          {b.duration_select_label} *
+                        </label>
+                        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-2">
+                          {durationOptions.map((opt) => {
+                            const active = form.durationHours === opt.hours
+                            return (
+                              <button
+                                key={opt.hours}
+                                type="button"
+                                onClick={() => setDuration(opt.hours)}
+                                className={clsx(
+                                  'h-12 rounded-xl border text-xs transition-all duration-150 cursor-pointer flex items-center justify-center text-center px-1 leading-tight',
+                                  active
+                                    ? 'border-gold bg-gold/15 text-navy font-semibold shadow-[0_0_0_1px_rgba(201,169,110,0.18)]'
+                                    : 'border-navy/10 bg-white text-navy/55 hover:border-gold/30'
+                                )}
+                                style={{ fontFamily: 'Jost, sans-serif' }}
+                              >
+                                {opt.label}
+                              </button>
+                            )
+                          })}
+                        </div>
+                        {durationError && (
+                          <p className="text-red-500 text-[10px] mb-2" style={{ fontFamily: 'Jost, sans-serif' }}>{durationError}</p>
+                        )}
+
+                        {/* Onboard extras */}
+                        <label className="block text-[10px] tracking-widest uppercase text-navy/50 mt-5 mb-1" style={{ fontFamily: 'Jost, sans-serif' }}>
+                          {b.addons_label}
+                        </label>
+                        <p className="text-[11px] text-navy/45 mb-3" style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}>
+                          {b.addons_hint}
+                        </p>
+                        <div className="grid sm:grid-cols-2 gap-2">
+                          {fixedAddons.map((addon) => {
+                            const qty = form.addons[addon.id] || 0
+                            return (
+                              <div
+                                key={addon.id}
+                                className={clsx(
+                                  'flex items-center justify-between gap-2 px-3 py-2 rounded-xl border bg-white transition-colors',
+                                  qty > 0 ? 'border-gold/40' : 'border-navy/10'
+                                )}
+                              >
+                                <div className="min-w-0">
+                                  <p className="text-[12px] text-navy/80 truncate" style={{ fontFamily: 'Jost, sans-serif' }}>{addon.label}</p>
+                                  <p className="text-[10px] text-navy/45" style={{ fontFamily: 'Jost, sans-serif' }}>{currency}{addon.price}</p>
+                                </div>
+                                <div className="flex items-center gap-1.5 flex-shrink-0">
+                                  <button
+                                    type="button"
+                                    aria-label={`- ${addon.label}`}
+                                    onClick={() => changeAddon(addon.id, -1)}
+                                    disabled={qty === 0}
+                                    className="w-7 h-7 rounded-lg border border-navy/15 text-navy/70 flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:border-gold/40 cursor-pointer transition-colors"
+                                  >
+                                    −
+                                  </button>
+                                  <span className="w-5 text-center text-sm text-navy tabular-nums" style={{ fontFamily: 'Jost, sans-serif' }}>{qty}</span>
+                                  <button
+                                    type="button"
+                                    aria-label={`+ ${addon.label}`}
+                                    onClick={() => changeAddon(addon.id, 1)}
+                                    className="w-7 h-7 rounded-lg border border-navy/15 text-navy/70 flex items-center justify-center hover:border-gold/40 hover:bg-gold/10 cursor-pointer transition-colors"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+
+                        {/* Custom-priced "special setup" extra — toggle + required brief */}
+                        {customAddon && (
+                          <div
+                            className={clsx(
+                              'mt-2 px-3 py-3 rounded-xl border bg-white transition-colors',
+                              customSetupSelected ? 'border-gold/40' : 'border-navy/10'
+                            )}
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="min-w-0">
+                                <p className="text-[12px] text-navy/80" style={{ fontFamily: 'Jost, sans-serif' }}>{customAddon.label}</p>
+                                <p className="text-[10px] text-gold-dark" style={{ fontFamily: 'Jost, sans-serif' }}>
+                                  {b.custom_price_label} · {b.custom_price_value}
+                                </p>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => toggleCustomSetup(customAddon.id)}
+                                className={clsx(
+                                  'flex-shrink-0 text-[11px] px-3 h-8 rounded-lg border cursor-pointer transition-colors',
+                                  customSetupSelected
+                                    ? 'border-gold bg-gold/15 text-navy font-medium'
+                                    : 'border-navy/15 text-navy/70 hover:border-gold/40'
+                                )}
+                                style={{ fontFamily: 'Jost, sans-serif' }}
+                              >
+                                {customSetupSelected ? b.remove_label : b.add_label}
+                              </button>
+                            </div>
+                            {customSetupSelected && (
+                              <div className="mt-3">
+                                <label className="block text-[10px] tracking-widest uppercase text-navy/50 mb-1.5" style={{ fontFamily: 'Jost, sans-serif' }}>
+                                  {b.custom_setup_desc_label} *
+                                </label>
+                                <textarea
+                                  value={form.customSetupNote}
+                                  onChange={e => {
+                                    set('customSetupNote', e.target.value)
+                                  }}
+                                  rows={2}
+                                  placeholder={b.custom_setup_placeholder}
+                                  className={clsx('luxury-input resize-none', errors.customSetupNote && 'border-red-400 focus:ring-red-400')}
+                                />
+                                {errors.customSetupNote && (
+                                  <p className="text-red-500 text-[10px] mt-1" style={{ fontFamily: 'Jost, sans-serif' }}>{errors.customSetupNote}</p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Live total — original price struck through + progressive discount */}
+                        <div className="flex items-center justify-between mt-5 pt-4 border-t border-gold/20">
+                          <span className="text-[11px] tracking-widest uppercase text-navy/50" style={{ fontFamily: 'Jost, sans-serif', letterSpacing: '0.12em' }}>
+                            {b.total_label}
+                          </span>
+                          <div className="text-right">
+                            {liveBreakdown.discountRate > 0 && (
+                              <div className="flex items-center justify-end gap-2 mb-0.5">
+                                <span className="text-navy/40 line-through" style={{ fontFamily: 'Jost, sans-serif', fontSize: '0.85rem' }}>
+                                  {currency}{liveBreakdown.originalTotal}
+                                </span>
+                                <span className="text-[10px] font-semibold text-gold-dark bg-gold/15 px-1.5 py-0.5 rounded-full" style={{ fontFamily: 'Jost, sans-serif' }}>
+                                  −{Math.round(liveBreakdown.discountRate * 100)}%
+                                </span>
+                              </div>
+                            )}
+                            <span className="text-navy" style={{ fontFamily: 'Bodoni Moda, serif', fontSize: '1.5rem', fontWeight: 400 }}>
+                              {currency}{liveBreakdown.total}
+                            </span>
+                            {liveBreakdown.discountRate > 0 && (
+                              <p className="text-[10px] text-gold-dark mt-0.5" style={{ fontFamily: 'Jost, sans-serif' }}>
+                                {b.you_save_label} {currency}{liveBreakdown.originalTotal - liveBreakdown.total}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Calendar */}
                     <div className="mb-6">

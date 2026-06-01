@@ -6,7 +6,7 @@ export const runtime = 'edge';
 export async function POST(req: Request) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
-    const { form, message, whatsappMessage } = await req.json();
+    const { form, message, whatsappMessage, pricing } = await req.json();
 
     // Escape per inserire in sicurezza il testo nel markup HTML della mail.
     const escapeHtml = (str: string) =>
@@ -14,6 +14,40 @@ export async function POST(req: Request) {
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
+
+    type AddonLine = { label: string; qty: number; price: number; lineTotal: number; isCustomPrice?: boolean };
+    const cur = escapeHtml(pricing?.currency ?? '€');
+
+    // Riga durata (solo per il pacchetto personalizzabile "La Bella Vita").
+    const durationRow = pricing?.isCustom && pricing?.durationLabel
+      ? `<tr><td style="padding: 8px 0;"><strong>Durata:</strong></td><td>${escapeHtml(pricing.durationLabel)}</td></tr>`
+      : '';
+
+    // Elenco extra a bordo selezionati (l'allestimento ha prezzo da definire).
+    const addonLines: AddonLine[] = Array.isArray(pricing?.addonLines) ? pricing.addonLines : [];
+    const addonsRow = addonLines.length
+      ? `<tr><td style="padding: 8px 0; vertical-align: top;"><strong>Extra a bordo:</strong></td><td>${addonLines
+          .map((l) => l.isCustomPrice
+            ? `${escapeHtml(l.label)} (prezzo da definire)`
+            : `${l.qty}× ${escapeHtml(l.label)} (${cur}${l.lineTotal})`)
+          .join('<br>')}</td></tr>`
+      : '';
+
+    // Descrizione dell'allestimento speciale richiesto dal cliente.
+    const setupNote = pricing?.customSetupNote || form.customSetupNote;
+    const setupRow = setupNote
+      ? `<tr><td style="padding: 8px 0; vertical-align: top;"><strong>Allestimento speciale:</strong></td><td>${escapeHtml(setupNote)}</td></tr>`
+      : '';
+
+    // Righe prezzo: eventuale prezzo pieno barrato + sconto, totale (già scontato) + acconto 30%.
+    const discountRow = pricing?.discountRate > 0 && typeof pricing?.originalTotal === 'number'
+      ? `<tr><td style="padding: 8px 0;"><strong>Prezzo pieno:</strong></td><td><span style="text-decoration: line-through; color: #999;">${cur}${pricing.originalTotal}</span> &nbsp;<span style="color: #C9A96E;">−${Math.round(pricing.discountRate * 100)}% sulle ore</span></td></tr>`
+      : '';
+    const priceRows = typeof pricing?.total === 'number'
+      ? discountRow +
+        `<tr><td style="padding: 8px 0;"><strong>Prezzo totale:</strong></td><td><strong>${cur}${pricing.total}</strong></td></tr>` +
+        `<tr><td style="padding: 8px 0;"><strong>Acconto (30%):</strong></td><td>${cur}${pricing.deposit}</td></tr>`
+      : '';
 
     const { data, error } = await resend.emails.send({
       // ── MODALITÀ TEST ───────────────────────────────────────────────────────
@@ -40,8 +74,12 @@ export async function POST(req: Request) {
           <table style="width: 100%; border-collapse: collapse;">
             <tr><td style="padding: 8px 0;"><strong>Pacchetto:</strong></td><td>${form.packageName}</td></tr>
             <tr><td style="padding: 8px 0;"><strong>Modalità:</strong></td><td>${form.mode === 'private' ? 'Privata' : 'Condivisa'}</td></tr>
+            ${durationRow}
             <tr><td style="padding: 8px 0;"><strong>Data e Ora:</strong></td><td>${form.date} ore ${form.time}</td></tr>
             <tr><td style="padding: 8px 0;"><strong>Ospiti:</strong></td><td>${form.guests}</td></tr>
+            ${addonsRow}
+            ${setupRow}
+            ${priceRows}
           </table>
 
           <h3 style="margin-top: 20px; color: #C9A96E;">Dati Cliente</h3>
