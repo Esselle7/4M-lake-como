@@ -517,7 +517,11 @@ Il team di 4M Lake Como 🌅📖`
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ form, message, whatsappMessage }),
       })
-      if (!response.ok) throw new Error('Errore invio mail')
+      if (!response.ok) {
+        const payload = await response.json().catch(() => null)
+        const detail = payload?.error?.message ?? payload?.error ?? `HTTP ${response.status}`
+        throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail))
+      }
       setSubmitted(true)
     } catch (error) {
       console.error(error)

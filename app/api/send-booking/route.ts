@@ -16,11 +16,21 @@ export async function POST(req: Request) {
         .replace(/>/g, '&gt;');
 
     const { data, error } = await resend.emails.send({
-      from: 'Booking System <onboarding@resend.dev>', // Se hai validato il dominio usa: info@tuodominio.it
-      // Destinatario principale: la casella dello staff.
-      to: ['simone.leone300900@gmail.com'],
-      // Copia conoscenza nascosta: i due destinatari non si vedono a vicenda nel "to".
-      bcc: ['simone.leone300900@gmail.com'],
+      // ── MODALITÀ TEST ───────────────────────────────────────────────────────
+      // Con il mittente di test `onboarding@resend.dev` Resend consegna SOLO
+      // all'email proprietaria dell'account (info@4mlake.com). Qualsiasi altro
+      // destinatario viene rifiutato con 403.
+      from: 'Booking System <onboarding@resend.dev>',
+      to: ['info@4mlake.com'],
+
+      // ── PRODUZIONE (attivare dopo aver verificato un dominio su Resend) ──────
+      // 1. Verifica il dominio su resend.com/domains (record DNS SPF/DKIM).
+      // 2. Cambia il `from` con un indirizzo di quel dominio, es:
+      //      from: '4M Lake Como <booking@4mboatlakecomo.com>',
+      // 3. Sblocca i destinatari reali — staff in "to", Simone in copia nascosta
+      //    (bcc) così i due non si vedono a vicenda:
+      //      to: [process.env.PERSONAL_EMAIL as string],
+      //      bcc: ['simone.leone300900@gmail.com'],
       subject: `Nuova Prenotazione: ${form.name} ${form.surname}`,
       html: `
         <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
@@ -53,11 +63,21 @@ export async function POST(req: Request) {
     });
 
     if (error) {
-      return NextResponse.json({ error }, { status: 400 });
+      // Propaga l'errore reale di Resend (messaggio + status) invece di un 400 generico,
+      // così in console/network si vede subito la causa.
+      console.error('Resend error:', error);
+      const status = typeof (error as { statusCode?: number }).statusCode === 'number'
+        ? (error as { statusCode: number }).statusCode
+        : 400;
+      return NextResponse.json({ error }, { status });
     }
 
     return NextResponse.json({ success: true, data });
   } catch (err) {
-    return NextResponse.json({ error: 'Errore interno' }, { status: 500 });
+    console.error('Errore interno send-booking:', err);
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : 'Errore interno' },
+      { status: 500 }
+    );
   }
 }
