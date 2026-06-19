@@ -17,11 +17,22 @@ export async function POST(req: Request) {
 
     type AddonLine = { label: string; qty: number; price: number; lineTotal: number; isCustomPrice?: boolean };
     const cur = escapeHtml(pricing?.currency ?? '€');
+    const isSelfDrive = !!pricing?.isSelfDrive;
 
-    // Riga durata (solo per il pacchetto personalizzabile "La Bella Vita").
-    const durationRow = pricing?.isCustom && pricing?.durationLabel
-      ? `<tr><td style="padding: 8px 0;"><strong>Durata:</strong></td><td>${escapeHtml(pricing.durationLabel)}</td></tr>`
+    // Riga durata (solo per il pacchetto personalizzabile "La Bella Vita" o per il self drive).
+    const durationRow = (pricing?.isCustom || isSelfDrive) && pricing?.durationLabel
+      ? `<tr><td style="padding: 8px 0;"><strong>Durata:</strong></td><td>${escapeHtml(pricing.durationLabel)}${isSelfDrive && pricing?.durationHours ? ` (${pricing.durationHours} ore)` : ''}</td></tr>`
       : '';
+
+    // Barca self drive (7/6 posti) — solo flusso self drive.
+    const selfBoatRow = isSelfDrive && pricing?.selfBoatName
+      ? `<tr><td style="padding: 8px 0;"><strong>Barca (self drive):</strong></td><td>${escapeHtml(pricing.selfBoatName)}</td></tr>`
+      : '';
+
+    // Etichetta modalità: "Self Drive (senza patente)" per il flusso self, altrimenti privata/condivisa.
+    const modeLabel = isSelfDrive
+      ? 'Self Drive (senza patente)'
+      : (form.mode === 'private' ? 'Privata' : 'Condivisa');
 
     // Elenco extra a bordo selezionati (l'allestimento ha prezzo da definire).
     const addonLines: AddonLine[] = Array.isArray(pricing?.addonLines) ? pricing.addonLines : [];
@@ -72,8 +83,9 @@ export async function POST(req: Request) {
           <p>Hai ricevuto una nuova richiesta dal sito web:</p>
           
           <table style="width: 100%; border-collapse: collapse;">
-            <tr><td style="padding: 8px 0;"><strong>Pacchetto:</strong></td><td>${form.packageName}</td></tr>
-            <tr><td style="padding: 8px 0;"><strong>Modalità:</strong></td><td>${form.mode === 'private' ? 'Privata' : 'Condivisa'}</td></tr>
+            <tr><td style="padding: 8px 0;"><strong>Pacchetto:</strong></td><td>${form.packageName || (isSelfDrive ? 'Self Drive (senza patente)' : '—')}</td></tr>
+            <tr><td style="padding: 8px 0;"><strong>Modalità:</strong></td><td>${modeLabel}</td></tr>
+            ${selfBoatRow}
             ${durationRow}
             <tr><td style="padding: 8px 0;"><strong>Data e Ora:</strong></td><td>${form.date} ore ${form.time}</td></tr>
             <tr><td style="padding: 8px 0;"><strong>Ospiti:</strong></td><td>${form.guests}</td></tr>

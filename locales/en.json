@@ -43,7 +43,7 @@
   },
   "fleet": {
     "eyebrow": "Our Fleet",
-    "title": "Two Exceptional Vessels",
+    "title": "Three Exceptional Vessels",
     "subtitle": "One uncompromising standard of excellence",
     "capacity": "Up to",
     "people": "guests",
@@ -57,6 +57,10 @@
       {
         "name": "Cranchi Turchese 24",
         "desc": "Class and comfort without compromise. Generous spaces and timeless elegance make her the perfect choice for those seeking relaxation and refinement on the lake."
+      },
+      {
+        "name": "Self Drive · No License",
+        "desc": "Be the captain of your own journey and explore Lake Como in total freedom. Rent a private boat without a license and cruise past historic villas and charming villages at your own pace."
       }
     ]
   },
@@ -223,6 +227,47 @@
     "step_boat_title": "Choose Your Vessel",
     "boat_required": "Please select a vessel to continue",
     "private_only_note": "Available as a private experience only",
+    "step_drive_title": "How Would You Like to Sail",
+    "drive_mode_label": "Choose Your Mode",
+    "drive_mode_required": "Please select a mode to continue",
+    "captain_title": "With Captain",
+    "captain_desc": "Let our skipper guide you — relax and take in the views",
+    "self_title": "Self Drive",
+    "self_desc": "Be the captain — no license needed, explore freely",
+    "self_hours_title": "Choose Your Duration",
+    "self_hours_subtitle": "Every hour is a different chapter on the lake",
+    "self_hours_label": "Duration",
+    "self_hours_required": "Please select a duration to continue",
+    "self_rate_note": "€160 / hour · fuel included",
+    "self_hours_options": [
+      {
+        "hours": 1,
+        "label": "1 hour",
+        "quote": "A golden hour to remember."
+      },
+      {
+        "hours": 2,
+        "label": "2 hours",
+        "quote": "Villas glide by, one by one."
+      },
+      {
+        "hours": 3,
+        "label": "3 hours",
+        "quote": "Hidden villages, your time to drift."
+      },
+      {
+        "hours": 8,
+        "label": "Full day",
+        "quote": "The whole lake — yours from dawn to dusk."
+      }
+    ],
+    "self_boat_title": "Choose Your Boat",
+    "self_boat_required": "Please select a boat to continue",
+    "self_boat_7_name": "7 Seats",
+    "self_boat_7_desc": "Spacious and comfortable for the whole group",
+    "self_boat_6_name": "6 Seats",
+    "self_boat_6_desc": "Compact and agile, a closer feel of the lake",
+    "self_drive_tag": "Self Drive · No License",
     "customize_title": "Customize Your Experience",
     "duration_select_label": "Duration",
     "duration_required": "Please select a duration to continue",

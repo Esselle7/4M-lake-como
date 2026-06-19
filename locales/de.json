@@ -43,7 +43,7 @@
   },
   "fleet": {
     "eyebrow": "Unsere Flotte",
-    "title": "Zwei Außergewöhnliche Boote",
+    "title": "Drei Außergewöhnliche Boote",
     "subtitle": "Ein unerschütterlicher Standard: Exzellenz",
     "capacity": "Bis zu",
     "people": "Gäste",
@@ -57,6 +57,10 @@
       {
         "name": "Cranchi Turchese 24",
         "desc": "Klasse und Komfort ohne Kompromisse. Großzügige Räume und zeitlose Eleganz machen sie zur perfekten Wahl für alle, die Entspannung und Raffinesse auf dem See suchen."
+      },
+      {
+        "name": "Self Drive · Ohne Führerschein",
+        "desc": "Seien Sie der Kapitän Ihrer eigenen Reise und entdecken Sie den Comer See in völliger Freiheit. Mieten Sie ein privates Boot ohne Führerschein und gleiten Sie an historischen Villen und malerischen Dörfern vorbei in Ihrem eigenen Tempo."
       }
     ]
   },
@@ -223,6 +227,47 @@
     "step_boat_title": "Boot Wählen",
     "boat_required": "Bitte wählen Sie ein Boot um fortzufahren",
     "private_only_note": "Nur als privates Erlebnis verfügbar",
+    "step_drive_title": "Wie Möchten Sie Segeln",
+    "drive_mode_label": "Modus Wählen",
+    "drive_mode_required": "Bitte wählen Sie einen Modus um fortzufahren",
+    "captain_title": "Mit Kapitän",
+    "captain_desc": "Unser Skipper führt Sie — entspannen Sie und genießen Sie die Aussicht",
+    "self_title": "Self Drive",
+    "self_desc": "Seien Sie der Kapitän — ohne Führerschein, entdecken Sie frei",
+    "self_hours_title": "Dauer Wählen",
+    "self_hours_subtitle": "Jede Stunde ist ein anderes Kapitel auf dem See",
+    "self_hours_label": "Dauer",
+    "self_hours_required": "Bitte wählen Sie eine Dauer um fortzufahren",
+    "self_rate_note": "€160 / Stunde · Kraftstoff inklusive",
+    "self_hours_options": [
+      {
+        "hours": 1,
+        "label": "1 Stunde",
+        "quote": "Eine goldene Stunde zum Erinnern."
+      },
+      {
+        "hours": 2,
+        "label": "2 Stunden",
+        "quote": "Villen ziehen vorbei, eine nach der anderen."
+      },
+      {
+        "hours": 3,
+        "label": "3 Stunden",
+        "quote": "Versteckte Dörfer, Ihre Zeit zum Treiben."
+      },
+      {
+        "hours": 8,
+        "label": "Ganzer Tag",
+        "quote": "Der ganze See — Ihrer vom Morgen bis zum Abend."
+      }
+    ],
+    "self_boat_title": "Boot Wählen",
+    "self_boat_required": "Bitte wählen Sie ein Boot um fortzufahren",
+    "self_boat_7_name": "7 Sitzplätze",
+    "self_boat_7_desc": "Geräumig und komfortabel für die ganze Gruppe",
+    "self_boat_6_name": "6 Sitzplätze",
+    "self_boat_6_desc": "Kompakt und wendig, den See hautnah erleben",
+    "self_drive_tag": "Self Drive · Ohne Führerschein",
     "customize_title": "Gestalten Sie Ihr Erlebnis",
     "duration_select_label": "Dauer",
     "duration_required": "Bitte wählen Sie eine Dauer um fortzufahren",

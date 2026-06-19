@@ -35,6 +35,14 @@ const FLEET_ASSETS: Array<{ images: FlipImage[]; available: boolean }> = [
       { title: 'Cranchi — Vista Lago', url: '/images/cranchi-e26-3.webp' },
     ],
   },
+  {
+    available: true,  // Self drive — no license required
+    images: [
+      { title: 'Self Drive — Senza Patente', url: '/images/self-spec-4-v2.png' },
+      { title: 'Self Drive — Dettaglio',     url: '/images/self-spec-2-v2.png' },
+      { title: 'Self Drive — Vista Lago',    url: '/images/self-spec-3-v2.png' },
+    ],
+  },
 ]
 
 // ── Flip animation keyframes ──────────────────────────────────────────────────

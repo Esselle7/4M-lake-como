@@ -43,7 +43,7 @@
   },
   "fleet": {
     "eyebrow": "La Nostra Flotta",
-    "title": "Due Imbarcazioni d'Eccezione",
+    "title": "Tre Imbarcazioni d'Eccezione",
     "subtitle": "Un unico standard irrinunciabile: l'eccellenza",
     "capacity": "Fino a",
     "people": "ospiti",
@@ -57,6 +57,10 @@
       {
         "name": "Cranchi Turchese 24",
         "desc": "Classe e comfort senza compromessi. Spazi generosi e un'eleganza senza tempo la rendono la scelta perfetta per chi cerca relax e raffinatezza sul lago."
+      },
+      {
+        "name": "Self Drive · Senza Patente",
+        "desc": "Sii il capitano del tuo viaggio ed esplora il Lago di Como in totale libertà. Noleggia una barca privata senza patente e naviga tra ville storiche e borghi incantevoli al tuo ritmo."
       }
     ]
   },
@@ -223,6 +227,47 @@
     "step_boat_title": "Scegli l'Imbarcazione",
     "boat_required": "Seleziona un'imbarcazione per continuare",
     "private_only_note": "Esperienza disponibile solo in modalità privata",
+    "step_drive_title": "Come Vuoi Vivere il Lago",
+    "drive_mode_label": "Scegli la Modalità",
+    "drive_mode_required": "Seleziona una modalità per continuare",
+    "captain_title": "Con Capitano",
+    "captain_desc": "Affidati al nostro skipper — rilassati e goditi il paesaggio",
+    "self_title": "Self Drive",
+    "self_desc": "Sii il capitano — senza patente, esplora in libertà",
+    "self_hours_title": "Scegli la Durata",
+    "self_hours_subtitle": "Ogni ora è un capitolo diverso sul lago",
+    "self_hours_label": "Durata",
+    "self_hours_required": "Seleziona una durata per continuare",
+    "self_rate_note": "€160 all'ora · carburante incluso",
+    "self_hours_options": [
+      {
+        "hours": 1,
+        "label": "1 ora",
+        "quote": "Un'ora d'oro da ricordare."
+      },
+      {
+        "hours": 2,
+        "label": "2 ore",
+        "quote": "Le ville scivolano via, una dopo l'altra."
+      },
+      {
+        "hours": 3,
+        "label": "3 ore",
+        "quote": "Borghi nascosti, il tuo tempo per vagare."
+      },
+      {
+        "hours": 8,
+        "label": "Intera giornata",
+        "quote": "Tutto il lago — tuo dall'alba al tramonto."
+      }
+    ],
+    "self_boat_title": "Scegli la Barca",
+    "self_boat_required": "Seleziona una barca per continuare",
+    "self_boat_7_name": "7 Posti",
+    "self_boat_7_desc": "Spaziosa e confortevole per tutto il gruppo",
+    "self_boat_6_name": "6 Posti",
+    "self_boat_6_desc": "Compatta e agile, per sentire il lago da vicino",
+    "self_drive_tag": "Self Drive · Senza Patente",
     "customize_title": "Personalizza la Tua Esperienza",
     "duration_select_label": "Durata",
     "duration_required": "Seleziona una durata per continuare",

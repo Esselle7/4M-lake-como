@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useMemo } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { useLang } from '@/context/LanguageContext'
 import Image from 'next/image'
 import LiquidGlassButton from '@/components/ui/LiquidGlassButton'
@@ -20,7 +20,10 @@ interface FormData {
   packageId: string
   packageName: string
   mode: 'private' | 'shared'
+  driveMode: 'captain' | 'self'
   boatId: string
+  selfHours: number
+  selfBoatId: '' | 'self-7' | 'self-6'
   date: string
   time: string
   name: string
@@ -39,7 +42,12 @@ interface FormData {
 const BOAT_IMAGES: Record<string, string> = {
   'boat-1': 'ba-prima-1.webp',
   'boat-2': 'cranchi-e26-1.webp',
+  'self-7': 'self-spec-1-v2.png',
+  'self-6': 'self-spec-2-v2.png',
 }
+
+// Self drive (no license) — hourly rate in €, fuel included.
+const SELF_DRIVE_RATE = 160
 
 // Set visible: true to re-enable a boat in the booking flow when ready
 const BOATS_CONFIG: Array<{ id: 'boat-1' | 'boat-2'; fleetIdx: number; visible: boolean }> = [
@@ -51,7 +59,10 @@ const INITIAL_FORM: FormData = {
   packageId: '',
   packageName: '',
   mode: 'private',
+  driveMode: 'captain',
   boatId: '',
+  selfHours: 0,
+  selfBoatId: '',
   date: '',
   time: '',
   name: '',
@@ -428,6 +439,9 @@ const WA_STRINGS: Record<WaLang, {
   deposit: (amount: string) => string
   closing: string
   signoff: string
+  selfExperience: string
+  selfBoat: (name: string) => string
+  selfRate: string
 }> = {
   it: {
     locale: 'it-IT',
@@ -454,6 +468,9 @@ const WA_STRINGS: Record<WaLang, {
     deposit: (amount) => `A breve ti invieremo qui sotto un link sicuro per il pagamento dell'acconto, che è di ${amount} (30% del prezzo totale). Ti basterà cliccarci sopra per completare la transazione in un attimo.`,
     closing: `Non vediamo l'ora di avervi a bordo! Se hai richieste particolari per l'aperitivo, per la musica o per le tue occasioni speciali, faccelo sapere. 🍾🥂`,
     signoff: `A presto,\nIl team di 4M Lake Como 🌅📖`,
+    selfExperience: 'Self Drive (senza patente)',
+    selfBoat: (name) => `La barca: ${name} — noleggio self drive, senza patente 🛥️`,
+    selfRate: 'Tariffa: €160/ora, carburante incluso',
   },
   en: {
     locale: 'en-GB',
@@ -480,6 +497,9 @@ const WA_STRINGS: Record<WaLang, {
     deposit: (amount) => `We'll shortly send you a secure link below to pay the deposit of ${amount} (30% of the total). Just tap it to complete the transaction in seconds.`,
     closing: `We can't wait to have you on board! If you have any special requests for the aperitivo, the music or your special occasion, just let us know. 🍾🥂`,
     signoff: `See you soon,\nThe 4M Lake Como team 🌅📖`,
+    selfExperience: 'Self Drive (no license)',
+    selfBoat: (name) => `The boat: ${name} — self drive rental, no license required 🛥️`,
+    selfRate: 'Rate: €160/hour, fuel included',
   },
 }
 
@@ -490,7 +510,7 @@ export default function BookingForm() {
   const [step, setStep] = useState(0)
   const [form, setForm] = useState<FormData>(INITIAL_FORM)
   const [submitted, setSubmitted] = useState(false)
-  const [errors, setErrors] = useState<Partial<FormData>>({})
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSending, setIsSending] = useState(false)
   const [durationError, setDurationError] = useState('')
   const sectionRef = useRef<HTMLDivElement>(null)
@@ -592,22 +612,48 @@ export default function BookingForm() {
   }
 
   function validateStep(): boolean {
-    const errs: Partial<FormData> = {}
+    const errs: Record<string, string> = {}
     let durationInvalid = false
-    if (step === 0 && !form.packageId) errs.packageId = b.required
-    if (step === 1 && !form.boatId) errs.boatId = b.boat_required
-    if (step === 2) {
-      durationInvalid = isCustom && !(form.durationHours > 0)
-      setDurationError(durationInvalid ? b.duration_required : '')
-      if (customSetupSelected && !form.customSetupNote.trim()) errs.customSetupNote = b.custom_setup_required
-      if (!form.date) errs.date = b.required
-      if (!form.time) errs.time = b.required
-    }
-    if (step === 3) {
-      if (!form.name.trim()) errs.name = b.required
-      if (!form.surname.trim()) errs.surname = b.required
-      if (!form.email.trim()) errs.email = b.required
-      if (!form.phone.trim()) errs.phone = b.required
+    const isSelf = form.driveMode === 'self'
+
+    if (step === 0 && !form.driveMode) errs.driveMode = b.drive_mode_required
+
+    if (isSelf) {
+      if (step === 1 && !(form.selfHours > 0)) {
+        errs.selfHours = b.self_hours_required
+        durationInvalid = true
+        setDurationError(b.self_hours_required)
+      } else if (step === 1) {
+        setDurationError('')
+      }
+      if (step === 2 && !form.selfBoatId) errs.selfBoatId = b.self_boat_required
+      if (step === 3) {
+        if (!form.date) errs.date = b.required
+        if (!form.time) errs.time = b.required
+      }
+      if (step === 4) {
+        if (!form.name.trim()) errs.name = b.required
+        if (!form.surname.trim()) errs.surname = b.required
+        if (!form.email.trim()) errs.email = b.required
+        if (!form.phone.trim()) errs.phone = b.required
+      }
+    } else {
+      // Captain flow — preserved as-is, shifted by one step
+      if (step === 1 && !form.packageId) errs.packageId = b.required
+      if (step === 2 && !form.boatId) errs.boatId = b.boat_required
+      if (step === 3) {
+        durationInvalid = isCustom && !(form.durationHours > 0)
+        setDurationError(durationInvalid ? b.duration_required : '')
+        if (customSetupSelected && !form.customSetupNote.trim()) errs.customSetupNote = b.custom_setup_required
+        if (!form.date) errs.date = b.required
+        if (!form.time) errs.time = b.required
+      }
+      if (step === 4) {
+        if (!form.name.trim()) errs.name = b.required
+        if (!form.surname.trim()) errs.surname = b.required
+        if (!form.email.trim()) errs.email = b.required
+        if (!form.phone.trim()) errs.phone = b.required
+      }
     }
     setErrors(errs)
     return Object.keys(errs).length === 0 && !durationInvalid
@@ -617,6 +663,35 @@ export default function BookingForm() {
   // WhatsApp/email messages and the structured payload sent to the API.
   function computePricing() {
     const guests = parseInt(form.guests, 10) || 1
+
+    // ── Self drive (no license) — flat hourly rate, fuel included ──
+    if (form.driveMode === 'self') {
+      const hours = Number(form.selfHours) || 0
+      const total = SELF_DRIVE_RATE * hours
+      const selfBoatName =
+        form.selfBoatId === 'self-7' ? b.self_boat_7_name
+        : form.selfBoatId === 'self-6' ? b.self_boat_6_name
+        : ''
+      const durationLabel = (b.self_hours_options as Array<{ hours: number; label: string }>)
+        .find(o => o.hours === form.selfHours)?.label ?? ''
+      return {
+        isCustom: false,
+        isSelfDrive: true,
+        currency,
+        guests,
+        unitPrice: SELF_DRIVE_RATE,
+        durationHours: hours,
+        durationLabel,
+        addonLines: [] as Array<{ id: string; label: string; price: number; qty: number; lineTotal: number; isCustomPrice?: boolean }>,
+        customSetupNote: '',
+        discountRate: 0,
+        originalTotal: total,
+        total,
+        deposit: computeDeposit(total),
+        selfBoatName,
+      }
+    }
+
     const bd = computePriceBreakdown({
       packageId: form.packageId,
       unitPrice,
@@ -633,6 +708,7 @@ export default function BookingForm() {
     }))
     return {
       isCustom,
+      isSelfDrive: false,
       currency,
       guests,
       unitPrice,
@@ -644,13 +720,20 @@ export default function BookingForm() {
       originalTotal: bd.originalTotal,
       total: bd.total,
       deposit: computeDeposit(bd.total),
+      selfBoatName: '',
     }
   }
 
   function buildMessage() {
+    const pr = computePricing()
+
+    // ── Self drive message ──
+    if (pr.isSelfDrive) {
+      return `Vorrei richiedere una prenotazione per noleggio barca in SELF DRIVE (senza patente). Barca: ${pr.selfBoatName}. Durata: ${pr.durationLabel} (${pr.durationHours} ore). Data: ${form.date} alle ore ${form.time}. Gruppo composto da ${form.guests} persone. Nome: ${form.name} ${form.surname}. Contatto: ${form.phone} - ${form.email}. Note: ${form.notes || 'Nessuna nota specifica'}. Totale stimato: ${currency}${pr.total} (acconto ${currency}${pr.deposit}).`
+    }
+
     const modeText = form.mode === 'private' ? b.private : b.shared
     const boatName = form.boatId === 'boat-1' ? t.fleet.boats[0].name : t.fleet.boats[1].name
-    const pr = computePricing()
     let extra = ''
     if (pr.isCustom) {
       const addonsText = pr.addonLines.length
@@ -720,8 +803,56 @@ export default function BookingForm() {
     return lines.join('\n')
   }
 
+  // Self drive variant of the WhatsApp confirmation (bilingual IT + EN).
+  function buildSelfWhatsappVariant(lng: WaLang) {
+    const tr = WA_STRINGS[lng]
+    const loc = lng === 'it' ? itLocale : enLocale
+    const pr = computePricing()
+    const guestsLabel = tr.persons(pr.guests)
+    const experienceLabel = `${tr.selfExperience} (${tr.privateFor(guestsLabel)})`
+    const durationLabel = (loc.booking.self_hours_options as Array<{ hours: number; label: string }>)
+      .find(o => o.hours === form.selfHours)?.label ?? ''
+    const timeIdx = t.booking.time_options.indexOf(form.time)
+    const timeLabel = timeIdx >= 0 ? loc.booking.time_options[timeIdx] : form.time
+
+    let dateLabel = form.date
+    if (form.date) {
+      const d = new Date(`${form.date}T00:00:00`)
+      const raw = new Intl.DateTimeFormat(tr.locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(d)
+      dateLabel = raw.charAt(0).toUpperCase() + raw.slice(1)
+    }
+
+    const lines = [
+      tr.greeting(form.name),
+      tr.intro,
+      tr.recap,
+      `📅 ${tr.date}: ${dateLabel}`,
+      `🥂 ${tr.experience}: ${experienceLabel}`,
+      `⏱️ ${tr.duration}: ${durationLabel}`,
+      `🚤 ${tr.selfBoat(pr.selfBoatName)}`,
+      `⛽ ${tr.selfRate}`,
+      `💰 ${tr.total}: ${currency}${pr.total}`,
+      `🕒 ${tr.departure}: ${timeLabel}`,
+      `📍 ${tr.meeting}`,
+      tr.lock,
+      tr.deposit(`${currency}${pr.deposit}`),
+      tr.closing,
+      tr.signoff,
+    ]
+    return lines.join('\n')
+  }
+
   // Confirmation message ready to copy into WhatsApp — always bilingual (IT + EN).
   function buildWhatsappMessage() {
+    if (form.driveMode === 'self') {
+      return [
+        WA_STRINGS.it.header,
+        buildSelfWhatsappVariant('it'),
+        '———————————————',
+        WA_STRINGS.en.header,
+        buildSelfWhatsappVariant('en'),
+      ].join('\n\n')
+    }
     return [
       WA_STRINGS.it.header,
       buildWhatsappVariant('it'),
@@ -775,7 +906,7 @@ export default function BookingForm() {
 
   function handleNext() {
     if (!validateStep()) return
-    if (step < 3) setStep(s => s + 1)
+    if (step < 4) setStep(s => s + 1)
     else handleSubmit()
   }
 
@@ -827,7 +958,7 @@ export default function BookingForm() {
           <div className="p-8 md:p-12">
           {!submitted ? (
             <>
-              <StepIndicator step={step} total={4} label={`${step + 1} ${b.step_of} 4`} />
+              <StepIndicator step={step} total={5} label={`${step + 1} ${b.step_of} 5`} />
 
               <motion.div
                 key={step}
@@ -836,8 +967,270 @@ export default function BookingForm() {
                 transition={{ duration: 0.22, ease: 'easeOut' }}
               >
 
-                {/* ── Step 0: Package + Mode ── */}
-{step === 0 && (
+                {/* ── Step 0: Drive mode — Captain vs Self Drive ── */}
+                {step === 0 && (
+                  <div>
+                    <h3
+                      className="text-navy text-center mb-2"
+                      style={{ fontFamily: 'Bodoni Moda, serif', fontSize: '1.375rem', fontWeight: 400 }}
+                    >
+                      {b.step_drive_title}
+                    </h3>
+                    <p className="text-navy/45 text-center text-sm mb-8" style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}>
+                      {b.subtitle}
+                    </p>
+
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {([
+                        { id: 'captain', title: b.captain_title, desc: b.captain_desc, img: 'private-tour.webp' },
+                        { id: 'self',     title: b.self_title,    desc: b.self_desc,    img: 'self-spec-1-v2.png' },
+                      ] as const).map((opt) => {
+                        const isSelected = form.driveMode === opt.id
+                        return (
+                          <button
+                            key={opt.id}
+                            onClick={() => {
+                              setForm(p => ({ ...p, driveMode: opt.id }))
+                              setErrors(e => ({ ...e, driveMode: '' }))
+                              // Reset the opposite flow's selections to avoid stale data
+                              if (opt.id === 'self') {
+                                setForm(p => ({ ...p, packageId: '', packageName: '', boatId: '', mode: 'private', durationHours: 0, addons: {}, customSetupNote: '' }))
+                              } else {
+                                setForm(p => ({ ...p, selfHours: 0, selfBoatId: '' }))
+                              }
+                            }}
+                            className={clsx(
+                              'group relative overflow-hidden rounded-2xl border transition-all duration-300 text-left cursor-pointer',
+                              isSelected
+                                ? 'border-gold shadow-[0_0_0_1px_rgba(201,169,110,0.2),0_8px_40px_rgba(201,169,110,0.28)] scale-[1.01]'
+                                : 'border-navy/10 hover:border-gold/30 hover:shadow-[0_4px_20px_rgba(201,169,110,0.12)]'
+                            )}
+                          >
+                            {/* Gold top bar */}
+                            <motion.div
+                              className="absolute top-0 left-0 right-0 h-[2px] z-10"
+                              style={{ background: 'linear-gradient(90deg, transparent, #C9A96E 35%, #E8D5A3 50%, #C9A96E 65%, transparent)' }}
+                              animate={{ opacity: isSelected ? 1 : 0, scaleX: isSelected ? 1 : 0.3 }}
+                              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                            />
+                            <div className="relative h-44 overflow-hidden">
+                              <Image
+                                src={`/images/${opt.img}`}
+                                alt={opt.title}
+                                fill
+                                sizes="(max-width: 640px) 100vw, 50vw"
+                                priority
+                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                              />
+                              <div className={clsx('absolute inset-0 transition-all duration-300', isSelected ? 'bg-navy/15' : 'bg-navy/30')} />
+                              {isSelected && <div className="absolute inset-0 bg-gradient-to-t from-gold/20 via-transparent to-transparent" />}
+                              {/* Checkmark badge */}
+                              <motion.div
+                                className="absolute top-3 right-3 w-7 h-7 rounded-full bg-gold flex items-center justify-center shadow-lg"
+                                animate={{ opacity: isSelected ? 1 : 0, scale: isSelected ? 1 : 0.3 }}
+                                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                              >
+                                <svg className="w-3.5 h-3.5 text-navy" viewBox="0 0 12 12" fill="none">
+                                  <path d="M2.5 6l2.5 2.5 4.5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                              </motion.div>
+                            </div>
+                            <div className={clsx('p-5 transition-colors duration-300', isSelected ? 'bg-gold/[0.07]' : 'bg-white')}>
+                              <p
+                                className={clsx('mb-1', isSelected ? 'text-navy' : 'text-navy/80')}
+                                style={{ fontFamily: 'Bodoni Moda, serif', fontSize: '1.2rem', fontStyle: 'italic', fontWeight: 400 }}
+                              >
+                                {opt.title}
+                              </p>
+                              <p className={clsx('text-xs leading-relaxed', isSelected ? 'text-navy/60' : 'text-navy/45')} style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}>
+                                {opt.desc}
+                              </p>
+                            </div>
+                          </button>
+                        )
+                      })}
+                    </div>
+                    {errors.driveMode && (
+                      <p className="text-red-500 text-xs mt-4" style={{ fontFamily: 'Jost, sans-serif' }}>
+                        {errors.driveMode}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* ── Self drive · Step 1: Duration ── */}
+                {step === 1 && form.driveMode === 'self' && (
+                  <div>
+                    <h3
+                      className="text-navy text-center mb-1"
+                      style={{ fontFamily: 'Bodoni Moda, serif', fontSize: '1.375rem', fontWeight: 400 }}
+                    >
+                      {b.self_hours_title}
+                    </h3>
+                    <p className="text-navy/45 text-center text-sm mb-8" style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}>
+                      {b.self_hours_subtitle}
+                    </p>
+
+                    <div className="grid md:grid-cols-2 gap-6 items-stretch">
+                      {/* Hours selection */}
+                      <div className="flex flex-col">
+                        <label className="block text-[10px] tracking-widest uppercase text-navy/50 mb-3" style={{ fontFamily: 'Jost, sans-serif' }}>
+                          {b.self_hours_label} *
+                        </label>
+                        <div className="grid grid-cols-2 gap-3">
+                          {(b.self_hours_options as Array<{ hours: number; label: string; quote: string }>).map((opt) => {
+                            const active = form.selfHours === opt.hours
+                            return (
+                              <button
+                                key={opt.hours}
+                                type="button"
+                                onClick={() => { setForm(p => ({ ...p, selfHours: opt.hours })); setDurationError('') }}
+                                className={clsx(
+                                  'relative h-20 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all duration-200 cursor-pointer overflow-hidden',
+                                  active
+                                    ? 'border-gold bg-gold/15 text-navy shadow-[0_0_0_1px_rgba(201,169,110,0.18),0_6px_24px_rgba(201,169,110,0.22)] scale-[1.02]'
+                                    : 'border-navy/10 bg-white text-navy/60 hover:border-gold/30'
+                                )}
+                                style={{ fontFamily: 'Jost, sans-serif' }}
+                              >
+                                <motion.div
+                                  className="absolute top-0 left-0 right-0 h-[2px]"
+                                  style={{ background: 'linear-gradient(90deg, transparent, #C9A96E, transparent)' }}
+                                  animate={{ opacity: active ? 1 : 0 }}
+                                  transition={{ duration: 0.25 }}
+                                />
+                                <span className="text-sm font-semibold">{opt.label}</span>
+                                <span className="text-[10px] text-navy/45">{currency}{SELF_DRIVE_RATE * opt.hours}</span>
+                              </button>
+                            )
+                          })}
+                        </div>
+                        <p className="flex items-center gap-1.5 mt-3 text-[10px] text-navy/45" style={{ fontFamily: 'Jost, sans-serif' }}>
+                          <span className="text-gold">✦</span>
+                          {b.self_rate_note}
+                        </p>
+                        {durationError && (
+                          <p className="text-red-500 text-[10px] mt-3" style={{ fontFamily: 'Jost, sans-serif' }}>{durationError}</p>
+                        )}
+                      </div>
+
+                      {/* Dissolving impact quote */}
+                      <div className="relative rounded-2xl border border-gold/15 bg-cream/30 p-6 flex items-center min-h-[180px] overflow-hidden">
+                        <span className="absolute top-3 left-4 text-gold/30 text-5xl leading-none select-none" style={{ fontFamily: 'Bodoni Moda, serif' }}>“</span>
+                        <div className="relative w-full pl-8">
+                          <AnimatePresence mode="wait">
+                            <motion.blockquote
+                              key={form.selfHours || 'empty'}
+                              initial={{ opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -8 }}
+                              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                              className="text-navy"
+                              style={{ fontFamily: 'Bodoni Moda, serif', fontStyle: 'italic', fontSize: '1.35rem', lineHeight: 1.4, fontWeight: 400 }}
+                            >
+                              {form.selfHours > 0
+                                ? `"${(b.self_hours_options as Array<{ hours: number; label: string; quote: string }>).find(o => o.hours === form.selfHours)?.quote ?? ''}"`
+                                : `"${b.self_hours_subtitle}"`}
+                            </motion.blockquote>
+                          </AnimatePresence>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── Self drive · Step 2: Boat ── */}
+                {step === 2 && form.driveMode === 'self' && (
+                  <div>
+                    <h3
+                      className="text-navy text-center mb-8"
+                      style={{ fontFamily: 'Bodoni Moda, serif', fontSize: '1.375rem', fontWeight: 400 }}
+                    >
+                      {b.self_boat_title}
+                    </h3>
+
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {([
+                        { id: 'self-7', name: b.self_boat_7_name, desc: b.self_boat_7_desc },
+                        { id: 'self-6', name: b.self_boat_6_name, desc: b.self_boat_6_desc },
+                      ] as const).map((boat, i) => {
+                        const isSelected = form.selfBoatId === boat.id
+                        return (
+                          <button
+                            key={boat.id}
+                            onClick={() => setForm(p => ({ ...p, selfBoatId: boat.id }))}
+                            className={clsx(
+                              'group relative overflow-hidden rounded-2xl border transition-all duration-300 text-left cursor-pointer',
+                              isSelected
+                                ? 'border-gold shadow-[0_0_0_1px_rgba(201,169,110,0.2),0_8px_40px_rgba(201,169,110,0.28)] scale-[1.01]'
+                                : 'border-navy/10 hover:border-gold/30 hover:shadow-[0_4px_20px_rgba(201,169,110,0.12)]'
+                            )}
+                          >
+                            <motion.div
+                              className="absolute top-0 left-0 right-0 h-[2px] z-10"
+                              style={{ background: 'linear-gradient(90deg, transparent, #C9A96E 35%, #E8D5A3 50%, #C9A96E 65%, transparent)' }}
+                              animate={{ opacity: isSelected ? 1 : 0, scaleX: isSelected ? 1 : 0.3 }}
+                              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                            />
+                            <div className="relative h-48 overflow-hidden">
+                              <Image
+                                src={`/images/${BOAT_IMAGES[boat.id]}`}
+                                alt={boat.name}
+                                fill
+                                sizes="(max-width: 640px) 100vw, 50vw"
+                                priority
+                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                              />
+                              <div className={clsx('absolute inset-0 transition-all duration-300', isSelected ? 'bg-navy/15' : 'bg-navy/25')} />
+                              {isSelected && <div className="absolute inset-0 bg-gradient-to-t from-gold/20 via-transparent to-transparent" />}
+                              <div className="absolute top-3 left-3">
+                                <motion.span
+                                  animate={{
+                                    background: isSelected ? '#C9A96E' : 'rgba(255,255,255,0.15)',
+                                    color: isSelected ? '#0A1628' : '#ffffff',
+                                  }}
+                                  transition={{ duration: 0.25 }}
+                                  className="text-[10px] tracking-[0.2em] uppercase px-2.5 py-1 rounded-full backdrop-blur-sm inline-block"
+                                  style={{ fontFamily: 'Jost, sans-serif' }}
+                                >
+                                  {i === 0 ? 'I' : 'II'}
+                                </motion.span>
+                              </div>
+                              <motion.div
+                                className="absolute top-3 right-3 w-7 h-7 rounded-full bg-gold flex items-center justify-center shadow-lg"
+                                animate={{ opacity: isSelected ? 1 : 0, scale: isSelected ? 1 : 0.3 }}
+                                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                              >
+                                <svg className="w-3.5 h-3.5 text-navy" viewBox="0 0 12 12" fill="none">
+                                  <path d="M2.5 6l2.5 2.5 4.5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                              </motion.div>
+                            </div>
+                            <div className={clsx('p-4 transition-colors duration-300', isSelected ? 'bg-gold/[0.07]' : 'bg-white')}>
+                              <p
+                                className={clsx('mb-1', isSelected ? 'text-navy' : 'text-navy/80')}
+                                style={{ fontFamily: 'Bodoni Moda, serif', fontSize: '1.05rem', fontStyle: 'italic', fontWeight: 400 }}
+                              >
+                                {boat.name}
+                              </p>
+                              <p className={clsx('text-xs', isSelected ? 'text-navy/55' : 'text-navy/40')} style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}>
+                                {boat.desc}
+                              </p>
+                            </div>
+                          </button>
+                        )
+                      })}
+                    </div>
+                    {errors.selfBoatId && (
+                      <p className="text-red-500 text-xs mt-4" style={{ fontFamily: 'Jost, sans-serif' }}>
+                        {errors.selfBoatId}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* ── Step 1 (captain): Package + Mode ── */}
+                {step === 1 && form.driveMode === 'captain' && (
   <div>
     <h3 className="display-md text-navy mb-10 text-center" style={{ fontSize: '1.375rem' }}>
       {b.step1_title}
@@ -1044,8 +1437,8 @@ export default function BookingForm() {
   </div>
 )}
 
-                {/* ── Step 1: Boat Selection ── */}
-                {step === 1 && (
+                {/* ── Step 2 (captain): Boat Selection ── */}
+                {step === 2 && form.driveMode === 'captain' && (
                   <div>
                     <h3
                       className="text-navy text-center mb-8"
@@ -1141,8 +1534,8 @@ export default function BookingForm() {
                   </div>
                 )}
 
-                {/* ── Step 2: Date & Time ── */}
-                {step === 2 && (
+                {/* ── Step 3: Date & Time (shared by both flows) ── */}
+                {step === 3 && (
                   <div>
                     <h3
                       className="text-navy text-center mb-8"
@@ -1356,11 +1749,24 @@ export default function BookingForm() {
                         </p>
                       </div>
                     )}
+
+                    {/* Self drive summary hint */}
+                    {form.driveMode === 'self' && form.selfBoatId && (
+                      <div className="mt-6 p-4 rounded-xl bg-gold/8 border border-gold/20">
+                        <p className="text-navy/60 text-sm" style={{ fontFamily: 'Jost, sans-serif', fontWeight: 300 }}>
+                          <span className="text-gold font-medium">✦ </span>
+                          {b.self_drive_tag} ·{' '}
+                          {form.selfBoatId === 'self-7' ? b.self_boat_7_name : b.self_boat_6_name} ·{' '}
+                          {(b.self_hours_options as Array<{ hours: number; label: string }>).find(o => o.hours === form.selfHours)?.label} ·{' '}
+                          {currency}{SELF_DRIVE_RATE * (form.selfHours || 0)}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
 
-                {/* ── Step 3: Personal details ── */}
-                {step === 3 && (
+                {/* ── Step 4: Personal details ── */}
+                {step === 4 && (
                   <div>
                     <h3
                       className="text-navy text-center mb-8"
@@ -1511,7 +1917,7 @@ export default function BookingForm() {
                       </svg>
                       {b.sending}
                     </span>
-                  ) : step < 3 ? (
+                  ) : step < 4 ? (
                     b.next
                   ) : (
                     b.submit_desktop
