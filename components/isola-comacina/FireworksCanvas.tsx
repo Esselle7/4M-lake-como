@@ -1,8 +1,8 @@
 'use client'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FireworksCanvas — lightweight gold particle fireworks for the Bellagio event.
-// BELLAGIO EVENT (remove after 2026-06-27)
+// FireworksCanvas — lightweight gold particle fireworks for the Isola Comacina event.
+// ISOLA COMACINA EVENT (remove after 2026-06-27)
 // ─────────────────────────────────────────────────────────────────────────────
 // Canvas-based, requestAnimationFrame-driven. Respects prefers-reduced-motion
 // (renders nothing). Auto-pauses when the tab is hidden. Self-cleans on unmount.

@@ -1,25 +1,25 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// /book-bellagio — dedicated page for the limited Bellagio fireworks package.
-// BELLAGIO EVENT (remove after 2026-06-27) — also remove this file.
+// /book-isola-comacina — dedicated page for the limited Isola Comacina fireworks package.
+// ISOLA COMACINA EVENT (remove after 2026-06-27) — also remove this file.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { Metadata } from 'next'
-import BellagioHero from './BellagioHero'
-import BellagioContent from './BellagioContent'
+import IsolaComacinaHero from './IsolaComacinaHero'
+import IsolaComacinaContent from './IsolaComacinaContent'
 import { BreadcrumbLd, WebPageLd } from '@/components/seo/JsonLd'
 
 const SITE = 'https://4mboatlakecomo.com'
 
 export const metadata: Metadata = {
-  title: 'Book Bellagio — Notte di Fuochi | 4M Luxury Boats',
+  title: 'Book Isola Comacina — Notte di Fuochi | 4M Luxury Boats',
   description:
-    'Esperienza esclusiva per i fuochi d\'artificio di Bellagio sul Lago di Como, 27 giugno 2026. Skipper, carburante e due bottiglie di Moët & Chandon inclusi. €1.200 per barca privata.',
-  alternates: { canonical: '/book-bellagio' },
+    'Esperienza esclusiva per i fuochi d\'artificio di Isola Comacina sul Lago di Como, 27 giugno 2026. Skipper, carburante e due bottiglie di Moët & Chandon inclusi. €1.200 per barca privata.',
+  alternates: { canonical: '/book-isola-comacina' },
   openGraph: {
-    title: 'Book Bellagio — Notte di Fuochi | 4M Luxury Boats',
+    title: 'Book Isola Comacina — Notte di Fuochi | 4M Luxury Boats',
     description:
-      'Esperienza esclusiva per i fuochi d\'artificio di Bellagio sul Lago di Como. Skipper, carburante e Moët & Chandon inclusi.',
-    url: `${SITE}/book-bellagio`,
+      'Esperienza esclusiva per i fuochi d\'artificio di Isola Comacina sul Lago di Como. Skipper, carburante e Moët & Chandon inclusi.',
+    url: `${SITE}/book-isola-comacina`,
     type: 'website',
     locale: 'it_IT',
     images: [
@@ -27,23 +27,23 @@ export const metadata: Metadata = {
         url: `${SITE}/images/bellagio-fire.jpg`,
         width: 1200,
         height: 630,
-        alt: 'Fuochi d\'artificio a Bellagio sul Lago di Como — 4M Luxury Boats',
+        alt: 'Fuochi d\'artificio a Isola Comacina sul Lago di Como — 4M Luxury Boats',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Book Bellagio — Notte di Fuochi | 4M Luxury Boats',
-    description: 'Fuochi d\'artificio di Bellagio sul Lago di Como. €1.200 barca privata, skipper e Moët & Chandon inclusi.',
+    title: 'Book Isola Comacina — Notte di Fuochi | 4M Luxury Boats',
+    description: 'Fuochi d\'artificio di Isola Comacina sul Lago di Como. €1.200 barca privata, skipper e Moët & Chandon inclusi.',
     images: [`${SITE}/images/bellagio-fire.jpg`],
   },
   robots: { index: true, follow: true },
 }
 
-export default function BookBellagioPage() {
+export default function BookIsolaComacinaPage() {
   const breadcrumb = [
     { name: 'Home', url: SITE },
-    { name: 'Book Bellagio', url: `${SITE}/book-bellagio` },
+    { name: 'Book Isola Comacina', url: `${SITE}/book-isola-comacina` },
   ] as const
 
   return (
@@ -51,15 +51,15 @@ export default function BookBellagioPage() {
       <BreadcrumbLd items={breadcrumb} />
       <WebPageLd
         type="WebPage"
-        name="Book Bellagio — Notte di Fuochi | 4M Luxury Boats"
-        description="Esperienza esclusiva per i fuochi d'artificio di Bellagio sul Lago di Como. Skipper, carburante e Moët & Chandon inclusi."
-        url={`${SITE}/book-bellagio`}
+        name="Book Isola Comacina — Notte di Fuochi | 4M Luxury Boats"
+        description="Esperienza esclusiva per i fuochi d'artificio di Isola Comacina sul Lago di Como. Skipper, carburante e Moët & Chandon inclusi."
+        url={`${SITE}/book-isola-comacina`}
         breadcrumb={breadcrumb}
       />
       {/* Wallpaper hero — top half of the page */}
-      <BellagioHero />
+      <IsolaComacinaHero />
       {/* Package description + quote form — bottom half */}
-      <BellagioContent />
+      <IsolaComacinaContent />
     </main>
   )
 }

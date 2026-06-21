@@ -25,8 +25,8 @@ const NAV_PAGES = [
   { href: '/story', labelKey: 'visual_story' as const },
 ]
 
-// BELLAGIO EVENT (remove after 2026-06-27) — temporary highlighted nav link.
-const BELLAGIO_HREF = '/book-bellagio'
+// ISOLA COMACINA EVENT (remove after 2026-06-27) — temporary highlighted nav link.
+const ISOLA_COMACINA_HREF = '/book-isola-comacina'
 
 export default function GlowMenu() {
   const { t } = useLang()
@@ -157,12 +157,12 @@ export default function GlowMenu() {
               })}
             </ul>
 
-            {/* BELLAGIO EVENT (remove after 2026-06-27) — temporary highlighted link */}
+            {/* ISOLA COMACINA EVENT (remove after 2026-06-27) — temporary highlighted link */}
             <Link
-              href={BELLAGIO_HREF}
+              href={ISOLA_COMACINA_HREF}
               scroll={false}
               className="hidden lg:flex relative items-center gap-1.5 ml-2 px-4 py-2 rounded-xl border border-gold/40 overflow-hidden group"
-              aria-current={pathname === BELLAGIO_HREF ? 'page' : undefined}
+              aria-current={pathname === ISOLA_COMACINA_HREF ? 'page' : undefined}
             >
               {/* Animated fireworks glow */}
               <motion.span
@@ -185,7 +185,7 @@ export default function GlowMenu() {
                 className="relative z-10 text-xs tracking-widest uppercase whitespace-nowrap text-gold"
                 style={{ fontFamily: 'Jost, sans-serif', letterSpacing: '0.12em', fontWeight: 600 }}
               >
-                {t.bellagio.nav_label}
+                {t.isola_comacina.nav_label}
               </span>
             </Link>
 
@@ -279,7 +279,7 @@ export default function GlowMenu() {
                   </motion.div>
                 )
               })}
-              {/* BELLAGIO EVENT (remove after 2026-06-27) — mobile menu link */}
+              {/* ISOLA COMACINA EVENT (remove after 2026-06-27) — mobile menu link */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -287,7 +287,7 @@ export default function GlowMenu() {
                 className="mt-2"
               >
                 <Link
-                  href={BELLAGIO_HREF}
+                  href={ISOLA_COMACINA_HREF}
                   scroll={false}
                   onClick={() => setMenuOpen(false)}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-gold/40"
@@ -302,7 +302,7 @@ export default function GlowMenu() {
                     className="text-lg tracking-widest uppercase text-gold"
                     style={{ fontFamily: 'Bodoni Moda, serif', fontStyle: 'italic' }}
                   >
-                    {t.bellagio.nav_label}
+                    {t.isola_comacina.nav_label}
                   </span>
                 </Link>
               </motion.div>

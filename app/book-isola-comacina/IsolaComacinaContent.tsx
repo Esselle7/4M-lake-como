@@ -1,17 +1,17 @@
 'use client'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// BellagioContent — package description + quote form for /book-bellagio.
-// BELLAGIO EVENT (remove after 2026-06-27)
+// IsolaComacinaContent — package description + quote form for /book-isola-comacina.
+// ISOLA COMACINA EVENT (remove after 2026-06-27)
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { motion } from 'framer-motion'
 import { useLang } from '@/context/LanguageContext'
-import BellagioQuoteForm from '@/components/bellagio/BellagioQuoteForm'
+import IsolaComacinaQuoteForm from '@/components/isola-comacina/IsolaComacinaQuoteForm'
 
-export default function BellagioContent() {
+export default function IsolaComacinaContent() {
   const { t } = useLang()
-  const bl = t.bellagio
+  const bl = t.isola_comacina
 
   return (
     <section className="relative -mt-10 z-10">
@@ -131,7 +131,7 @@ export default function BellagioContent() {
               </p>
             </motion.div>
 
-            <BellagioQuoteForm />
+            <IsolaComacinaQuoteForm />
           </div>
         </div>
       </div>

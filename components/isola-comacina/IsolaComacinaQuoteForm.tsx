@@ -1,10 +1,10 @@
 'use client'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// BellagioQuoteForm — quote-request form for the Bellagio fireworks package.
-// BELLAGIO EVENT (remove after 2026-06-27)
+// IsolaComacinaQuoteForm — quote-request form for the Isola Comacina fireworks package.
+// ISOLA COMACINA EVENT (remove after 2026-06-27)
 // ─────────────────────────────────────────────────────────────────────────────
-// Same personal-data fields as the main booking form. Posts to /api/send-bellagio.
+// Same personal-data fields as the main booking form. Posts to /api/send-isola-comacina.
 // Locked once the booking deadline (27 June 10:00) passes.
 
 import { useState } from 'react'
@@ -12,7 +12,7 @@ import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import { useLang } from '@/context/LanguageContext'
 import LiquidGlassButton from '@/components/ui/LiquidGlassButton'
-import { useBellagioStatus, BELLAGIO_DEADLINE } from './BellagioCountdown'
+import { useIsolaComacinaStatus, ISOLA_COMACINA_DEADLINE } from './IsolaComacinaCountdown'
 
 interface FormState {
   name: string
@@ -28,10 +28,10 @@ const INITIAL: FormState = { name: '', surname: '', email: '', phone: '', guests
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 const validatePhone = (phone: string) => /^\+?[\d\s\-()]{7,20}$/.test(phone)
 
-export default function BellagioQuoteForm() {
+export default function IsolaComacinaQuoteForm() {
   const { t } = useLang()
-  const bl = t.bellagio
-  const status = useBellagioStatus()
+  const bl = t.isola_comacina
+  const status = useIsolaComacinaStatus()
   const [form, setForm] = useState<FormState>(INITIAL)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSending, setIsSending] = useState(false)
@@ -60,7 +60,7 @@ export default function BellagioQuoteForm() {
     if (locked || !validate()) return
     setIsSending(true)
     try {
-      const res = await fetch('/api/send-bellagio', {
+      const res = await fetch('/api/send-isola-comacina', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

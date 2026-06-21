@@ -389,10 +389,10 @@
     "rights": "Tutti i diritti riservati.",
     "privacy": "Privacy Policy"
   },
-  "bellagio": {
-    "nav_label": "Book Bellagio",
+  "isola_comacina": {
+    "nav_label": "Book Isola Comacina",
     "banner_eyebrow": "Evento a tempo · Sabato 27 Giugno",
-    "banner_title": "Notte di Fuochi a Bellagio",
+    "banner_title": "Notte di Fuochi a Isola Comacina",
     "banner_desc": "Un'esperienza unica per la Notte di San Giovanni. Vive la magia dei fuochi d'artificio sul lago, a bordo di una barca privata con skipper e champagne.",
     "banner_cta": "Scopri il Pacchetto",
     "banner_note": "Prenotazioni chiudono Sabato 27 alle 10:00",
@@ -403,14 +403,14 @@
     "seconds": "Sec",
     "booking_closed": "Prenotazioni chiuse",
     "event_started": "Lo spettacolo è iniziato",
-    "page_title": "Book Bellagio — Notte di Fuochi",
+    "page_title": "Book Isola Comacina — Notte di Fuochi",
     "page_eyebrow": "Esperienza Esclusiva · 27 Giugno 2026",
     "page_headline_1": "Notte di",
     "page_headline_2": "Fuochi",
     "page_subtitle": "Sabato 27 Giugno 2026 · Ore 22:30",
     "package_eyebrow": "Il Pacchetto",
     "package_title": "Una Notte sul Lago, Sotto i Fuochi",
-    "package_desc": "Posizione privilegiata davanti a Bellagio per godere dello spettacolo pirotecnico della Notte di San Giovanni. Partenza al tramonto, navigazione tra le ville illuminate e attracco in prima fila per i fuochi d'artificio alle 22:30. Tutto compreso: skipper esperto, carburante e due bottiglie di Moët & Chandon per brindare alla magia del lago.",
+    "package_desc": "Posizione privilegiata davanti a Isola Comacina per godere dello spettacolo pirotecnico della Notte di San Giovanni. Partenza al tramonto, navigazione tra le ville illuminate e attracco in prima fila per i fuochi d'artificio alle 22:30. Tutto compreso: skipper esperto, carburante e due bottiglie di Moët & Chandon per brindare alla magia del lago.",
     "package_includes_title": "Cosa Include",
     "package_includes": [
       "Skipper esperto a disposizione",
@@ -436,7 +436,7 @@
     "form_sending": "Invio in corso…",
     "form_required": "Campo obbligatorio",
     "form_success_title": "Richiesta Ricevuta!",
-    "form_success_desc": "Grazie. Ti contatteremo entro poche ore con il preventivo dettagliato per la Notte di Bellagio.",
+    "form_success_desc": "Grazie. Ti contatteremo entro poche ore con il preventivo dettagliato per la Notte di Isola Comacina.",
     "form_new": "← Nuova richiesta",
     "deadline_warning": "Le prenotazioni chiudono il 27 Giugno alle 10:00"
   }

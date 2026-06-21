@@ -389,10 +389,10 @@
     "rights": "Alle Rechte vorbehalten.",
     "privacy": "Datenschutz"
   },
-  "bellagio": {
-    "nav_label": "Book Bellagio",
+  "isola_comacina": {
+    "nav_label": "Book Isola Comacina",
     "banner_eyebrow": "Zeitbegrenztes Event · Samstag 27. Juni",
-    "banner_title": "Eine Nacht voller Feuerwerk in Bellagio",
+    "banner_title": "Eine Nacht voller Feuerwerk in Isola Comacina",
     "banner_desc": "Ein einmaliges Erlebnis für die Johannistag. Erleben Sie die Magie des Feuerwerks über dem See von Ihrem eigenen privaten Boot aus, mit Skipper und Champagner.",
     "banner_cta": "Das Paket Entdecken",
     "banner_note": "Buchungen schließen Samstag 27. um 10:00",
@@ -403,14 +403,14 @@
     "seconds": "Sek",
     "booking_closed": "Buchungen geschlossen",
     "event_started": "Die Show hat begonnen",
-    "page_title": "Book Bellagio — Nacht der Feuerwerke",
+    "page_title": "Book Isola Comacina — Nacht der Feuerwerke",
     "page_eyebrow": "Exklusives Erlebnis · 27. Juni 2026",
     "page_headline_1": "Eine Nacht",
     "page_headline_2": "der Feuerwerke",
     "page_subtitle": "Samstag, 27. Juni 2026 · 22:30 Uhr",
     "package_eyebrow": "Das Paket",
     "package_title": "Eine Nacht auf dem See, unter den Feuerwerken",
-    "package_desc": "Ein bevorzugter Platz vor Bellagio, um das Feuerwerk der Johannistag zu genießen. Abfahrt bei Sonnenuntergang, Fahrt vorbei an den erleuchteten Villen, dann Erstreihe-Anlegeplatz für das Feuerwerk um 22:30 Uhr. Alles inklusive: erfahrener Skipper, Kraftstoff für den ganzen Abend und zwei Flaschen Moët & Chandon, um auf die Magie des Sees anzustoßen.",
+    "package_desc": "Ein bevorzugter Platz vor Isola Comacina, um das Feuerwerk der Johannistag zu genießen. Abfahrt bei Sonnenuntergang, Fahrt vorbei an den erleuchteten Villen, dann Erstreihe-Anlegeplatz für das Feuerwerk um 22:30 Uhr. Alles inklusive: erfahrener Skipper, Kraftstoff für den ganzen Abend und zwei Flaschen Moët & Chandon, um auf die Magie des Sees anzustoßen.",
     "package_includes_title": "Was Enthalten Ist",
     "package_includes": [
       "Eigener erfahrener Skipper",
@@ -436,7 +436,7 @@
     "form_sending": "Wird gesendet…",
     "form_required": "Pflichtfeld",
     "form_success_title": "Anfrage Erhalten!",
-    "form_success_desc": "Vielen Dank. Wir melden uns innerhalb weniger Stunden mit dem detaillierten Angebot für die Bellagio-Nacht.",
+    "form_success_desc": "Vielen Dank. Wir melden uns innerhalb weniger Stunden mit dem detaillierten Angebot für die Isola Comacina-Nacht.",
     "form_new": "← Neue Anfrage",
     "deadline_warning": "Buchungen schließen am 27. Juni um 10:00"
   }

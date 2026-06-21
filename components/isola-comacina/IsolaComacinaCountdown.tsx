@@ -1,8 +1,8 @@
 'use client'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// BellagioCountdown — real-time countdown to the fireworks event.
-// BELLAGIO EVENT (remove after 2026-06-27)
+// IsolaComacinaCountdown — real-time countdown to the fireworks event.
+// ISOLA COMACINA EVENT (remove after 2026-06-27)
 // ─────────────────────────────────────────────────────────────────────────────
 // Event: Saturday 27 June 2026, 22:30 local time (Lake Como fireworks).
 // Booking deadline: 27 June 2026, 10:00 — after this the form is disabled
@@ -14,8 +14,8 @@ import { useLang } from '@/context/LanguageContext'
 
 // Build the event date in LOCAL time (avoid TZ drift server-side).
 // new Date(2026, 5, 27, 22, 30) → 5 = June (0-indexed).
-export const BELLAGIO_EVENT = new Date(2026, 5, 27, 22, 30, 0).getTime()
-export const BELLAGIO_DEADLINE = new Date(2026, 5, 27, 10, 0, 0).getTime()
+export const ISOLA_COMACINA_EVENT = new Date(2026, 5, 27, 22, 30, 0).getTime()
+export const ISOLA_COMACINA_DEADLINE = new Date(2026, 5, 27, 10, 0, 0).getTime()
 
 interface Remaining {
   days: number
@@ -35,15 +35,15 @@ function getRemaining(target: number): Remaining {
 
 type Status = 'open' | 'closed' | 'live' | 'past'
 
-export function useBellagioStatus(): Status {
+export function useIsolaComacinaStatus(): Status {
   const [now, setNow] = useState(() => Date.now())
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000)
     return () => clearInterval(id)
   }, [])
-  if (now < BELLAGIO_DEADLINE) return 'open'
-  if (now < BELLAGIO_EVENT) return 'closed'
-  if (now < BELLAGIO_EVENT + 60 * 60 * 1000) return 'live' // 1h of show
+  if (now < ISOLA_COMACINA_DEADLINE) return 'open'
+  if (now < ISOLA_COMACINA_EVENT) return 'closed'
+  if (now < ISOLA_COMACINA_EVENT + 60 * 60 * 1000) return 'live' // 1h of show
   return 'past'
 }
 
@@ -51,14 +51,14 @@ interface Props {
   variant?: 'banner' | 'page'
 }
 
-export default function BellagioCountdown({ variant = 'banner' }: Props) {
+export default function IsolaComacinaCountdown({ variant = 'banner' }: Props) {
   const { t } = useLang()
-  const bl = t.bellagio
-  const [remaining, setRemaining] = useState<Remaining>(() => getRemaining(BELLAGIO_EVENT))
-  const status = useBellagioStatus()
+  const bl = t.isola_comacina
+  const [remaining, setRemaining] = useState<Remaining>(() => getRemaining(ISOLA_COMACINA_EVENT))
+  const status = useIsolaComacinaStatus()
 
   useEffect(() => {
-    const id = setInterval(() => setRemaining(getRemaining(BELLAGIO_EVENT)), 1000)
+    const id = setInterval(() => setRemaining(getRemaining(ISOLA_COMACINA_EVENT)), 1000)
     return () => clearInterval(id)
   }, [])
 

@@ -1,8 +1,8 @@
 'use client'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// BellagioHero — full-width wallpaper hero for /book-bellagio.
-// BELLAGIO EVENT (remove after 2026-06-27)
+// IsolaComacinaHero — full-width wallpaper hero for /book-isola-comacina.
+// ISOLA COMACINA EVENT (remove after 2026-06-27)
 // ─────────────────────────────────────────────────────────────────────────────
 // Takes the top ~half of the viewport. bellagio-fire.jpg as background with
 // fireworks canvas overlay + event headline + real-time countdown.
@@ -10,12 +10,12 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useLang } from '@/context/LanguageContext'
-import FireworksCanvas from '@/components/bellagio/FireworksCanvas'
-import BellagioCountdown from '@/components/bellagio/BellagioCountdown'
+import FireworksCanvas from '@/components/isola-comacina/FireworksCanvas'
+import IsolaComacinaCountdown from '@/components/isola-comacina/IsolaComacinaCountdown'
 
-export default function BellagioHero() {
+export default function IsolaComacinaHero() {
   const { t } = useLang()
-  const bl = t.bellagio
+  const bl = t.isola_comacina
 
   return (
     <section className="relative w-full overflow-hidden" style={{ minHeight: '60vh' }}>
@@ -23,7 +23,7 @@ export default function BellagioHero() {
       <div className="absolute inset-0">
         <Image
           src="/images/bellagio-fire.jpg"
-          alt="Fuochi d'artificio a Bellagio sul Lago di Como"
+          alt="Fuochi d'artificio a Isola Comacina sul Lago di Como"
           fill
           priority
           sizes="100vw"
@@ -89,7 +89,7 @@ export default function BellagioHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.55 }}
         >
-          <BellagioCountdown variant="page" />
+          <IsolaComacinaCountdown variant="page" />
         </motion.div>
       </div>
     </section>

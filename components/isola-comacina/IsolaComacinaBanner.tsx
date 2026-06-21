@@ -1,11 +1,11 @@
 'use client'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// BellagioBanner — home teaser for the limited Bellagio fireworks package.
-// BELLAGIO EVENT (remove after 2026-06-27)
+// IsolaComacinaBanner — home teaser for the limited Isola Comacina fireworks package.
+// ISOLA COMACINA EVENT (remove after 2026-06-27)
 // ─────────────────────────────────────────────────────────────────────────────
 // Placed between HeroSection and HowItWorks on the home page.
-// Fireworks canvas backdrop + real-time countdown + CTA to /book-bellagio.
+// Fireworks canvas backdrop + real-time countdown + CTA to /book-isola-comacina.
 
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
@@ -14,11 +14,11 @@ import { useRouter } from 'next/navigation'
 import { useLang } from '@/context/LanguageContext'
 import LiquidGlassButton from '@/components/ui/LiquidGlassButton'
 import FireworksCanvas from './FireworksCanvas'
-import BellagioCountdown from './BellagioCountdown'
+import IsolaComacinaCountdown from './IsolaComacinaCountdown'
 
-export default function BellagioBanner() {
+export default function IsolaComacinaBanner() {
   const { t } = useLang()
-  const bl = t.bellagio
+  const bl = t.isola_comacina
   const router = useRouter()
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
@@ -26,7 +26,7 @@ export default function BellagioBanner() {
   return (
     <section
       ref={ref}
-      aria-labelledby="bellagio-banner-title"
+      aria-labelledby="isola-comacina-banner-title"
       className="relative overflow-hidden"
       style={{ background: '#07101E' }}
     >
@@ -34,7 +34,7 @@ export default function BellagioBanner() {
       <div className="absolute inset-0">
         <Image
           src="/images/bellagio-fire.jpg"
-          alt="Fuochi d'artificio a Bellagio sul Lago di Como"
+          alt="Fuochi d'artificio a Isola Comacina sul Lago di Como"
           fill
           sizes="100vw"
           quality={75}
@@ -67,7 +67,7 @@ export default function BellagioBanner() {
         </motion.p>
 
         <motion.h2
-          id="bellagio-banner-title"
+          id="isola-comacina-banner-title"
           initial={{ opacity: 0, y: 22 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
@@ -102,7 +102,7 @@ export default function BellagioBanner() {
           transition={{ duration: 0.8, delay: 0.45 }}
           className="mb-10"
         >
-          <BellagioCountdown variant="banner" />
+          <IsolaComacinaCountdown variant="banner" />
         </motion.div>
 
         {/* CTA + note */}
@@ -115,7 +115,7 @@ export default function BellagioBanner() {
           <LiquidGlassButton
             variant="gold"
             size="lg"
-            onClick={() => router.push('/book-bellagio')}
+            onClick={() => router.push('/book-isola-comacina')}
           >
             {bl.banner_cta}
           </LiquidGlassButton>

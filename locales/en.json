@@ -389,10 +389,10 @@
     "rights": "All rights reserved.",
     "privacy": "Privacy Policy"
   },
-  "bellagio": {
-    "nav_label": "Book Bellagio",
+  "isola_comacina": {
+    "nav_label": "Book Isola Comacina",
     "banner_eyebrow": "Limited event · Saturday 27 June",
-    "banner_title": "A Night of Fireworks in Bellagio",
+    "banner_title": "A Night of Fireworks in Isola Comacina",
     "banner_desc": "A once-in-a-year experience for the Night of St. John. Witness the magic of fireworks over the lake from your own private boat, with a skipper and champagne.",
     "banner_cta": "Discover the Package",
     "banner_note": "Bookings close Saturday 27 at 10:00",
@@ -403,14 +403,14 @@
     "seconds": "Sec",
     "booking_closed": "Bookings closed",
     "event_started": "The show has begun",
-    "page_title": "Book Bellagio — Night of Fireworks",
+    "page_title": "Book Isola Comacina — Night of Fireworks",
     "page_eyebrow": "Exclusive Experience · 27 June 2026",
     "page_headline_1": "A Night of",
     "page_headline_2": "Fireworks",
     "page_subtitle": "Saturday 27 June 2026 · 10:30 PM",
     "package_eyebrow": "The Package",
     "package_title": "A Night on the Lake, Beneath the Fireworks",
-    "package_desc": "A privileged spot in front of Bellagio to enjoy the fireworks of the Night of St. John. Departure at sunset, a cruise past the illuminated villas, then a front-row mooring for the 10:30 PM fireworks. All included: an expert skipper, fuel for the whole evening, and two bottles of Moët & Chandon to toast the magic of the lake.",
+    "package_desc": "A privileged spot in front of Isola Comacina to enjoy the fireworks of the Night of St. John. Departure at sunset, a cruise past the illuminated villas, then a front-row mooring for the 10:30 PM fireworks. All included: an expert skipper, fuel for the whole evening, and two bottles of Moët & Chandon to toast the magic of the lake.",
     "package_includes_title": "What's Included",
     "package_includes": [
       "Dedicated expert skipper",
@@ -436,7 +436,7 @@
     "form_sending": "Sending…",
     "form_required": "Required field",
     "form_success_title": "Request Received!",
-    "form_success_desc": "Thank you. We'll be in touch within a few hours with the detailed quote for the Bellagio Night.",
+    "form_success_desc": "Thank you. We'll be in touch within a few hours with the detailed quote for the Isola Comacina Night.",
     "form_new": "← New request",
     "deadline_warning": "Bookings close on 27 June at 10:00"
   }
