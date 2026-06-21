@@ -25,6 +25,9 @@ const NAV_PAGES = [
   { href: '/story', labelKey: 'visual_story' as const },
 ]
 
+// BELLAGIO EVENT (remove after 2026-06-27) — temporary highlighted nav link.
+const BELLAGIO_HREF = '/book-bellagio'
+
 export default function GlowMenu() {
   const { t } = useLang()
   const pathname = usePathname()
@@ -154,6 +157,38 @@ export default function GlowMenu() {
               })}
             </ul>
 
+            {/* BELLAGIO EVENT (remove after 2026-06-27) — temporary highlighted link */}
+            <Link
+              href={BELLAGIO_HREF}
+              scroll={false}
+              className="hidden lg:flex relative items-center gap-1.5 ml-2 px-4 py-2 rounded-xl border border-gold/40 overflow-hidden group"
+              aria-current={pathname === BELLAGIO_HREF ? 'page' : undefined}
+            >
+              {/* Animated fireworks glow */}
+              <motion.span
+                className="absolute inset-0 rounded-xl pointer-events-none"
+                style={{
+                  background:
+                    'radial-gradient(ellipse at 30% 50%, rgba(201,169,110,0.35) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(232,213,163,0.25) 0%, transparent 55%)',
+                }}
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              {/* Sparkle dot */}
+              <motion.span
+                className="w-1.5 h-1.5 rounded-full bg-gold"
+                style={{ boxShadow: '0 0 6px 2px rgba(201,169,110,0.7)' }}
+                animate={{ scale: [1, 1.4, 1], opacity: [0.8, 1, 0.8] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <span
+                className="relative z-10 text-xs tracking-widest uppercase whitespace-nowrap text-gold"
+                style={{ fontFamily: 'Jost, sans-serif', letterSpacing: '0.12em', fontWeight: 600 }}
+              >
+                {t.bellagio.nav_label}
+              </span>
+            </Link>
+
             {/* Right: social icons + language (desktop only) + mobile burger */}
             <div className="flex items-center gap-3">
               {/* Social icons — desktop only */}
@@ -244,6 +279,33 @@ export default function GlowMenu() {
                   </motion.div>
                 )
               })}
+              {/* BELLAGIO EVENT (remove after 2026-06-27) — mobile menu link */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: NAV_PAGES.length * 0.07 + 0.1 }}
+                className="mt-2"
+              >
+                <Link
+                  href={BELLAGIO_HREF}
+                  scroll={false}
+                  onClick={() => setMenuOpen(false)}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-gold/40"
+                >
+                  <motion.span
+                    className="w-1.5 h-1.5 rounded-full bg-gold"
+                    style={{ boxShadow: '0 0 6px 2px rgba(201,169,110,0.7)' }}
+                    animate={{ scale: [1, 1.4, 1], opacity: [0.8, 1, 0.8] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                  <span
+                    className="text-lg tracking-widest uppercase text-gold"
+                    style={{ fontFamily: 'Bodoni Moda, serif', fontStyle: 'italic' }}
+                  >
+                    {t.bellagio.nav_label}
+                  </span>
+                </Link>
+              </motion.div>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

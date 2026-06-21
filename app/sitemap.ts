@@ -22,5 +22,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.7,
     },
+    // BELLAGIO EVENT (remove after 2026-06-27)
+    {
+      url: `${SITE_URL}/book-bellagio`,
+      lastModified: new Date('2026-06-01'),
+      changeFrequency: 'daily',
+      priority: 0.95,
+    },
   ]
 }
