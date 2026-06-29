@@ -7,6 +7,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useLang } from '@/context/LanguageContext'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
+import LanguageHint from '@/components/LanguageHint'
 import clsx from 'clsx'
 
 const GYG_SIZE = 40  // ← modifica questo per ridimensionare il logo GetYourGuide
@@ -44,6 +45,7 @@ export default function GlowMenu() {
 
   return (
     <>
+      <LanguageHint />
       <motion.nav
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
