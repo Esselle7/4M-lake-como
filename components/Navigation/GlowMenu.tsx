@@ -157,7 +157,8 @@ export default function GlowMenu() {
               })}
             </ul>
 
-            {/* ISOLA COMACINA EVENT (remove after 2026-06-27) — temporary highlighted link */}
+            {/* ISOLA COMACINA EVENT — disabled until next season. Flip `false` to `true` to restore. */}
+            {false && (
             <Link
               href={ISOLA_COMACINA_HREF}
               scroll={false}
@@ -188,6 +189,7 @@ export default function GlowMenu() {
                 {t.isola_comacina.nav_label}
               </span>
             </Link>
+            )}
 
             {/* Right: social icons + language (desktop only) + mobile burger */}
             <div className="flex items-center gap-3">
@@ -279,7 +281,8 @@ export default function GlowMenu() {
                   </motion.div>
                 )
               })}
-              {/* ISOLA COMACINA EVENT (remove after 2026-06-27) — mobile menu link */}
+              {/* ISOLA COMACINA EVENT — disabled until next season. Flip `false` to `true` to restore. */}
+              {false && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -306,6 +309,7 @@ export default function GlowMenu() {
                   </span>
                 </Link>
               </motion.div>
+              )}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

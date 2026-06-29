@@ -37,7 +37,8 @@ export const metadata: Metadata = {
     description: 'Fuochi d\'artificio di Isola Comacina sul Lago di Como. €1.200 barca privata, skipper e Moët & Chandon inclusi.',
     images: [`${SITE}/images/bellagio-fire.jpg`],
   },
-  robots: { index: true, follow: true },
+  // ISOLA COMACINA EVENT — noindex until next season. Set back to index:true to relaunch.
+  robots: { index: false, follow: true },
 }
 
 export default function BookIsolaComacinaPage() {

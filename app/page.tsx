@@ -11,8 +11,8 @@ export default function Home() {
   return (
     <main id="main-content">
       <HeroSection />
-      {/* ISOLA COMACINA EVENT (remove after 2026-06-27) */}
-      <IsolaComacinaBanner />
+      {/* ISOLA COMACINA EVENT — disabled until next season. Flip `false` to `true` to restore. */}
+      {false && <IsolaComacinaBanner />}
       <HowItWorks />
       <FleetSection />
       <PackagesSection />

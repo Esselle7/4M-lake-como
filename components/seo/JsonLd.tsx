@@ -1,6 +1,6 @@
 const SITE = 'https://4mboatlakecomo.com'
 const BUSINESS_NAME = '4M Luxury Boats'
-const PHONE = process.env.NEXT_PUBLIC_PHONE || '+39 031 000 0000'
+const PHONE = process.env.NEXT_PUBLIC_PHONE || '+39 352 007 8241'
 const EMAIL = 'info@4mboatlakecomo.com'
 const DEPARTURE_LAT = 45.8108
 const DEPARTURE_LNG = 9.0836
@@ -9,6 +9,9 @@ const DEPARTURE_CITY = 'Como'
 const DEPARTURE_REGION = 'Lombardia'
 const DEPARTURE_POSTAL = '22100'
 const DEPARTURE_COUNTRY = 'IT'
+
+// ponytail: season tracks current year so offers never show as expired; rolls over automatically every Jan 1
+const SEASON_YEAR = new Date().getFullYear()
 
 const PACKAGES = [
   { id: 'la-bella-vita', name: 'La Bella Vita',     price: 290, duration: 'PT1H',   desc: 'Fully customizable private boat experience on Lake Como. Choose your duration (from 1 hour, €290/hour) and onboard extras. Special requests welcome.' },
@@ -156,8 +159,8 @@ export function LocalBusinessLd({ locale = 'it' }: { locale?: string }) {
         price: p.price,
         priceCurrency: 'EUR',
         availability: 'https://schema.org/InStock',
-        validFrom: '2025-04-01',
-        validThrough: '2025-10-31',
+        validFrom: `${SEASON_YEAR}-04-01`,
+        validThrough: `${SEASON_YEAR}-10-31`,
         url: `${SITE}/booking`,
         itemOffered: {
           '@type': 'TouristTrip',

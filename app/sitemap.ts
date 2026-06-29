@@ -6,7 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: SITE_URL,
-      lastModified: new Date('2025-05-01'),
+      lastModified: new Date(), // build time — honest freshness signal
       changeFrequency: 'weekly',
       priority: 1.0,
     },
@@ -22,12 +22,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.7,
     },
-    // ISOLA COMACINA EVENT (remove after 2026-06-27)
-    {
-      url: `${SITE_URL}/book-isola-comacina`,
-      lastModified: new Date('2026-06-01'),
-      changeFrequency: 'daily',
-      priority: 0.95,
-    },
+    // ISOLA COMACINA EVENT — disabled until next season. Uncomment to relaunch.
+    // {
+    //   url: `${SITE_URL}/book-isola-comacina`,
+    //   lastModified: new Date('2026-06-01'),
+    //   changeFrequency: 'daily',
+    //   priority: 0.95,
+    // },
   ]
 }
