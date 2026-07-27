@@ -12,6 +12,7 @@ import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import { useLang } from '@/context/LanguageContext'
 import LiquidGlassButton from '@/components/ui/LiquidGlassButton'
+import Turnstile from '@/components/ui/Turnstile'
 import { useIsolaComacinaStatus, ISOLA_COMACINA_DEADLINE } from './IsolaComacinaCountdown'
 
 interface FormState {
@@ -35,6 +36,7 @@ export default function IsolaComacinaQuoteForm() {
   const [form, setForm] = useState<FormState>(INITIAL)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSending, setIsSending] = useState(false)
+  const [turnstileToken, setTurnstileToken] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
   const locked = status !== 'open'
@@ -63,7 +65,7 @@ export default function IsolaComacinaQuoteForm() {
       const res = await fetch('/api/send-isola-comacina', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, turnstileToken }),
       })
       if (!res.ok) {
         const p = await res.json().catch(() => null)
@@ -229,11 +231,12 @@ export default function IsolaComacinaQuoteForm() {
       </div>
 
       <div className="mt-8 flex flex-col items-center gap-3">
+        {!locked && <Turnstile onToken={setTurnstileToken} />}
         <LiquidGlassButton
           variant="gold"
           size="lg"
           onClick={submit}
-          disabled={isSending || locked}
+          disabled={isSending || locked || !turnstileToken}
           fullWidth
         >
           {isSending ? bl.form_sending : bl.form_submit}

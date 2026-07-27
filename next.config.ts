@@ -35,6 +35,20 @@ const nextConfig: NextConfig = {
       {
         source: '/(.*)',
         headers: [
+          // CSP: solo le direttive a rischio-zero di rottura per un sito marketing.
+          // ponytail: niente script-src — con GA + Meta Pixel + gli inline script di Next
+          //           servirebbe 'unsafe-inline' (protezione quasi nulla) o i nonce via middleware.
+          //           Aggiungilo quando il sito accetterà contenuto di terzi, testandolo prima in staging.
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "base-uri 'self'",
+              "form-action 'self'",
+              "frame-ancestors 'none'",
+              "object-src 'none'",
+              'upgrade-insecure-requests',
+            ].join('; '),
+          },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },

@@ -5,6 +5,7 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { useLang } from '@/context/LanguageContext'
 import Image from 'next/image'
 import LiquidGlassButton from '@/components/ui/LiquidGlassButton'
+import Turnstile from '@/components/ui/Turnstile'
 import clsx from 'clsx'
 import itLocale from '@/locales/it.json'
 import enLocale from '@/locales/en.json'
@@ -513,6 +514,7 @@ export default function BookingForm() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSending, setIsSending] = useState(false)
   const [durationError, setDurationError] = useState('')
+  const [turnstileToken, setTurnstileToken] = useState('')
   const sectionRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-80px' })
 
@@ -888,7 +890,7 @@ export default function BookingForm() {
       const response = await fetch('/api/send-booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ form, message, whatsappMessage, pricing }),
+        body: JSON.stringify({ form, message, whatsappMessage, pricing, turnstileToken }),
       })
       if (!response.ok) {
         const payload = await response.json().catch(() => null)
@@ -1886,6 +1888,9 @@ export default function BookingForm() {
                 )}
                 </motion.div>
 
+              {/* Anti-bot: solo sull'ultimo step, dove si invia davvero. */}
+              {step === 4 && <Turnstile onToken={setTurnstileToken} />}
+
               {/* Navigation */}
               <div className="flex items-center justify-between mt-10">
                 {step > 0 ? (
@@ -1907,7 +1912,7 @@ export default function BookingForm() {
                   variant="gold"
                   size="md"
                   onClick={handleNext}
-                  disabled={isSending}
+                  disabled={isSending || (step === 4 && !turnstileToken)}
                 >
                   {isSending ? (
                     <span className="flex items-center gap-2">

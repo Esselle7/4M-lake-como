@@ -5,6 +5,7 @@
 
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
+import { verifyTurnstile } from '@/lib/verify-turnstile';
 
 export const runtime = 'edge';
 
@@ -25,10 +26,25 @@ export async function POST(req: Request) {
     const form = await req.json() as {
       name: string; surname: string; email: string;
       phone: string; guests: string; notes: string;
+      turnstileToken?: string;
     };
+
+    if (!form || typeof form !== 'object') {
+      return NextResponse.json({ error: 'Payload non valido' }, { status: 400 });
+    }
+
+    // Anti-bot PRIMA di toccare Resend: un token non valido non deve costare una email.
+    const ok = await verifyTurnstile(form.turnstileToken, req.headers.get('CF-Connecting-IP'));
+    if (!ok) {
+      return NextResponse.json(
+        { error: 'Verifica anti-bot fallita. Ricarica la pagina e riprova.' },
+        { status: 403 }
+      );
+    }
 
     const escapeHtml = (str: string) =>
       String(str ?? '')
+        .slice(0, 2000)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
@@ -36,7 +52,7 @@ export async function POST(req: Request) {
     const { data, error } = await resend.emails.send({
       from: 'Booking System <onboarding@resend.dev>',
       to: ['info@4mlake.com'],
-      subject: `🔥 Isola Comacina — Richiesta preventivo: ${form.name} ${form.surname}`,
+      subject: `🔥 Isola Comacina — Richiesta preventivo: ${`${form.name} ${form.surname}`.replace(/[\r\n]+/g, ' ').slice(0, 200)}`,
       html: `
         <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
           <h2 style="color: #0A1628; border-bottom: 1px solid #eee; padding-bottom: 10px;">

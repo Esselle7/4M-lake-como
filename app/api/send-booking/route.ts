@@ -1,16 +1,34 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
+import { verifyTurnstile } from '@/lib/verify-turnstile';
 
 export const runtime = 'edge';
 
 export async function POST(req: Request) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
-    const { form, message, whatsappMessage, pricing } = await req.json();
+    const { form, whatsappMessage, pricing, turnstileToken } = await req.json();
+
+    // Trust boundary: il body arriva da internet, non dal form. Rifiuta subito ciò che non è un oggetto.
+    if (!form || typeof form !== 'object') {
+      return NextResponse.json({ error: 'Payload non valido' }, { status: 400 });
+    }
+
+    // Anti-bot PRIMA di toccare Resend: un token non valido non deve costare una email.
+    const ok = await verifyTurnstile(turnstileToken, req.headers.get('CF-Connecting-IP'));
+    if (!ok) {
+      return NextResponse.json(
+        { error: 'Verifica anti-bot fallita. Ricarica la pagina e riprova.' },
+        { status: 403 }
+      );
+    }
 
     // Escape per inserire in sicurezza il testo nel markup HTML della mail.
+    // Il cap a 2000 char evita mail da megabyte via POST diretto.
+    // ponytail: basta escapare &<> perché ogni valore finisce in text content, mai in un attributo.
     const escapeHtml = (str: string) =>
       String(str ?? '')
+        .slice(0, 2000)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
@@ -50,6 +68,10 @@ export async function POST(req: Request) {
       ? `<tr><td style="padding: 8px 0; vertical-align: top;"><strong>Allestimento speciale:</strong></td><td>${escapeHtml(setupNote)}</td></tr>`
       : '';
 
+    // ponytail: `pricing` è calcolato dal client (BookingForm.computePricing) e stampato come arriva.
+    //           Chi fa POST a mano può dichiarare un totale falso nella mail allo staff.
+    //           Accettato: non esiste un flusso di pagamento, lo staff rilegge il preventivo prima di
+    //           confermare. Ricalcolare server-side con lib/pricing.mjs il giorno in cui si incassa online.
     // Righe prezzo: eventuale prezzo pieno barrato + sconto, totale (già scontato) + acconto 30%.
     const discountRow = pricing?.discountRate > 0 && typeof pricing?.originalTotal === 'number'
       ? `<tr><td style="padding: 8px 0;"><strong>Prezzo pieno:</strong></td><td><span style="text-decoration: line-through; color: #999;">${cur}${pricing.originalTotal}</span> &nbsp;<span style="color: #C9A96E;">−${Math.round(pricing.discountRate * 100)}% sulle ore</span></td></tr>`
@@ -76,19 +98,20 @@ export async function POST(req: Request) {
       //    (bcc) così i due non si vedono a vicenda:
       //      to: [process.env.PERSONAL_EMAIL as string],
       //      bcc: ['simone.leone300900@gmail.com'],
-      subject: `Nuova Prenotazione: ${form.name} ${form.surname}`,
+      // Newline strippati: il subject è un header, non HTML — niente CRLF injection anche se Resend già filtra.
+      subject: `Nuova Prenotazione: ${`${form.name} ${form.surname}`.replace(/[\r\n]+/g, ' ').slice(0, 200)}`,
       html: `
         <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
           <h2 style="color: #0A1628; border-bottom: 1px solid #eee; padding-bottom: 10px;">Nuova Richiesta di Prenotazione</h2>
           <p>Hai ricevuto una nuova richiesta dal sito web:</p>
           
           <table style="width: 100%; border-collapse: collapse;">
-            <tr><td style="padding: 8px 0;"><strong>Pacchetto:</strong></td><td>${form.packageName || (isSelfDrive ? 'Self Drive (senza patente)' : '—')}</td></tr>
+            <tr><td style="padding: 8px 0;"><strong>Pacchetto:</strong></td><td>${escapeHtml(form.packageName) || (isSelfDrive ? 'Self Drive (senza patente)' : '—')}</td></tr>
             <tr><td style="padding: 8px 0;"><strong>Modalità:</strong></td><td>${modeLabel}</td></tr>
             ${selfBoatRow}
             ${durationRow}
-            <tr><td style="padding: 8px 0;"><strong>Data e Ora:</strong></td><td>${form.date} ore ${form.time}</td></tr>
-            <tr><td style="padding: 8px 0;"><strong>Ospiti:</strong></td><td>${form.guests}</td></tr>
+            <tr><td style="padding: 8px 0;"><strong>Data e Ora:</strong></td><td>${escapeHtml(form.date)} ore ${escapeHtml(form.time)}</td></tr>
+            <tr><td style="padding: 8px 0;"><strong>Ospiti:</strong></td><td>${escapeHtml(form.guests)}</td></tr>
             ${addonsRow}
             ${setupRow}
             ${priceRows}
@@ -96,17 +119,17 @@ export async function POST(req: Request) {
 
           <h3 style="margin-top: 20px; color: #C9A96E;">Dati Cliente</h3>
           <p>
-            <strong>Nome:</strong> ${form.name} ${form.surname}<br>
-            <strong>Email:</strong> ${form.email}<br>
-            <strong>Telefono:</strong> ${form.phone}
+            <strong>Nome:</strong> ${escapeHtml(form.name)} ${escapeHtml(form.surname)}<br>
+            <strong>Email:</strong> ${escapeHtml(form.email)}<br>
+            <strong>Telefono:</strong> ${escapeHtml(form.phone)}
           </p>
-          
+
           <p style="background: #f9f9f9; padding: 15px; border-left: 4px solid #C9A96E;">
-            <strong>Note:</strong><br>${form.notes || 'Nessuna nota aggiuntiva'}
+            <strong>Note:</strong><br>${escapeHtml(form.notes) || 'Nessuna nota aggiuntiva'}
           </p>
 
           <h3 style="margin-top: 30px; color: #C9A96E; border-top: 1px solid #eee; padding-top: 20px;">Messaggio WhatsApp per il cliente</h3>
-          <p style="font-size: 13px; color: #888;">Copia e incolla il testo qui sotto e invialo al cliente su WhatsApp (${form.phone}):</p>
+          <p style="font-size: 13px; color: #888;">Copia e incolla il testo qui sotto e invialo al cliente su WhatsApp (${escapeHtml(form.phone)}):</p>
           <pre style="white-space: pre-wrap; word-break: break-word; font-family: -apple-system, sans-serif; background: #f5f7fa; padding: 16px; border-radius: 8px; border: 1px solid #e0e4e8; font-size: 14px; line-height: 1.55; color: #222; margin: 0;">${escapeHtml(whatsappMessage)}</pre>
         </div>
       `,
